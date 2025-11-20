@@ -1,45 +1,59 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Equipo;
+use App\Models\Ubicacion;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class EquipoController extends Controller
 {
-
     public function index()
     {
-        return view('activos.index');
+        $activos = Equipo::all(); // Trae todos los activos
+        return view('activos.index', compact('activos'));
     }
-
 
     public function create()
     {
-        //
+        $usuarios = User::all();
+        $ubicaciones = Ubicacion::all();
+        return view('activos.create', compact('usuarios', 'ubicaciones'));
     }
+
 
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+            'descripcion' => 'nullable',
+        ]);
+
+        Equipo::create($request->all());
+
+        return redirect()->route('activos.index')->with('success', 'Equipo creado correctamente');
     }
 
-    public function show(string $id)
+    public function edit(Equipo $act)
     {
-        //
+        return view('activos.edit', compact('activo'));
     }
 
-    public function edit(string $id)
+    public function update(Request $request, Equipo $activo)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+            'descripcion' => 'nullable',
+        ]);
+
+        $activo->update($request->all());
+
+        return redirect()->route('activos.index')->with('success', 'Equipo actualizado correctamente');
     }
 
-    public function update(Request $request, string $id)
+    public function destroy(Equipo $activo)
     {
-        //
-    }
-
-    public function destroy(string $id)
-    {
-        //
+        $activo->delete();
+        return redirect()->route('activos.index')->with('success', 'Equipo eliminado correctamente');
     }
 }
