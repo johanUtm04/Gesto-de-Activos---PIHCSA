@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-/* Route::get('/', [EquipoController::class, 'index'])->name('dashboard');*/
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -17,8 +17,8 @@ class User extends Authenticatable
      * CRÍTICO: Incluir todos los campos nuevos para asignación masiva.
      */
     protected $fillable = [
-        'nombre', // Usando 'nombre' en lugar de 'name'
-        'correo', // Usando 'correo' en lugar de 'email'
+        'name', 
+        'email', 
         'password',
         'rol',
         'departamento',
