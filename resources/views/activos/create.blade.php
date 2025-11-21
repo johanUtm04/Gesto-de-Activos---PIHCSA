@@ -3,14 +3,16 @@
 @section('title', 'Agregar Equipo')
 
 @section('content_header')
-<h1>Agregar Nuevo Equipo</h1>
-<a href="{{ route('activos.index') }}" class="btn btn-secondary mb-2">Volver</a>
+    <h1>Agregar Nuevo Equipo</h1>
+    <a href="{{ route('activos.index') }}" class="btn btn-secondary mb-2">Volver</a>
 @stop
 
 @section('content')
 
+{{-- Mostrar errores --}}
 @if ($errors->any())
 <div class="alert alert-danger">
+    <strong>Ups! Hay algunos errores:</strong>
     <ul>
         @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>
@@ -21,66 +23,126 @@
 
 <form action="{{ route('activos.store') }}" method="POST">
     @csrf
+
     <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Datos del Equipo</h3>
+        </div>
+
         <div class="card-body">
 
+            {{-- Marca --}}
             <div class="form-group">
-                <label for="marca_equipo">Marca del Equipo</label>
-                <input type="text" name="marca_equipo" id="marca_equipo" class="form-control" value="{{ old('marca_equipo') }}">
+                <label>Marca del Equipo</label>
+                <input 
+                    type="text" 
+                    name="marca_equipo" 
+                    class="form-control"
+                    placeholder="Ej. Dell, HP, Lenovo"
+                    value="{{ old('marca_equipo') }}">
             </div>
 
+            {{-- Tipo --}}
             <div class="form-group">
-                <label for="tipo_equipo">Tipo de Equipo</label>
-                <input type="text" name="tipo_equipo" id="tipo_equipo" class="form-control" value="{{ old('tipo_equipo') }}" required>
+                <label>Tipo de Equipo</label>
+                <input 
+                    type="text" 
+                    name="tipo_equipo" 
+                    class="form-control"
+                    placeholder="Ej. Laptop, PC, Tablet"
+                    value="{{ old('tipo_equipo') }}" 
+                    required>
             </div>
 
+            {{-- Serial --}}
             <div class="form-group">
-                <label for="serial">Serial</label>
-                <input type="text" name="serial" id="serial" class="form-control" value="{{ old('serial') }}" required>
+                <label>Serial</label>
+                <input 
+                    type="text" 
+                    name="serial" 
+                    class="form-control"
+                    placeholder="Número de serie"
+                    value="{{ old('serial') }}" 
+                    required>
             </div>
 
+            {{-- Sistema Operativo --}}
             <div class="form-group">
-                <label for="sistema_operativo">Sistema Operativo</label>
-                <input type="text" name="sistema_operativo" id="sistema_operativo" class="form-control" value="{{ old('sistema_operativo') }}" required maxlength="11">
+                <label>Sistema Operativo</label>
+                <input 
+                    type="text" 
+                    name="sistema_operativo" 
+                    class="form-control"
+                    placeholder="Ej. Windows 10"
+                    maxlength="50"
+                    value="{{ old('sistema_operativo') }}" 
+                    required>
             </div>
 
+            {{-- Usuario --}}
             <div class="form-group">
-                <label for="usuario_id">Usuario Asignado</label>
-                <select name="usuario_id" id="usuario_id" class="form-control" required>
+                <label>Usuario Responsable</label>
+                <select name="usuario_id" class="form-control" required>
                     <option value="">Seleccione un usuario</option>
                     @foreach($usuarios as $usuario)
-                        <option value="{{ $usuario->id }}" {{ old('usuario_id') == $usuario->id ? 'selected' : '' }}>
+                        <option 
+                            value="{{ $usuario->id }}" 
+                            {{ old('usuario_id') == $usuario->id ? 'selected' : '' }}>
                             {{ $usuario->name }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
+            {{-- Ubicación --}}
             <div class="form-group">
-                <label for="ubicacion_id">Ubicación</label>
-                <select name="ubicacion_id" id="ubicacion_id" class="form-control" required>
+                <label>Ubicación</label>
+                <select name="ubicacion_id" class="form-control" required>
                     <option value="">Seleccione una ubicación</option>
                     @foreach($ubicaciones as $ubicacion)
-                        <option value="{{ $ubicacion->id }}" {{ old('ubicacion_id') == $ubicacion->id ? 'selected' : '' }}>
-                            {{ $ubicacion->nombre ?? 'Sin nombre' }}
+                        <option 
+                            value="{{ $ubicacion->id }}" 
+                            {{ old('ubicacion_id') == $ubicacion->id ? 'selected' : '' }}>
+                            {{ $ubicacion->nombre }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
+            {{-- Valor Inicial --}}
             <div class="form-group">
-                <label for="valor_inicial">Valor Inicial</label>
-                <input type="number" step="0.01" name="valor_inicial" id="valor_inicial" class="form-control" value="{{ old('valor_inicial') }}" required>
+                <label>Valor Inicial</label>
+                <input 
+                    type="number" 
+                    name="valor_inicial" 
+                    step="0.01" 
+                    class="form-control"
+                    placeholder="Ej. 15000.00"
+                    value="{{ old('valor_inicial') }}" 
+                    required>
             </div>
 
+            {{-- Fecha de adquisición --}}
             <div class="form-group">
-                <label for="fecha_adquisicion">Fecha de Adquisición</label>
-                <input type="date" name="fecha_adquisicion" id="fecha_adquisicion" class="form-control" value="{{ old('fecha_adquisicion') }}" required>
+                <label>Fecha de Adquisición</label>
+                <input 
+                    type="date" 
+                    name="fecha_adquisicion" 
+                    class="form-control"
+                    value="{{ old('fecha_adquisicion') }}" 
+                    required>
             </div>
 
+            {{-- Vida Útil --}}
             <div class="form-group">
-                <label for="vida_util_estimada">Vida Útil Estimada</label>
-                <input type="text" name="vida_util_estimada" id="vida_util_estimada" class="form-control" value="{{ old('vida_util_estimada') }}" required>
+                <label>Vida Útil Estimada</label>
+                <input 
+                    type="text" 
+                    name="vida_util_estimada" 
+                    class="form-control"
+                    placeholder="Ej. 5 años"
+                    value="{{ old('vida_util_estimada') }}" 
+                    required>
             </div>
 
         </div>

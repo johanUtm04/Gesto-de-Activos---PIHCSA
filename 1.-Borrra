@@ -23,3 +23,72 @@ crear modelos
 definición de todas las relaciones (1:N, N:1, 1:1).
 Creación de la Vista del Dashboard
 
+👨‍💻CHECKLIST PARA TENER TU PROYECTO LARAVEL BIEN UBICADO👨‍💻
+Versiones del Entorno👨‍💻
+version de php
+    PHP 8.1.25
+
+version de composer
+    Composer version 2.7.1
+
+version de laravel
+    Laravel Framework 10.49.1
+
+version de Node & NPM
+    v22.17.0
+    11.4.2
+
+
+Estructura de estructura de carpetas y archivos clave👨‍💻
+/app/ → Lógica del proyecto
+    Models/ → Tablas de BD en versión PHP (equipo, usuario, ubicacion…)
+    Http/Controllers/ → Funciones que reciben la petición y devuelven respuesta.
+    Http/Middleware/ → Filtros (auth, permisos, etc.)
+
+/routes/ → Rutas del sistema
+    web.php → Rutas que devuelven vistas normales (HTML).
+    api.php → Rutas tipo API (JSON).
+
+/database/
+    migrations/ → Estructura de las tablas.
+    seeders/ → Datos iniciales.
+    factories/ → Datos falsos para pruebas.
+
+/resources/
+    views/ → Vistas Blade.
+    js/ y css/ → Frontend manejado por Vite.
+
+/public/
+    Archivos finales que ve el navegador (assets compilados).
+
+.env
+    Config de conexión: base de datos, mails, claves privadas, etc.
+
+composer.json
+    Lista de dependencias PHP del proyecto.
+
+vite.config.js
+    Config de compilación para JS/CSS.
+
+Kernel.php
+    Define qué middleware están activos.
+
+
+Comandos necesarios👨‍💻
+Migraciones
+    php artisan migrate
+    php artisan migrate:fresh
+    php artisan migrate:rollback
+
+Modelos y Controladores
+    php artisan make:model Equipo -m
+    php artisan make:controller EquipoController --resource
+
+Seeders
+    php artisan db:seed
+    php artisan make:seeder UsuarioSeeder
+
+Cache / Limpieza
+    php artisan cache:clear
+    php artisan config:clear
+    php artisan route:clear
