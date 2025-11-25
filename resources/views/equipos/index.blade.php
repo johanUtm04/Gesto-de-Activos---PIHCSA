@@ -4,7 +4,7 @@
 
 @section('content_header')
     <h1>Lista de Equipos</h1>
-    <a href="{{ route('activos.create') }}" class="btn btn-success mb-2">Agregar Equipo</a>
+    <a href="{{ route('equipos.create') }}" class="btn btn-success mb-2">Agregar Equipo</a>
 @stop
 
 @section('content')
@@ -30,35 +30,35 @@
         </thead>
 
         <tbody>
-            @foreach($activos as $activo)
+            @foreach($equipos as $equipo)
                 <tr>
-                    <td>{{ $activo->id }}</td>
-                    <td>{{ $activo->marca_equipo ?? '-' }}</td>
-                    <td>{{ $activo->tipo_equipo }}</td>
-                    <td>{{ $activo->serial }}</td>
-                    <td>{{ $activo->sistema_operativo }}</td>
+                    <td>{{ $equipo->id }}</td>
+                    <td>{{ $equipo->marca_equipo ?? '-' }}</td>
+                    <td>{{ $equipo->tipo_equipo }}</td>
+                    <td>{{ $equipo->serial }}</td>
+                    <td>{{ $equipo->sistema_operativo }}</td>
 
                     {{-- Usuario responsable --}}
-                    <td>{{ $activo->responsable->name ?? 'Sin asignar' }}</td>
+                    <td>{{ $equipo->responsable->name ?? 'Sin asignar' }}</td>
 
                     {{-- Ubicación --}}
-                    <td>{{ $activo->ubicacion->nombre ?? 'Sin ubicación' }}</td>
+                    <td>{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}</td>
 
-                    <td>${{ number_format($activo->valor_inicial, 2) }}</td>
-                    <td>{{ $activo->fecha_adquisicion }}</td>
-                    <td>{{ $activo->vida_util_estimada }}</td>
+                    <td>${{ number_format($equipo->valor_inicial, 2) }}</td>
+                    <td>{{ $equipo->fecha_adquisicion }}</td>
+                    <td>{{ $equipo->vida_util_estimada }}</td>
 
                     <td>
-                        <a href="{{ route('activos.edit', $activo) }}" class="btn btn-primary btn-sm">Editar</a>
+                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Editar</a>
 
-                        <form action="{{ route('activos.destroy', $activo) }}" 
+                        <form action="{{ route('equipos.destroy', $equipo) }}" 
                               method="POST" 
                               style="display:inline-block;">
                             @csrf
                             @method('DELETE')
 
                             <button class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Seguro que quieres eliminar este activo?')">
+                                onclick="return confirm('¿Seguro que quieres eliminar este equipo?')">
                                 Eliminar
                             </button>
                         </form>

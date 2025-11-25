@@ -4,7 +4,7 @@
 
 @section('content_header')
     <h1>Agregar Nuevo Equipo</h1>
-    <a href="{{ route('activos.index') }}" class="btn btn-secondary mb-2">Volver</a>
+    <a href="{{ route('equipos.index') }}" class="btn btn-secondary mb-2">Volver</a>
 @stop
 
 @section('content')
@@ -21,7 +21,7 @@
 </div>
 @endif
 
-<form action="{{ route('activos.store') }}" method="POST">
+<form action="{{ route('equipos.store') }}" method="POST">
     @csrf
 
     <div class="card card-primary">
@@ -149,7 +149,7 @@
 
         <div class="card-footer">
             <button type="submit" class="btn btn-success">Guardar Equipo</button>
-            <a href="{{ route('activos.index') }}" class="btn btn-secondary">Cancelar</a>
+            <a href="{{ route('equipos.index') }}" class="btn btn-secondary">Cancelar</a>
         </div>
     </div>
 </form>

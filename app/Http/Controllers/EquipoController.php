@@ -12,8 +12,8 @@ class EquipoController extends Controller
     public function index()
     {
         //Tomamos el modelo de la tabla y lo pasamos a la vista
-        $activos = Equipo::all(); 
-        return view('activos.index', compact('activos'));
+        $equipos = Equipo::all(); 
+        return view('equipos.index', compact('equipos'));
     }
 
     //Funcion para crear un componente de la tabla
@@ -23,7 +23,7 @@ class EquipoController extends Controller
         $usuarios = User::all();
         //Usamos el modelo ubicacion
         $ubicaciones = Ubicacion::all();
-        return view('activos.create', compact('usuarios', 'ubicaciones'));
+        return view('equipos.create', compact('usuarios', 'ubicaciones'));
     }
 
     //Funcion para guardar un registro en la base de datos
@@ -43,31 +43,33 @@ class EquipoController extends Controller
         ]);
         //Una ves se crea el registro de un nuevo equipo, vamos al segundo formulario, enviando el id del equipo recien creado
         //Para trabajar sobre el
-        return redirect()->route('activos.create', $equipo->id);
+        return redirect()->route('equipos.create', $equipo->id);
     }
 
 
     //Funcion para 
-    public function edit(Equipo $activo)
+    public function edit(Equipo $equipo,)    //Inyecciones como parametro
     {
-        return view('activos.edit', compact('activo'));
+        $usuarios = User::all();
+        $ubicaciones = Ubicacion::all();
+        return view('equipos.edit', compact('equipo', 'usuarios', 'ubicaciones'));
     }
 
-    public function update(Request $request, Equipo $activo)
+    public function update(Request $request, Equipo $equipo)
     {
         $request->validate([
-            'nombre' => 'required',
+            'nombre' => '',
             'descripcion' => 'nullable',
         ]);
 
-        $activo->update($request->all());
+        $equipo->update($request->all());
 
-        return redirect()->route('activos.index')->with('success', 'Equipo actualizado correctamente');
+        return redirect()->route('equipos.index')->with('success', 'Equipo actualizado correctamente');
     }
 
-    public function destroy(Equipo $activo)
+    public function destroy(Equipo $equipo)
     {
-        $activo->delete();
-        return redirect()->route('activos.index')->with('success', 'Equipo eliminado correctamente');
+        $equipo->delete();
+        return redirect()->route('equipos.index')->with('success', 'Equipo eliminado correctamente');
     }
 }
