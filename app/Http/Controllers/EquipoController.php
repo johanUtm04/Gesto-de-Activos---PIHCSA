@@ -43,7 +43,7 @@ class EquipoController extends Controller
         ]);
         //Una ves se crea el registro de un nuevo equipo, vamos al segundo formulario, enviando el id del equipo recien creado
         //Para trabajar sobre el
-        return redirect()->route('equipos.create', $equipo->id);
+        return redirect()->route('equipos.wizard', $equipo->id);
     }
 
 

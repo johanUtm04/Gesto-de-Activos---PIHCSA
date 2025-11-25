@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'PIHCSA Gestion de Activos',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -258,7 +258,7 @@ return [
 
     'use_route_url' => false,
     //Ruta principal a la que el usuario es dirijido
-    'dashboard_url' => 'dashboard',
+    'dashboard_url' => 'equipos',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
