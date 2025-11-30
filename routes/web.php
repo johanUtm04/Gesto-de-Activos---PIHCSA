@@ -28,14 +28,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/equipos/{equipo}/ubicacion', [EquipoWizardController::class, 'ubicacionForm'])->name('equipos.wizard-ubicacion');
     Route::post('/equipos/{equipo}/ubicacion', [EquipoWizardController::class, 'saveUbicacion'])->name('equipos.wizard.saveUbicacion');
-    
+
     Route::get('/equipos/{equipo}/monitores', [EquipoWizardController::class, 'monitoresForm'])->name('equipos.wizard-monitores');
     Route::post('/equipos/{equipo}/monitores', [EquipoWizardController::class, 'saveMonitor'])->name('equipos.wizard.saveMonitor');
 
-
-
-    // Route::get('/equipos/{equipo}/discoduro', [EquipoWizardController::class, 'discoduroForm'])->name('equipos.wizard.discoduro');
-    // Route::post('/equipos/{equipo}/discoduro', [EquipoWizardController::class, 'saveDiscoduro'])->name('equipos.wizard.saveDiscoduro');
+    Route::get('/equipos/{equipo}/discoduro', [EquipoWizardController::class, 'discoduroForm'])->name('equipos.wizard-discos_duros');
+    Route::post('/equipos/{equipo}/discoduro', [EquipoWizardController::class, 'saveDiscoduro'])->name('equipos.wizard.saveDiscoduro');
 
     // Route::get('/equipos/{equipo}/ram', [EquipoWizardController::class, 'ramForm'])->name('equipos.wizard.ram');
     // Route::post('/equipos/{equipo}/ram', [EquipoWizardController::class, 'saveRam'])->name('equipos.wizard.saveRam');

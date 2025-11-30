@@ -1,6 +1,17 @@
 @extends('adminlte::page')
 
 @section('content')
+@php
+    $alertTypes = ['success', 'danger', 'warning', 'info', 'primary'];
+@endphp
+
+@foreach ($alertTypes as $msg)
+    @if(Session::has($msg))
+        <div class="alert alert-{{ $msg }} alert-dismissible fade show" role="alert">
+            {{ Session::get($msg) }}
+        </div>
+    @endif
+@endforeach
     <div class="container">
 
         <h2>Equipo creado exitosamente</h2>
@@ -11,17 +22,20 @@
 
         <h3>Agregar información opcional</h3>
 
-<!--HASTA AQUI ENTRAMOS CON $EQUIPO-->
         <div class="list-group">
 
             <a href="{{ route('equipos.wizard-ubicacion', $equipo) }}" class="list-group-item">
-                Registrar Ubicación
+                Registrar Ubicación 🗺️
             </a>
 
             <a href="{{ route('equipos.wizard-monitores', $equipo) }}" class="list-group-item">
-                Registrar Monitor
+                Registrar Monitor 🖥️
             </a>
-        
+
+            <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}" class="list-group-item">
+                Registrar Disco Duro 💾
+            </a>
+
         </div>
 
         <br>

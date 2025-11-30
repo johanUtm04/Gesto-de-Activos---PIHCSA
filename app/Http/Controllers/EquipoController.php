@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipo;
 use App\Models\Monitor;
 use App\Models\Ubicacion;
+use App\Models\discos_duros;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -84,10 +85,9 @@ class EquipoController extends Controller
     }
 
     //function to delete some 'equipo'
-    public function destroy(Equipo $equipo, Monitor $monitor)
+    public function destroy(Equipo $equipo)
     {
         $equipo->delete();
-        $monitor->delete();
         return redirect()->route('equipos.index')->with('danger', 'Equipo eliminado correctamente');
     }
 }
