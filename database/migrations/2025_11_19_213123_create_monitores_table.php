@@ -12,7 +12,9 @@ return new class extends Migration
         Schema::create('monitores', function (Blueprint $table) {
             $table->id();
             //llave foranea 
-            $table->foreignId('equipo_id')->constrained('equipos');
+            $table->foreignId('equipo_id')->constrained('equipos')
+            ->onDelete('cascade'); 
+            ;
 
             $table->string('marca');
             $table->string('serial');

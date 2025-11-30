@@ -2,34 +2,43 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipo;
+use App\Models\Monitor;
 use App\Models\Ubicacion;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class EquipoController extends Controller
 {
-    //Funcion para mostrar tabla
+    //Function to explain the main table
     public function index()
     {
-        //Tomamos el modelo de la tabla y lo pasamos a la vista
         $equipos = Equipo::all(); 
         return view('equipos.index', compact('equipos'));
     }
 
-    //Funcion para crear un componente de la tabla
+    //function to create a new 'equipo'
     public function create()
     {
-        //Usamos el modelo usuario
         $usuarios = User::all();
-        //Usamos el modelo ubicacion
         $ubicaciones = Ubicacion::all();
         return view('equipos.create', compact('usuarios', 'ubicaciones'));
     }
 
-    //Funcion para guardar un registro en la base de datos
+    //function to send the data from index's form
     public function store(Request $request)
     {
-        // Crear el equipo con los datos enviados del formulario
+        $request->validate([
+            'marca_equipo' => 'nullable|string|max:255',
+            'tipo_equipo' => 'required|string|max:255',
+            'serial' => 'required|string|max:255',
+            'sistema_operativo' => 'required|string|max:11', 
+            'usuario_id' => 'required|integer|exists:users,id',
+            'ubicacion_id' => 'required|integer|exists:ubicaciones,id',
+            'valor_inicial' => 'required|numeric|min:0|max:999999.99',
+            'fecha_adquisicion' => 'required|date',
+            'vida_util_estimada' => 'required|string|max:255',
+            ]);
+
         $equipo = Equipo::create([
             'marca_equipo' => $request->marca_equipo,
             'tipo_equipo' => $request->tipo_equipo,
@@ -41,35 +50,44 @@ class EquipoController extends Controller
             'fecha_adquisicion' => $request->fecha_adquisicion,
             'vida_util_estimada' => $request->vida_util_estimada,
         ]);
-        //Una ves se crea el registro de un nuevo equipo, vamos al segundo formulario, enviando el id del equipo recien creado
-        //Para trabajar sobre el
+
         return redirect()->route('equipos.wizard', $equipo->id);
     }
 
 
-    //Funcion para 
-    public function edit(Equipo $equipo,)    //Inyecciones como parametro
+    //function to edit a 'equipo'
+    public function edit(Equipo $equipo)
     {
         $usuarios = User::all();
         $ubicaciones = Ubicacion::all();
         return view('equipos.edit', compact('equipo', 'usuarios', 'ubicaciones'));
     }
 
+    //function to send the changes data from edit's form
     public function update(Request $request, Equipo $equipo)
     {
         $request->validate([
-            'nombre' => '',
-            'descripcion' => 'nullable',
-        ]);
+            'marca_equipo' => 'nullable|string|max:255',
+            'tipo_equipo' => 'required|string|max:255',
+            'serial' => 'required|string|max:255',
+            'sistema_operativo' => 'required|string|max:11', 
+            'usuario_id' => 'required|integer|exists:users,id',
+            'ubicacion_id' => 'required|integer|exists:ubicaciones,id',
+            'valor_inicial' => 'required|numeric|min:0|max:999999.99',
+            'fecha_adquisicion' => 'required|date',
+            'vida_util_estimada' => 'required|string|max:255',
+            ]);
 
         $equipo->update($request->all());
 
-        return redirect()->route('equipos.index')->with('success', 'Equipo actualizado correctamente');
+        return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');
     }
 
-    public function destroy(Equipo $equipo)
+    //function to delete some 'equipo'
+    public function destroy(Equipo $equipo, Monitor $monitor)
     {
         $equipo->delete();
-        return redirect()->route('equipos.index')->with('success', 'Equipo eliminado correctamente');
+        $monitor->delete();
+        return redirect()->route('equipos.index')->with('danger', 'Equipo eliminado correctamente');
     }
 }

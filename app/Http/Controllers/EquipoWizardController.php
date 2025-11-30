@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Equipo;
+use App\Models\Monitor;
 
 class EquipoWizardController extends Controller
 {
@@ -36,11 +37,12 @@ class EquipoWizardController extends Controller
      */
     public function show(Equipo $equipo)
     {
+        //Al pasar al menu de wizrd le pasamos la variable equipo 
         return view('equipos.wizard', compact('equipo'));
     }
 
-    //Ubicacion---------------------------------------
-        public function ubicacionForm(Equipo $equipo)
+//Ubicacion---------------------------------------
+    public function ubicacionForm(Equipo $equipo)
     {
         return view('equipos.wizard-ubicacion', compact('equipo'));
     }
@@ -58,33 +60,32 @@ class EquipoWizardController extends Controller
             ->with('success', 'Ubicación registrada');
     }
 
-    //Monitores------------------
-public function monitoresForm(Request $request)
-{
-    $equipoId = $request->session()->get('equipo_id');
+//Monitores------------------
+    public function monitoresForm(Equipo $equipo)
+    {
 
-    return view('equipos.wizard-monitores', compact('equipoId'));
-}
+         return view('equipos.wizard-monitores', compact('equipo'));
+    }
 
-public function saveMonitor(Request $request)
-{
-    $request->validate([
-        'marca' => 'required|string',
-        'modelo' => 'required|string',
-        'pulgadas' => 'nullable|integer',
-    ]);
+    public function saveMonitor(Request $request, Equipo $equipo)
+    {
+        $request->validate([
+            'marca' => 'required|string',
+            'serial' => 'required|string',
+            'escala_pulgadas' => 'required|string',
+        ]);
 
-    $equipoId = $request->session()->get('equipo_id');
+        Monitor::create([
+            'equipo_id' => $equipo->id,
+            'marca' => $request->marca,
+            'serial' => $request->serial,
+            'escala_pulgadas' => $request->escala_pulgadas,
+            'interface' => $request->interface,
+        ]);
 
-    Monitor::create([
-        'marca' => $request->marca,
-        'modelo' => $request->modelo,
-        'pulgadas' => $request->pulgadas,
-        'equipo_id' => $equipoId
-    ]);
-
-    return redirect()->route('wizard.discosForm'); // siguiente paso
-}
+        return redirect()->route('equipos.wizard', $equipo->id)
+            ->with('success', 'Ubicación registrada');
+    }
 
 
 

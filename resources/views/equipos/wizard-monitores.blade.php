@@ -1,10 +1,10 @@
-@extends('layouts.app')
+@extends('adminlte::page')
 
 @section('content')
 <div class="container">
     <h3>Paso 1: Monitor asignado</h3>
 
-    <form action="{{ route('equipos.wizard.saveMonitor') }}" method="POST">
+    <form action="{{ route('equipos.wizard.saveMonitor', $equipo) }}" method="POST">
         @csrf
 
         <div class="mb-3">
@@ -14,15 +14,21 @@
         </div>
 
         <div class="mb-3">
-            <label>Modelo</label>
-            <input type="text" class="form-control" name="modelo" value="{{ old('modelo') }}">
-            @error('modelo') <span class="text-danger">{{ $message }}</span> @enderror
+            <label>Serial</label>
+            <input type="text" class="form-control" name="serial" value="{{ old('serial') }}">
+            @error('serial') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-3">
-            <label>Pulgadas</label>
-            <input type="number" class="form-control" name="pulgadas" value="{{ old('pulgadas') }}">
-            @error('pulgadas') <span class="text-danger">{{ $message }}</span> @enderror
+            <label>Escala en Pulgadas</label>
+            <input type="text" class="form-control" name="escala_pulgadas" value="{{ old('escala_pulgadas') }}">
+            @error('escala_pulgadas') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="mb-3">
+            <label>Interface</label>
+            <input type="text" class="form-control" name="interface" value="{{ old('interface') }}">
+            @error('interface') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
 
         <button class="btn btn-primary">Guardar y continuar</button>

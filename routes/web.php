@@ -4,12 +4,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\EquipoWizardController;
-//Ruta principal
+use App\Http\Controllers\ProfileController;
+
+//Main Route
 Route::get('/', function () {
     return view('welcome');
 });
 
-// CRUD completo para equipos
+//Full crud to 'equipos'
 Route::middleware(['auth'])->group(function () {
     Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
     Route::get('/equipos/create', [EquipoController::class, 'create'])->name('equipos.create');
@@ -17,24 +19,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/equipos/{equipo}/edit', [EquipoController::class, 'edit'])->name('equipos.edit');
     Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
     Route::delete('/equipos/{equipo}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //Wizard
-    // Route::post('/equipos/store-step1', [EquipoController::class, 'storeStep1'])->name('equipos.store.step1');
-    // Route::get('/equipos/create/hardware/{equipo}', [EquipoController::class, 'createHardware'])
-    // ->name('equipos.create.hardware');
+    Route::get('/equipos/{equipo}/wizard', [EquipoWizardController::class, 'show'])->name('equipos.wizard');
 
-    //Ruta principal
-    Route::get('/equipos/{equipo}/wizard', [EquipoWizardController::class, 'show'])
-     ->name('equipos.wizard');
-
-
-     //Rutas adicionales
-
-    Route::get('/equipos/{equipo}/ubicacion', [EquipoWizardController::class, 'ubicacionForm'])->name('equipos.wizard.ubicacion');
+    Route::get('/equipos/{equipo}/ubicacion', [EquipoWizardController::class, 'ubicacionForm'])->name('equipos.wizard-ubicacion');
     Route::post('/equipos/{equipo}/ubicacion', [EquipoWizardController::class, 'saveUbicacion'])->name('equipos.wizard.saveUbicacion');
-
-    //Monitores
-    Route::get('/equipos/{equipo}/monitores', [EquipoWizardController::class, 'monitoresForm'])->name('equipos.wizard.monitores');
+    
+    Route::get('/equipos/{equipo}/monitores', [EquipoWizardController::class, 'monitoresForm'])->name('equipos.wizard-monitores');
     Route::post('/equipos/{equipo}/monitores', [EquipoWizardController::class, 'saveMonitor'])->name('equipos.wizard.saveMonitor');
 
 

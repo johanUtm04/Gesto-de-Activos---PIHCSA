@@ -11,17 +11,17 @@
 
         <h3>Agregar información opcional</h3>
 
+<!--HASTA AQUI ENTRAMOS CON $EQUIPO-->
         <div class="list-group">
 
-            <a href="{{ route('equipos.wizard.ubicacion', $equipo) }}" class="list-group-item">
+            <a href="{{ route('equipos.wizard-ubicacion', $equipo) }}" class="list-group-item">
                 Registrar Ubicación
             </a>
 
-            <a href="{{ route('equipos.wizard.monitores', $equipo) }}" class="list-group-item">
+            <a href="{{ route('equipos.wizard-monitores', $equipo) }}" class="list-group-item">
                 Registrar Monitor
             </a>
-            
-
+        
         </div>
 
         <br>

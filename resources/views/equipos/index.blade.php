@@ -8,9 +8,17 @@
 @stop
 
 @section('content')
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    @php
+        $alertTypes = ['success', 'danger', 'warning', 'info', 'primary'];
+    @endphp
+
+    @foreach ($alertTypes as $msg)
+        @if(Session::has($msg))
+            <div class="alert alert-{{ $msg }} alert-dismissible fade show" role="alert">
+                {{ Session::get($msg) }}
+            </div>
+        @endif
+    @endforeach
 
     <table class="table table-bordered table-striped">
         <thead>
