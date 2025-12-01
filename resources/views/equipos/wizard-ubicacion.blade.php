@@ -16,9 +16,8 @@
 
             <br>
 
-            <button class="btn btn-primary">Guardar</button>
+            <button class="btn btn-primary">Guardar y continuar</button>
 
-            <a href="{{ route('equipos.wizard', $equipo) }}" class="btn btn-secondary">Omitir</a>
         </form>
     </div>
 @endsection

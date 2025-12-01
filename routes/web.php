@@ -23,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    //Wizard
+    //Wizard, este menu tal vez se use al querer agregar algo extra
     Route::get('/equipos/{equipo}/wizard', [EquipoWizardController::class, 'show'])->name('equipos.wizard');
 
     Route::get('/equipos/{equipo}/ubicacion', [EquipoWizardController::class, 'ubicacionForm'])->name('equipos.wizard-ubicacion');
@@ -35,15 +35,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/equipos/{equipo}/discoduro', [EquipoWizardController::class, 'discoduroForm'])->name('equipos.wizard-discos_duros');
     Route::post('/equipos/{equipo}/discoduro', [EquipoWizardController::class, 'saveDiscoduro'])->name('equipos.wizard.saveDiscoduro');
 
-    // Route::get('/equipos/{equipo}/ram', [EquipoWizardController::class, 'ramForm'])->name('equipos.wizard.ram');
-    // Route::post('/equipos/{equipo}/ram', [EquipoWizardController::class, 'saveRam'])->name('equipos.wizard.saveRam');
+    Route::get('/equipos/{equipo}/ram', [EquipoWizardController::class, 'ramForm'])->name('equipos.wizard-ram');
+    Route::post('/equipos/{equipo}/ram', [EquipoWizardController::class, 'saveRam'])->name('equipos.wizard.saveRam');
 
 
-    // Route::get('/equipos/{equipo}/periferico', [EquipoWizardController::class, 'perifericoForm'])->name('equipos.wizard.ubicacion');
-    // Route::post('/equipos/{equipo}/periferico', [EquipoWizardController::class, 'savePeriferico'])->name('equipos.wizard.savePeriferico');
+    Route::get('/equipos/{equipo}/periferico', [EquipoWizardController::class, 'perifericoForm'])->name('equipos.wizard-periferico');
+    Route::post('/equipos/{equipo}/periferico', [EquipoWizardController::class, 'savePeriferico'])->name('equipos.wizard.savePeriferico');
 
-    // Route::get('/equipos/{equipo}/precesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard.procesador');
-    // Route::post('/equipos/{equipo}/procesador', [EquipoWizardController::class, 'savePreocesador'])->name('equipos.wizard.savePreocesador');
+    Route::get('/equipos/{equipo}/precesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard-procesador');
+    Route::post('/equipos/{equipo}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
 
 });
 

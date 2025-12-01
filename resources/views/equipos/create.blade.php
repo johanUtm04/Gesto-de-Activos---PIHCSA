@@ -148,7 +148,7 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-success">Guardar Equipo</button>
+            <button type="submit" class="btn btn-success">Guardar y continuar</button>
             <a href="{{ route('equipos.index') }}" class="btn btn-secondary">Cancelar</a>
         </div>
     </div>

@@ -8,6 +8,7 @@
 @stop
 
 @section('content')
+    {{-- Manejo de Mensajes de Sesión (Alertas) --}}
     @php
         $alertTypes = ['success', 'danger', 'warning', 'info', 'primary'];
     @endphp
@@ -28,12 +29,19 @@
                 <th>Tipo</th>
                 <th>Serial</th>
                 <th>SO</th>
-                <th>Usuario</th>
-                <th>Ubicación</th>
-                <th>Valor</th>
+                
+                <th>USUARIO</th> 
+                
+                <th>UBICACIÓN</th> 
+                
+                <th>Valor Inicial</th>
                 <th>Fecha Adq.</th>
-                <th>Vida Útil</th>
-                <th>Acciones</th>
+                <th>Vida Útil Estimada</th>
+                <th>Monitores</th>
+                <th>Discos Duros</th>
+                <th>RAM</th>
+                <!-- <th>Perifericos</th>
+                <th>Procesadores</th> -->
             </tr>
         </thead>
 
@@ -46,19 +54,45 @@
                     <td>{{ $equipo->serial }}</td>
                     <td>{{ $equipo->sistema_operativo }}</td>
 
-                    {{-- Usuario responsable --}}
-                    <td>{{ $equipo->responsable->name ?? 'Sin asignar' }}</td>
+                    <td>
+                        <strong>{{ $equipo->usuario->name ?? 'Sin asignar' }}</strong>
+                        <br>
+                        <small>{{ $equipo->usuario->email ?? '-' }}</small>
+                    </td>
 
-                    {{-- Ubicación --}}
-                    <td>{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}</td>
+                    <td>
+                        <strong>{{ $equipo->ubicacion->nombre ?? 'Sin Monitor' }}</strong>
+                        <br>
+                        <small>{{ $equipo->ubicacion->codigo ?? '-' }}</small>
+                    </td>
 
                     <td>${{ number_format($equipo->valor_inicial, 2) }}</td>
                     <td>{{ $equipo->fecha_adquisicion }}</td>
                     <td>{{ $equipo->vida_util_estimada }}</td>
+                    <!-- MONITOR -->
+                    <td>
+                        <strong>{{ $equipo->monitor->marca ?? 'Sin Monitor' }}</strong>
+                        <br>
+                        <small>{{ $equipo->monitor->serial ?? '-' }}</small>
+                    </td>
+                    <!-- DISCO DURO -->
+                    <td>
+                        <strong>{{ $equipo->discoDuro->marca ?? 'Sin discoDuro' }}</strong>
+                        <br>
+                        <small>{{ $equipo->discoDuro->serial ?? '-' }}</small>
+                    </td>
+                    <!-- RAM -->
+                    <td>
+                        <strong>{{ $equipo->ram->marca ?? 'Sin ram' }}</strong>
+                        <br>
+                        <small>{{ $equipo->ram->serial ?? '-' }}</small>
+                    </td>
 
+                    
+                    <!-- Acciones -->
                     <td>
                         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Editar</a>
-
+                        
                         <form action="{{ route('equipos.destroy', $equipo) }}" 
                               method="POST" 
                               style="display:inline-block;">
@@ -66,7 +100,7 @@
                             @method('DELETE')
 
                             <button class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Seguro que quieres eliminar este equipo?')">
+                                onclick="return confirm('¿Seguro que quieres eliminar este equipo y todos sus componentes asociados?')">
                                 Eliminar
                             </button>
                         </form>

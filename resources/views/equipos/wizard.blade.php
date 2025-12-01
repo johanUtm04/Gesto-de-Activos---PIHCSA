@@ -1,3 +1,4 @@
+<!-- Vista no usada -->
 @extends('adminlte::page')
 
 @section('content')
@@ -25,17 +26,28 @@
         <div class="list-group">
 
             <a href="{{ route('equipos.wizard-ubicacion', $equipo) }}" class="list-group-item">
-                Registrar Ubicación 🗺️
+                Registrar Ubicación 
             </a>
 
             <a href="{{ route('equipos.wizard-monitores', $equipo) }}" class="list-group-item">
-                Registrar Monitor 🖥️
+                Registrar Monitor 
             </a>
 
             <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}" class="list-group-item">
-                Registrar Disco Duro 💾
+                Registrar Disco Duro 
             </a>
 
+            <a href="{{ route('equipos.wizard-ram', $equipo) }}" class="list-group-item">
+            Registrar una RAM
+            </a>
+
+            <a href="{{ route('equipos.wizard-periferico', $equipo) }}" class="list-group-item">
+            Registrar un periferico
+            </a>
+        
+            <a href="{{ route('equipos.wizard-procesador', $equipo) }}" class="list-group-item">
+            Registrar un Procesador
+            </a>
         </div>
 
         <br>

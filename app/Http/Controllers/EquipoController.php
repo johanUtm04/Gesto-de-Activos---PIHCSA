@@ -52,7 +52,7 @@ class EquipoController extends Controller
             'vida_util_estimada' => $request->vida_util_estimada,
         ]);
 
-        return redirect()->route('equipos.wizard', $equipo->id);
+        return redirect()->route('equipos.wizard-ubicacion', $equipo->id);
     }
 
 
