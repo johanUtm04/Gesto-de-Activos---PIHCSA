@@ -16,8 +16,41 @@ class PerifericoFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
-        ];
+    return [
+        'tipo' => $this->faker->randomElement([
+            'Mouse',
+            'Teclado',
+            'Audífonos',
+            'Bocinas',
+            'Micrófono',
+            'Webcam',
+            'Impresora',
+            'Scaner'
+        ]),
+
+        'marca' => $this->faker->randomElement([
+            'Logitech',
+            'HP',
+            'Dell',
+            'Microsoft',
+            'Genius',
+            'Razer',
+            'Corsair',
+            'Canon',
+            'Epson',
+            'Lenovo'
+        ]),
+
+        'serial' => strtoupper($this->faker->bothify('PER-####-??')),
+
+        'interface' => $this->faker->randomElement([
+            'USB-A',
+            'USB-C',
+            'Bluetooth',
+            'Wireless 2.4GHz',
+            'HDMI',
+            'DisplayPort'
+        ]),
+    ];
     }
 }
