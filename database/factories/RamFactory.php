@@ -21,7 +21,7 @@ class RamFactory extends Factory
             4, 8, 16, 32, 64
         ]),
 
-        'clock_mhz' => $this->faker->randomElement([
+        'clock_m,hz' => $this->faker->randomElement([
             2133, 2400, 2666, 3000, 3200, 3600, 4000
         ]),
 

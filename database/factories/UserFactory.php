@@ -26,8 +26,8 @@ class UserFactory extends Factory
     return [
         'name' => $this->faker->name(),
         'email' => $this->faker->unique()->safeEmail(),
-        'email_verified_at' => now(),
 
+        
         'rol' => $this->faker->randomElement([
             'ADMINISTRADOR',
             'SISTEMAS',
@@ -39,9 +39,8 @@ class UserFactory extends Factory
             'Contabilidad',
         ]),
 
-        'contacto' => $this->faker->phoneNumber(),
 
-        'status' => $this->faker->randomElement([
+        'estatus' => $this->faker->randomElement([
             'Activo',
             'Inactivo',
             'Suspendido'

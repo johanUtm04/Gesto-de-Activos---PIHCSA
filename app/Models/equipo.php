@@ -63,7 +63,7 @@ class Equipo extends Model
 
     public function discosDuros() 
     { 
-        return $this->hasMany(Disco_Duro::class, 'equipo_id'); 
+        return $this->hasMany(DiscoDuro::class, 'equipo_id'); 
     }
     
     public function rams() 

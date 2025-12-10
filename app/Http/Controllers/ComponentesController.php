@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Disco_Duro;
+use App\Models\DiscoDuro;
 use App\Models\Monitor;
 use App\Models\Periferico;
 use App\Models\Procesador;
@@ -43,7 +44,7 @@ class ComponentesController extends Controller
         }
         //DISCO_DURO
         if ($request->filled('disco_capacidad')) {
-            Disco_Duro::create([
+            DiscoDuro::create([
                 'equipo_id' => $equipo_id,
                 'capacidad' => $request->disco_capacidad,
                 'tipo_hdd_ssd' => $request->disco_tipo,
