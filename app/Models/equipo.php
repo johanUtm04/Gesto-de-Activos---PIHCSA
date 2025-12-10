@@ -5,40 +5,80 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// Asegúrate de incluir todos los modelos necesarios
+use App\Models\User; 
+use App\Models\Ubicacion; 
+use App\Models\Monitor;
+use App\Models\Disco_Duro; 
+use App\Models\Ram;
+use App\Models\Periferico;
+use App\Models\Procesador;
+
+
 class Equipo extends Model
 {
+    use HasFactory; 
 
     protected $fillable = [
-    'marca_equipo',
-    'tipo_equipo',
-    'serial',
-    'sistema_operativo',
-    'usuario_id',
-    'ubicacion_id',
-    'valor_inicial',
-    'fecha_adquisicion',
-    'vida_util_estimada',
+        'marca_equipo',
+        'tipo_equipo',
+        'serial',
+        'sistema_operativo',
+        'usuario_id',
+        'ubicacion_id',
+        'valor_inicial',
+        'fecha_adquisicion',
+        'vida_util_estimada',
     ];
 
-    // Relación con usuario
-    public function usuario() { return $this->belongsTo(User::class); }
+    // ----------------------------------------------------
+    // RELACIONES belongsTo (Este Equipo PERTENECE a uno)
+    // ----------------------------------------------------
 
-    // Relación con ubicación
-    public function ubicacion() { return $this->belongsTo(Ubicacion::class); }
+    // 1. Usuario (Acceso: $equipo->usuario->name)
+    public function usuario() 
+    { 
+        // Busca en la tabla 'users' usando 'usuario_id' de esta tabla
+        return $this->belongsTo(User::class, 'usuario_id'); 
+    }
 
-    // Relación 1 a 1
-    public function ram() { return $this->belongsTo(Ram::class); }
-    public function discoDuro() { return $this->belongsTo(Disco_Duro::class); }
-    public function monitor() { return $this->belongsTo(Monitor::class); }
+    // 2. Ubicación (Acceso: $equipo->ubicacion->nombre)
+    public function ubicacion() 
+    { 
+        // Busca en la tabla 'ubicaciones' usando 'ubicacion_id' de esta tabla
+        return $this->belongsTo(Ubicacion::class, 'ubicacion_id'); 
+    }
 
-    // Relación 1 a muchos
+    // ----------------------------------------------------
+    // RELACIONES hasMany (Este Equipo TIENE muchos - 1:N)
+    // ----------------------------------------------------
+
+    // Estas relaciones funcionan asumiendo que el campo 'equipo_id' está en las tablas hijas.
+    
+    public function monitores() 
+    { 
+        return $this->hasMany(Monitor::class, 'equipo_id'); 
+    }
+
+    public function discosDuros() 
+    { 
+        return $this->hasMany(Disco_Duro::class, 'equipo_id'); 
+    }
+    
+    public function rams() 
+    { 
+        return $this->hasMany(Ram::class, 'equipo_id'); 
+    }
+
     public function perifericos()
     {
-        return $this->belongsToMany(Periferico::class, 'equipo_periferico');
-    }
-    public function procesadores()
-    {
-    return $this->belongsToMany(Procesador::class, 'equipo_procesador');
+        // Se asume 1:N: la tabla 'perifericos' tiene el campo 'equipo_id'
+        return $this->hasMany(Periferico::class, 'equipo_id');
     }
 
+    public function procesadores()
+    {
+        // Se asume 1:N: la tabla 'procesadores' tiene el campo 'equipo_id'
+        return $this->hasMany(Procesador::class, 'equipo_id');
+    }
 }

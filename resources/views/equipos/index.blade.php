@@ -20,7 +20,7 @@
             </div>
         @endif
     @endforeach
-
+<div class="table-responsive">
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -31,17 +31,19 @@
                 <th>SO</th>
                 
                 <th>USUARIO</th> 
-                
                 <th>UBICACIÓN</th> 
                 
                 <th>Valor Inicial</th>
                 <th>Fecha Adq.</th>
                 <th>Vida Útil Estimada</th>
+                
                 <th>Monitores</th>
                 <th>Discos Duros</th>
                 <th>RAM</th>
-                <!-- <th>Perifericos</th>
-                <th>Procesadores</th> -->
+                <th>Periféricos</th>
+                <th>Procesadores</th>
+                
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -54,14 +56,16 @@
                     <td>{{ $equipo->serial }}</td>
                     <td>{{ $equipo->sistema_operativo }}</td>
 
+                    {{-- USUARIO --}}
                     <td>
                         <strong>{{ $equipo->usuario->name ?? 'Sin asignar' }}</strong>
                         <br>
                         <small>{{ $equipo->usuario->email ?? '-' }}</small>
                     </td>
 
+                    {{-- UBICACIÓN --}}
                     <td>
-                        <strong>{{ $equipo->ubicacion->nombre ?? 'Sin Monitor' }}</strong>
+                        <strong>{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}</strong>
                         <br>
                         <small>{{ $equipo->ubicacion->codigo ?? '-' }}</small>
                     </td>
@@ -69,30 +73,61 @@
                     <td>${{ number_format($equipo->valor_inicial, 2) }}</td>
                     <td>{{ $equipo->fecha_adquisicion }}</td>
                     <td>{{ $equipo->vida_util_estimada }}</td>
-                    <!-- MONITOR -->
+                    
                     <td>
-                        <strong>{{ $equipo->monitor->marca ?? 'Sin Monitor' }}</strong>
-                        <br>
-                        <small>{{ $equipo->monitor->serial ?? '-' }}</small>
+                        @if($equipo->monitores->isNotEmpty())
+                            <strong>{{ $equipo->monitores->count() }} Monitor(es)</strong>
+                            <br>
+                            <small>Marcas: {{ $equipo->monitores->pluck('marca')->implode(', ') }}</small>
+                        @else
+                            Sin Monitor
+                        @endif
                     </td>
-                    <!-- DISCO DURO -->
+                    
                     <td>
-                        <strong>{{ $equipo->discoDuro->marca ?? 'Sin discoDuro' }}</strong>
-                        <br>
-                        <small>{{ $equipo->discoDuro->serial ?? '-' }}</small>
+                        @if($equipo->discosDuros->isNotEmpty())
+                            <strong>{{ $equipo->discosDuros->count() }} Disco(s)</strong>
+                            <br>
+                            <small>Capacidad: {{ $equipo->discosDuros->pluck('capacidad')->implode(' + ') }}</small>
+                        @else
+                            Sin Disco Duro
+                        @endif
                     </td>
-                    <!-- RAM -->
+                    
                     <td>
-                        <strong>{{ $equipo->ram->marca ?? 'Sin ram' }}</strong>
-                        <br>
-                        <small>{{ $equipo->ram->serial ?? '-' }}</small>
+                        @if($equipo->rams->isNotEmpty())
+                            <strong>{{ $equipo->rams->count() }} Módulo(s)</strong>
+                            <br>
+                            <small>Total: {{ $equipo->rams->pluck('capacidad_gb') }} GB</small>
+                        @else
+                            Sin RAM
+                        @endif
+                    </td>
+                    
+                    <td>
+                        @if($equipo->perifericos->isNotEmpty())
+                            <strong>{{ $equipo->perifericos->count() }} Periférico(s)</strong>
+                            <br>
+                            <small>Tipos: {{ $equipo->perifericos->pluck('tipo')->implode(', ') }}</small>
+                        @else
+                            Sin Periférico
+                        @endif
+                    </td>
+                    
+                    <td>
+                        @if($equipo->procesadores->isNotEmpty())
+                            <strong>{{ $equipo->procesadores->count() }} Procesador(es)</strong>
+                            <br>
+                            <small>Marca: {{ $equipo->procesadores->first()->marca ?? 'N/A' }}</small>
+                        @else
+                            Sin Procesador
+                        @endif
                     </td>
 
-                    
-                    <!-- Acciones -->
+                    {{-- Acciones --}}
                     <td>
-                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Editar</a>
-                        
+                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Ver</a>
+                         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Editar</a>
                         <form action="{{ route('equipos.destroy', $equipo) }}" 
                               method="POST" 
                               style="display:inline-block;">
@@ -104,9 +139,11 @@
                                 Eliminar
                             </button>
                         </form>
+                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Registrar un mantenimiento</a>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    </div>
 @stop
