@@ -16,8 +16,20 @@ class RamFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
-        ];
+    return [
+        'capacidad_gb' => $this->faker->randomElement([
+            4, 8, 16, 32, 64
+        ]),
+
+        'clock_mhz' => $this->faker->randomElement([
+            2133, 2400, 2666, 3000, 3200, 3600, 4000
+        ]),
+
+        'tipo_chz' => $this->faker->randomElement([
+            'DDR3',
+            'DDR4',
+            'DDR5'
+        ]),
+    ];
     }
 }

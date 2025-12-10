@@ -16,8 +16,27 @@ class MonitorFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
-        ];
+    return [
+
+        'marca' => $this->faker->randomElement([
+            'Dell', 'HP', 'Samsung', 'Lenovo', 'Acer', 'Asus', 'LG', 'ViewSonic'
+        ]),
+
+
+        'serial' => strtoupper($this->faker->bothify('MON-####-??')),
+
+
+        'escala_pulgadas' => $this->faker->randomElement([
+            19, 21.5, 22, 23, 24, 27, 32
+        ]),
+
+        'interface' => $this->faker->randomElement([
+            'HDMI',
+            'VGA',
+            'DVI',
+            'DisplayPort',
+            'USB-C'
+        ]),
+    ];
     }
 }
