@@ -19,6 +19,7 @@ class Equipo extends Model
 {
     use HasFactory; 
 
+    //Campos asignables, es decir, los campos que se pueden llamar de manera masiva
     protected $fillable = [
         'marca_equipo',
         'tipo_equipo',
@@ -72,13 +73,11 @@ class Equipo extends Model
 
     public function perifericos()
     {
-        // Se asume 1:N: la tabla 'perifericos' tiene el campo 'equipo_id'
         return $this->hasMany(Periferico::class, 'equipo_id');
     }
 
     public function procesadores()
     {
-        // Se asume 1:N: la tabla 'procesadores' tiene el campo 'equipo_id'
         return $this->hasMany(Procesador::class, 'equipo_id');
     }
 }
