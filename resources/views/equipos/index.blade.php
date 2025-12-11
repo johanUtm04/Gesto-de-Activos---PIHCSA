@@ -125,22 +125,24 @@
                     </td>
 
                     {{-- Acciones --}}
-                    <td>
-                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Ver</a>
-                         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Editar</a>
+                    <div>
+                    <td style="border: 2px solid green">
+                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary">Ver</a>
+                         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-warning">Editar</a>
                         <form action="{{ route('equipos.destroy', $equipo) }}" 
                               method="POST" 
                               style="display:inline-block;">
                             @csrf
                             @method('DELETE')
 
-                            <button class="btn btn-danger btn-sm"
+                            <button class="btn btn-outline-danger"
                                 onclick="return confirm('¿Seguro que quieres eliminar este equipo y todos sus componentes asociados?')">
                                 Eliminar
                             </button>
                         </form>
-                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-primary btn-sm">Registrar un mantenimiento</a>
+                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-info">Registrar un mantenimiento</a>
                     </td>
+                    </div>
                 </tr>
             @endforeach
         </tbody>
