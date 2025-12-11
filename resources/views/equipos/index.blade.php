@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Equipos')
+@section('title', 'Gestion de Activos')
 
 @section('content_header')
     <h1>Lista de Equipos</h1>
@@ -22,31 +22,33 @@
     @endforeach
 <div class="table-responsive">
     <table class="table table-bordered table-striped">
+        <!-- Encabezados -->
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Marca</th>
-                <th>Tipo</th>
-                <th>Serial</th>
-                <th>SO</th>
-                
-                <th>USUARIO</th> 
-                <th>UBICACIÓN</th> 
-                
-                <th>Valor Inicial</th>
-                <th>Fecha Adq.</th>
-                <th>Vida Útil Estimada</th>
-                
-                <th>Monitores</th>
-                <th>Discos Duros</th>
-                <th>RAM</th>
-                <th>Periféricos</th>
-                <th>Procesadores</th>
-                
-                <th>Acciones</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">ID</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #0077CC;font-size:14px;font-weight:600;">Marca</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #005FB8;font-size:14px;font-weight:600;">Tipo</th>
+
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Serial</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #0077CC;font-size:14px;font-weight:600;">SO</th>
+
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #005FB8;font-size:14px;font-weight:600;">USUARIO</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">UBICACIÓN</th>
+
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #0077CC;font-size:14px;font-weight:600;">Valor Inicial</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #005FB8;font-size:14px;font-weight:600;">Fecha Adq.</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Vida Útil Estimada</th>
+
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #0077CC;font-size:14px;font-weight:600;">Monitores</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #005FB8;font-size:14px;font-weight:600;">Discos Duros</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">RAM</th>
+
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #0077CC;font-size:14px;font-weight:600;">Periféricos</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #005FB8;font-size:14px;font-weight:600;">Procesadores</th>
+
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Acciones</th>
             </tr>
         </thead>
-
         <tbody>
             @foreach($equipos as $equipo)
                 <tr>
