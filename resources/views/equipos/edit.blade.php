@@ -16,7 +16,7 @@
 
     <div class="row">
 
-        {{-- LEFT SIDE – CURRENT DATA --}}
+        {{-- LEFT SIDE  CURRENT DATA --}}
         <div class="col-md-6">
             <div class="card p-3" style="background:#0f0f0f; color:white; border:1px solid #333;">
                 <h4 class="mb-3 text-info">Datos Actuales</h4>
@@ -46,10 +46,26 @@
                 <hr>
 
                 <p><strong>Vida Útil Estimada:</strong><br> {{ $equipo->vida_util_estimada }}</p>
+
+                <h4 class="mb-3 text-info">Otros datos</h4>
+
+                <div class="perifericos-list-container mb-4">
+                    <h4>Periféricos Asociados ({{ $equipo->perifericos->count() }})</h4>
+
+                    @forelse($equipo->perifericos as $periferico)
+                    <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
+                        <span class="text-dark">
+                        <strong>{{ $periferico->tipo }}</strong> (Serial: {{ $periferico->serial }})
+                        </span>
+                    </div>
+                    @empty
+                    <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
+                    @endforelse
+                </div>
             </div>
         </div>
 
-        {{-- RIGHT SIDE – FORM TO UPDATE DATA --}}
+        {{-- RIGHT SIDE  FORM TO UPDATE DATA --}}
         <div class="col-md-6">
             <div class="card p-3" style="background:#ffffff; border:1px solid #ccc;">
                 <h4 class="mb-3 text-primary">Datos Modificados</h4>
@@ -127,7 +143,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block mt-3">
-                        Guardar Cambios
+                        Guardar Cambios (Involucrara un registro en el historial)
                     </button>
                 </form>
             </div>

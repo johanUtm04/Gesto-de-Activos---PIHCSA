@@ -106,25 +106,25 @@
         <thead>
             <tr>
                 <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">ID</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #cc0000ff;font-size:14px;font-weight:600;">Marca</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #000000ff;font-size:14px;font-weight:600;">Tipo</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Marca</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Tipo</th>
 
                 <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Serial</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #cc0000ff;font-size:14px;font-weight:600;">SO</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">SO</th>
 
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #000000ff;font-size:14px;font-weight:600;">USUARIO</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">USUARIO</th>
                 <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">UBICACIÓN</th>
 
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #cc0000ff;font-size:14px;font-weight:600;">Valor Inicial</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #000000ff;font-size:14px;font-weight:600;">Fecha Adq.</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Valor Inicial</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Fecha Adq.</th>
                 <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Vida Útil Estimada</th>
 
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #cc0000ff;font-size:14px;font-weight:600;">Monitores</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #000000ff;font-size:14px;font-weight:600;">Discos Duros</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Monitores</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Discos Duros</th>
                 <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">RAM</th>
 
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #cc0000ff;font-size:14px;font-weight:600;">Periféricos</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #000000ff;font-size:14px;font-weight:600;">Procesadores</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Periféricos</th>
+                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Procesadores</th>
 
                 <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Acciones</th>
             </tr>
