@@ -209,7 +209,7 @@
                     {{-- Acciones --}}
                     <div>
                     <td style="border: 2px solid green">
-                        <button class="btn btn-primary"
+                        <button class="btn btn-outline-primary"
                         data-bs-toggle="modal" 
                         data-bs-target="#modalDetalle"
                         data-id = "{{ $equipo->id }}"
