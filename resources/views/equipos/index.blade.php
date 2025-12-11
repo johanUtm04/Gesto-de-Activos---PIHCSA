@@ -40,25 +40,61 @@
                     <div class="row mb-3">
                         <div class="col-3 fw-bold">MARCA:</div>
                         <div class="col" id="modal_marca"></div>
-                    </div>                    <div class="row mb-3">
+                    </div>                    
+                    <div class="row mb-3">
                         <div class="col-3 fw-bold">TIPO:</div>
                         <div class="col" id="modal_tipo"></div>
-                    </div>                    <div class="row mb-3">
+                    </div>                    
+                    <div class="row mb-3">
                         <div class="col-3 fw-bold">SERIAL:</div>
                         <div class="col" id="modal_serial"></div>
-                    </div>                    <div class="row mb-3">
+                    </div>                    
+                    <div class="row mb-3">
                         <div class="col-3 fw-bold">SO:</div>
                         <div class="col" id="modal_so"></div>
                     </div>
-
-                
-</div>
-            
-
-
-
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold">USUARIO:</div>
+                        <div class="col" id="modal_usuario"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold">UBICACION:</div>
+                        <div class="col" id="modal_ubicacion"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold">VALOR INICIAL:</div>
+                        <div class="col" id="modal_valo_inicial"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold">FECHA DE ADQUISISCION:</div>
+                        <div class="col" id="modal_fecha_adquisicion"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold">VIDA UTIL ESTIMADA:</div>
+                        <div class="col" id="modal_vida_util"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold" >MONITORES:</div>
+                        <div class="col" id="modal_monitores"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold" >DISCOS DUROS:</div>
+                        <div class="col" id="modal_discos_duros"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold" >RAM</div>
+                        <div class="col" id="modal_ram"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold" >PERIFERICOS:</div>
+                        <div class="col" id="modal_perifericos"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3 fw-bold" >PROCESADORES</div>
+                        <div class="col" id="modal_procesadores"></div>
+                    </div>
+                </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -124,7 +160,7 @@
                         @if($equipo->monitores->isNotEmpty())
                             <strong>{{ $equipo->monitores->count() }} Monitor(es)</strong>
                             <br>
-                            <small>Marcas: {{ $equipo->monitores->pluck('marca')->implode(', ') }}</small>
+                            <small>Marca: {{ $equipo->monitores->pluck('marca')->implode(', ') }}</small>
                         @else
                             Sin Monitor
                         @endif
@@ -178,7 +214,19 @@
                         data-bs-target="#modalDetalle"
                         data-id = "{{ $equipo->id }}"
                         data-marca = "{{$equipo ->marca_equipo ?? '-' }}"
-
+                        data-tipo = "{{$equipo -> tipo_equipo }}"
+                        data-serial = "{{$equipo -> serial }}"
+                        data-so = "{{ $equipo->sistema_operativo }}"
+                        data-usuario = "{{ $equipo->usuario->name ?? 'Sin asignar' }}"
+                        data-ubicacion = "{{ $equipo->ubicacion->nombre ?? 'sin ubicacion' }}"
+                        data-valo-inicial = " {{ $equipo->valor_inicial ?? 'sin asignar' }}"
+                        data-fecha-adquisicion = " {{ $equipo->fecha_adquisicion ?? 'sin asignar' }} "
+                        data-vida-util = " {{ $equipo->vida_util_estimada ?? 'sin asignar'}}"
+                        data-monitores = "{{ $equipo->monitores->count() }}"
+                        data-discos-duros = "{{ $equipo->discosDuros->count() }}"
+                        data-ram = "{{ $equipo->rams->count()}}"
+                        data-perifericos = "{{  $equipo->perifericos->pluck('tipo')->implode(', ')  }}"
+                        data-procesadores = " {{ $equipo->procesadores->count() }}"
                         >
                         Ver detalles
                         </button>
@@ -215,7 +263,19 @@
 
         document.getElementById('modal_id').textContent = button.getAttribute('data-id');
         document.getElementById('modal_marca').textContent = button.getAttribute('data-marca');
-        
+        document.getElementById('modal_tipo').textContent = button.getAttribute('data-tipo');
+        document.getElementById('modal_serial').textContent = button.getAttribute('data-serial');
+        document.getElementById('modal_so').textContent = button.getAttribute('data-so');
+        document.getElementById('modal_usuario').textContent = button.getAttribute('data-usuario');
+        document.getElementById('modal_ubicacion').textContent= button.getAttribute('data-ubicacion');
+        document.getElementById('modal_valo_inicial').textContent = button.getAttribute('data-valo-inicial');
+        document.getElementById('modal_fecha_adquisicion').textContent = button.getAttribute('data-fecha-adquisicion');
+        document.getElementById('modal_vida_util').textContent = button.getAttribute('data-vida-util');
+        document.getElementById('modal_monitores').textContent = button.getAttribute('data-monitores');
+        document.getElementById('modal_discos_duros').textContent = button.getAttribute('data-discos-duros');
+        document.getElementById('modal_ram').textContent = button.getAttribute('data-ram');
+        document.getElementById('modal_perifericos').textContent = button.getAttribute('data-perifericos');
+        document.getElementById('modal_procesadores').textContent = button.getAttribute('data-procesadores');
         });
         </script>
 
