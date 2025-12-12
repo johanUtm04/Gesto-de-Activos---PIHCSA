@@ -64,6 +64,28 @@
                         @endforelse
                     </div>
                     <!-- RAMS -->
+                    <div class="perifericos-list-container mb-4">
+                        <h4>Rams Asociados ({{ $equipo->rams->count() }})</h4>
+                        @forelse($equipo->rams as $ram)
+                        <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
+                            <span class="text-dark">
+                            <strong> Capacidad en GB: </strong>{{ $ram->capacidad_gb }}
+                            <strong> Clock: </strong>{{ $ram->clock_mhz }}
+                            <strong> Tipo CHz: </strong>{{ $ram->tipo_chz }}
+                            </span>
+                        </div>
+                        @empty
+                        <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
+                        @endforelse
+                    </div>
+
+
+
+
+
+
+
+                    
 
                 </div>
             </div>
@@ -154,7 +176,7 @@
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
                     <!-- Perifericos -->
                      <h4 class="mb-3 text-info">Otros datos</h4>
-                    <div id="perifericos-container">
+                    <div id="perifericos-container  ">
                         <!-- $equipos->perifericos es similar a hacer esto
                         [
                             Periferico{id: 10, tipo: 'USB', serial: 'ABC001'},
