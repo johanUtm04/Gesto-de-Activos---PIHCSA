@@ -5,6 +5,7 @@ use App\Models\Equipo;
 use App\Models\Monitor;
 use App\Models\Ubicacion;
 use App\Models\discos_duros;
+use App\Models\Periferico;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -77,9 +78,50 @@ class EquipoController extends Controller
             'valor_inicial' => 'required|numeric|min:0|max:999999.99',
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
+
+            //Campos extra 
+            
+
+
+
             ]);
 
         $equipo->update($request->all());
+
+
+if ($request->has('perifericos')) {
+        foreach ($request->input('perifericos') as $peripheralData) {
+            
+            // Si el periférico tiene un ID, es un registro existente
+            if (isset($peripheralData['id'])) {
+                $periferico = Periferico::find($peripheralData['id']);
+                
+                if ($periferico) {
+                    // Si los campos de tipo Y serial están vacíos, se asume que se desea eliminar (Opción de borrado)
+                    if (empty($peripheralData['tipo']) && empty($peripheralData['serial'])) {
+                        $periferico->delete(); // Eliminar el registro
+                    } else {
+                        // Si tienen datos, actualizarlos
+                        $periferico->update([
+                            'tipo' => $peripheralData['tipo'],
+                            'serial' => $peripheralData['serial'],
+                            // Agrega cualquier otro campo aquí
+                        ]);
+                    }
+                }
+            } 
+            // Si NO tiene ID y al menos un campo está lleno, es un nuevo periférico
+            elseif (!empty($peripheralData['tipo']) || !empty($peripheralData['serial'])) {
+                $equipo->perifericos()->create([
+                    'tipo' => $peripheralData['tipo'],
+                    'serial' => $peripheralData['serial'],
+                    'equipo_id' => $equipo->id, // Aunque la relación lo hace automático, es bueno ser explícito.
+                    // Agrega cualquier otro campo aquí
+                ]);
+            }
+        }
+    }
+
 
         return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');
     }

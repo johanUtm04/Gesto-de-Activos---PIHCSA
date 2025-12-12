@@ -145,6 +145,33 @@
                     <button type="submit" class="btn btn-primary btn-block mt-3">
                         Guardar Cambios (Involucrara un registro en el historial)
                     </button>
+                    
+
+                <div id="perifericos-container">
+                    @foreach($equipo->perifericos as $index => $periferico)
+                    <div class="periferico-item card p-3 mb-3 border-secondary">
+                        <h6 class="text-secondary">Periférico #{{ $index + 1 }} - ID: {{ $periferico->id }}</h6>
+
+                        <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}">
+
+                        <div class="form-group">
+                            <label>Tipo / Marca</label>
+                            <input type="text" name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm"
+                                placeholder="Ej: Teclado, Monitor, Mouse"
+                                value="{{ old('perifericos.' . $index . '.tipo', $periferico->tipo ?? '') }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Serial</label>
+                            <input type="text" name="perifericos[{{ $index }}][serial]" class="form-control form-control-sm"
+                                placeholder="Serial del periférico"
+                                value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
+                        </div>
+                        <hr>
+                    </div>
+                    @endforeach
+
+
                 </form>
             </div>
         </div>

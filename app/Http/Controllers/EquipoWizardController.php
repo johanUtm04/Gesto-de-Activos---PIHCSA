@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Disco_Duro;
+use App\Models\DiscoDuro;
 use Illuminate\Http\Request;
 use App\Models\Equipo;
 use App\Models\Monitor;
@@ -83,7 +84,7 @@ class EquipoWizardController extends Controller
             'interface' => 'nullable|string',
         ]);
 
-        Disco_Duro::create([
+        DiscoDuro::create([
             'equipo_id' => $equipo->id,
             'capacidad' => $request->capacidad,
             'tipo_hdd_ssd' => $request->tipo_hdd_ssd,
