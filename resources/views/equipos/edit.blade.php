@@ -79,7 +79,20 @@
                         @endforelse
                     </div>
 
-
+                    <!-- Procesadores -->
+                    <div class="perifericos-list-container mb-4">
+                        <h4>Procesadores Asociados ({{ $equipo->procesadores->count() }})</h4>
+                        @forelse($equipo->procesadores as $procesador)
+                        <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
+                            <span class="text-dark">
+                            <strong> Marca: </strong>{{ $procesador->marca }}
+                            <strong> Clock: </strong>{{ $procesador->descripcion_tipo }}
+                            </span>
+                        </div>
+                        @empty
+                        <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
+                        @endforelse
+                    </div>
 
 
 
@@ -176,6 +189,8 @@
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
                     <!-- Perifericos -->
                      <h4 class="mb-3 text-info">Otros datos</h4>
+
+                     <h4 class="mb-3 text-info">Perifericos :v</h4>
                     <div id="perifericos-container  ">
                         <!-- $equipos->perifericos es similar a hacer esto
                         [
@@ -216,7 +231,7 @@
                         </div>
                         @endforeach
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
-
+                    <h4 class="mb-3 text-info">Ramsiñas</h4>
                         <div id="rams-container">
                         @foreach($equipo->rams as $index => $ram)
                         <!-- Capacidad en GB -->
@@ -246,11 +261,35 @@
                             </div>                           
                         
                         </div>
-                       
                         @endforeach
 
- </div>
 
+                    <h4 class="mb-3 text-info">Procesadores</h4>
+                        <div id="procesadores-container">
+                        @foreach($equipo->procesadores as $index => $procesador)
+                            <div class="procesador item card p-3 mb-3 border-secondary">
+                            <h6 class="text-secondary">Procesador #{{ $index + 1 }} </h6>
+                             <input type="hidden" name="procesadores[{{ $index }}][id]" value="{{ $procesador->id }}">
+                            <div class="form-group">
+                                <label>Marca</label>
+                                    <input type="text" name="procesadores[{{$index}}][marca]" id=""
+                                    placeholder="waza"
+                                    value=" {{old('procesadores.' . $index . '.marca', $procesador->marca ?? '')}} "
+                                    >
+                            </div>
+                            <div class="form-group">
+                                <label>Descripcion </label>
+                                <input type="text" name="procesadores[{{$index}}][descripcion_tipo]"
+                                placeholder="waza"
+                                value=" {{old('procesadore.' . $index . '.descripcion_tipo ', $procesador->descripcion_tipo ?? '')}} "
+                                >
+                            </div>                           
+                        
+                        </div>
+                        @endforeach
+                        
+                        
+                            </div>
                     </form>
                 </div>
             </div>

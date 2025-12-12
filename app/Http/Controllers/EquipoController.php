@@ -6,6 +6,7 @@ use App\Models\Monitor;
 use App\Models\Ubicacion;
 use App\Models\discos_duros;
 use App\Models\Periferico;
+use App\Models\Procesador;
 use App\Models\Ram;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -148,13 +149,15 @@ if ($request->has('rams')) {
 
                     //Si los espacios de la cajita ambos estan vacios 
                     //la mauqina interpreta que como estan vacios se borraron, los borramos
-                    if (empty($peripheralData['capacidad_gb'])) {
+                    if (empty($peripheralData['capacidad_gb']) && empty($peripheralData['clock_mhz']) && empty($periphereData['tipo_chz'])) {
                         $ram->delete(); 
-                    } else {    //Si no estan vacion lo aignamos o bien solo lo actualizamod
+                    } else {
 
                         //Caso contrario solo actualizamos el registro existente
                         $ram->update([
                             'capacidad_gb' => $peripheralData['capacidad_gb'],
+                            'clock_mhz' => $peripheralData['clock_mhz'],
+                            'tipo_chz' => $peripheralData['tipo_chz'],
                         ]);
                     }
                 }
@@ -163,6 +166,37 @@ if ($request->has('rams')) {
     }
 
 
+    //El formualario envio el arreglo de procesadores
+if ($request->has('procesadores')) {
+    //Recorremos cada ram enviado por el formulario $peripheralData es como una cajita 
+        foreach ($request->input('procesadores') as $peripheralData) {
+            
+            // Si la ram tiene un ID, es un registro existente, entramos aqui 
+            if (isset($peripheralData['id'])) {
+
+                //La guardamos en una variable
+                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
+                //Lo trae de la DB 
+                $procesador = Procesador::find($peripheralData['id']);
+                
+            
+                if ($procesador) {
+                    //Si los espacios de la cajita ambos estan vacios 
+                    //la mauqina interpreta que como estan vacios se borraron, los borramos
+                    if (empty($peripheralData['marca']) && empty($peripheralData['descripcion_tipo'])) {
+                        $procesador->delete(); 
+                    } else {
+
+                        //Caso contrario solo actualizamos el registro existente
+                        $procesador->update([
+                            'descripcion_tipo' => $peripheralData['descripcion_tipo'],
+                            'marca' => $peripheralData['marca'],
+                        ]);
+                    }
+                }
+            } 
+        }
+    }
 
 
         return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');
