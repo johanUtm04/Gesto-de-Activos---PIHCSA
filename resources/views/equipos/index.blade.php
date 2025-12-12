@@ -181,7 +181,8 @@
                             <strong>{{ $equipo->rams->count() }} Módulo(s)</strong>
                             <br>
                             <small>Capacidad: {{ $equipo->rams->pluck('capacidad_gb') }} GB</small> <br>
-                            <small>Clock: {{ $equipo->rams->pluck('clock_mhz') }} MHz</small>
+                            <small>Clock: {{ $equipo->rams->pluck('clock_mhz') }} MHz</small> <br>
+                            <small>Tipo de CHZ: {{ $equipo->rams->pluck('tipo_chz') }} MHz</small>
 
                         @else
                             Sin RAM

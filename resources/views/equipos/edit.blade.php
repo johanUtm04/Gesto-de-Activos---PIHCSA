@@ -49,6 +49,7 @@
 
                     <h4 class="mb-3 text-info">Otros datos</h4>
 
+                    <!-- Perifericos -->
                     <div class="perifericos-list-container mb-4">
                         <h4>Periféricos Asociados ({{ $equipo->perifericos->count() }})</h4>
 
@@ -62,6 +63,8 @@
                         <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
                         @endforelse
                     </div>
+                    <!-- RAMS -->
+
                 </div>
             </div>
 
@@ -150,6 +153,7 @@
                     <!-- Editables extra -->
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
                     <!-- Perifericos -->
+                     <h4 class="mb-3 text-info">Otros datos</h4>
                     <div id="perifericos-container">
                         <!-- $equipos->perifericos es similar a hacer esto
                         [
@@ -211,12 +215,19 @@
                                     value=" {{old('rams.' . $index . '.clock_mhz', $ram->clock_mhz ?? '')}} "
                                     >
                             </div>
-                            
-                            </div>
+                            <div class="form-group">
+                                <label>Tipo Chz</label>
+                                <input type="text" name="rams[{{$index}}][tipo_chz]"
+                                placeholder="waza"
+                                value=" {{old('rams.' . $index . '.tipo_chz ', $ram->tipo_chz ?? '')}} "
+                                >
+                            </div>                           
+                        
                         </div>
+                       
                         @endforeach
 
-
+ </div>
 
                     </form>
                 </div>
