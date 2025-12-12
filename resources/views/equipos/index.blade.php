@@ -180,7 +180,9 @@
                         @if($equipo->rams->isNotEmpty())
                             <strong>{{ $equipo->rams->count() }} Módulo(s)</strong>
                             <br>
-                            <small>Total: {{ $equipo->rams->pluck('capacidad_gb') }} GB</small>
+                            <small>Capacidad: {{ $equipo->rams->pluck('capacidad_gb') }} GB</small> <br>
+                            <small>Clock: {{ $equipo->rams->pluck('clock_mhz') }} MHz</small>
+
                         @else
                             Sin RAM
                         @endif

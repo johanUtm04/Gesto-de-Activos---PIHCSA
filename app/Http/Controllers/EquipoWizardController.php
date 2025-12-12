@@ -113,7 +113,7 @@ class EquipoWizardController extends Controller
         Ram::create([
             'equipo_id' => $equipo->id,
             'capacidad_gb' => $request->capacidad_gb,
-            'clock_m,hz' => $request->clock_m,
+            'clock_mhz' => $request->clock_m,
             'tipo_chz' => $request->tipo_chz,
         ]);
 

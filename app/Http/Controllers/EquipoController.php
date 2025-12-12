@@ -6,6 +6,7 @@ use App\Models\Monitor;
 use App\Models\Ubicacion;
 use App\Models\discos_duros;
 use App\Models\Periferico;
+use App\Models\Ram;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -79,48 +80,89 @@ class EquipoController extends Controller
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
 
-            //Campos extra 
-            
-
-
-
             ]);
 
         $equipo->update($request->all());
 
-
+//El formualario envio el arreglo de perifericos
 if ($request->has('perifericos')) {
+    //Recorremos cada periferico enviado por el formulario $peripheralData es como una cajita 
         foreach ($request->input('perifericos') as $peripheralData) {
             
-            // Si el periférico tiene un ID, es un registro existente
+            // Si el periférico tiene un ID, es un registro existente, entramos aqui 
             if (isset($peripheralData['id'])) {
+
+                //La guardamos en una variable
+                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
+                //Lo trae de la DB 
                 $periferico = Periferico::find($peripheralData['id']);
                 
+            
                 if ($periferico) {
-                    // Si los campos de tipo Y serial están vacíos, se asume que se desea eliminar (Opción de borrado)
+
+
+                    //Si los espacios de la cajita ambos estan vacios 
+                    //la mauqina interpreta que como estan vacios se borraron, los borramos
                     if (empty($peripheralData['tipo']) && empty($peripheralData['serial'])) {
-                        $periferico->delete(); // Eliminar el registro
-                    } else {
-                        // Si tienen datos, actualizarlos
+                        $periferico->delete(); 
+                    } else {    //Si no estan vacion lo aignamos o bien solo lo actualizamod
+
+                        //Caso contrario solo actualizamos el registro existente
                         $periferico->update([
                             'tipo' => $peripheralData['tipo'],
                             'serial' => $peripheralData['serial'],
-                            // Agrega cualquier otro campo aquí
+
                         ]);
                     }
                 }
             } 
+
             // Si NO tiene ID y al menos un campo está lleno, es un nuevo periférico
             elseif (!empty($peripheralData['tipo']) || !empty($peripheralData['serial'])) {
                 $equipo->perifericos()->create([
                     'tipo' => $peripheralData['tipo'],
                     'serial' => $peripheralData['serial'],
                     'equipo_id' => $equipo->id, // Aunque la relación lo hace automático, es bueno ser explícito.
-                    // Agrega cualquier otro campo aquí
                 ]);
             }
         }
     }
+
+
+//El formualario envio el arreglo de rams
+if ($request->has('rams')) {
+    //Recorremos cada ram enviado por el formulario $peripheralData es como una cajita 
+        foreach ($request->input('rams') as $peripheralData) {
+            
+            // Si la ram tiene un ID, es un registro existente, entramos aqui 
+            if (isset($peripheralData['id'])) {
+
+                //La guardamos en una variable
+                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
+                //Lo trae de la DB 
+                $ram = Ram::find($peripheralData['id']);
+                
+            
+                if ($ram) {
+
+
+                    //Si los espacios de la cajita ambos estan vacios 
+                    //la mauqina interpreta que como estan vacios se borraron, los borramos
+                    if (empty($peripheralData['capacidad_gb'])) {
+                        $ram->delete(); 
+                    } else {    //Si no estan vacion lo aignamos o bien solo lo actualizamod
+
+                        //Caso contrario solo actualizamos el registro existente
+                        $ram->update([
+                            'capacidad_gb' => $peripheralData['capacidad_gb'],
+                        ]);
+                    }
+                }
+            } 
+        }
+    }
+
+
 
 
         return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');

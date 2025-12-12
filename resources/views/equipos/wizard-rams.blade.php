@@ -16,7 +16,7 @@
         <div class="mb-3">
             <label>Clock_m hz</label>
             <input type="text" class="form-control" name="clock_m" value="{{ old('clock_m') }}">
-            @error('clock_m,hz') <span class="text-danger">{{ $message }}</span> @enderror
+            @error('clock_mhz') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-3">

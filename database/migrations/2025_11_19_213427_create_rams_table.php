@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('equipo_id')->constrained('equipos');
 
             $table->string('capacidad_gb');
-            $table->string('clock_m,hz')->nullable();
+            $table->string('clock_mhz')->nullable();
             $table->string('tipo_chz')->nullable();
             $table->timestamps();
         });
