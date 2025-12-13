@@ -123,7 +123,7 @@ if ($request->has('perifericos')) {
                 $equipo->perifericos()->create([
                     'tipo' => $peripheralData['tipo'],
                     'serial' => $peripheralData['serial'],
-                    'equipo_id' => $equipo->id, // Aunque la relación lo hace automático, es bueno ser explícito.
+                    'equipo_id' => $equipo->id, 
                 ]);
             }
         }
@@ -199,7 +199,42 @@ if ($request->has('procesadores')) {
     }
 
 
-        return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');
+//Si se envia el arreglo de monitores
+if ($request->has('monitores')) {
+    //recorremos ese arreglo
+        foreach ($request->input('monitores') as $peripheralData) {
+            
+            // Si la ram tiene un ID, es un registro existente, entramos aqui 
+            if (isset($peripheralData['id'])) {
+                //La guardamos en una variable
+                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
+                //Lo trae de la DB 
+                $monitor = Monitor::find($peripheralData['id']);
+                
+            
+                if ($monitor) {
+                    //Si los espacios de la cajita ambos estan vacios 
+                    //la mauqina interpreta que como estan vacios se borraron, los borramos
+                    if (empty($peripheralData['marca']) && empty($peripheralData['serial']) && empty($peripheralData['escala_pulgadas']) && empty($peripheralData['interface'])) {
+                        $monitor->delete(); 
+                    } else {
+
+                        //Caso contrario solo actualizamos el registro existente
+                        $monitor->update([
+                            'marca' => $peripheralData['marca'],
+                            'serial' => $peripheralData['serial'],
+                            'escala_pulgadas' => $peripheralData['escala_pulgadas'],
+                            'interface' => $peripheralData['interface'],
+                        ]);
+                    }
+                }
+            } 
+        }
+    }
+
+
+
+    return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');
     }
 
     //function to delete some 'equipo'

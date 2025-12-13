@@ -52,7 +52,6 @@
                     <!-- Perifericos -->
                     <div class="perifericos-list-container mb-4">
                         <h4>Periféricos Asociados ({{ $equipo->perifericos->count() }})</h4>
-
                         @forelse($equipo->perifericos as $periferico)
                         <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
                             <span class="text-dark">
@@ -63,6 +62,7 @@
                         <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
                         @endforelse
                     </div>
+
                     <!-- RAMS -->
                     <div class="perifericos-list-container mb-4">
                         <h4>Rams Asociados ({{ $equipo->rams->count() }})</h4>
@@ -95,7 +95,41 @@
                     </div>
 
 
+                    <!-- Monitores -->
+                    <div class="perifericos-list-container mb-4">
+                        <!-- Contar Relaciones -->
+                        <h4>Monitores Asociados ({{ $equipo->monitores->count() }})</h4>
+                        <!-- Recorre una lista de relaciones con una variable $ -->
+                        @forelse($equipo->monitores as $monitor)
+                        <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
+                            <span class="text-dark">
+                            <!-- Mostrar campos de la relacion, o bien de la tabla -->
+                            <strong> Marca: </strong>{{ $monitor->marca }}
+                            <strong> serial: </strong>{{ $monitor->serial }}
+                            <strong> escala_pulgadas: </strong>{{ $monitor->escala_pulgadas }}
+                            <strong> interface: </strong>{{ $monitor->interface }}
+                            </span>
+                        </div>
+                        @empty
+                        <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
+                        @endforelse
+                    </div>
 
+                    <!-- Discos Duros -->
+                    <div class="perifericos-list-container mb-4">
+                        <h4>Discos Duros Asociados {{ $equipo->discosDuros->count()}}</h4>
+                        @forelse($equipo->discosDuros as $disco_duro)
+                            <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row" >
+                                <span class="text-dark">
+                                <strong>Capacidad del Disco Duro</strong>{{ $disco_duro->capacidad }}
+                                <strong>Tipo de HDD/SSD</strong> {{ $disco_duro->tipo_hdd_ssd }}
+                                <strong>Interface </strong> {{ $disco_duro->interface }}
+                                </span>
+                            </div>
+                        @empty
+                        <p class="text-secondary">Este equipo no tiene Discos Duros asociados.</p>
+                        @endforelse
+                    </div>
 
 
                     
@@ -281,14 +315,61 @@
                                 <label>Descripcion </label>
                                 <input type="text" name="procesadores[{{$index}}][descripcion_tipo]"
                                 placeholder="waza"
-                                value=" {{old('procesadore.' . $index . '.descripcion_tipo ', $procesador->descripcion_tipo ?? '')}} "
+                                value=" {{old('procesadores.' . $index . '.descripcion_tipo ', $procesador->descripcion_tipo ?? '')}} "
                                 >
                             </div>                           
                         
                         </div>
                         @endforeach
                         
-                        
+
+
+                    <!-- Mostrar Editables -->
+                    <h4 class="mb-3 text-info">Monitores</h4>
+                        <div id="monitores-container">
+                        <!-- Recorrer relacion y sumar un contador -->
+                        @foreach($equipo->monitores as $index => $monitor)
+                            <div class="monitor item card p-3 mb-3 border-secondary">
+                            <!-- Ir contando los Monitores -->
+                            <h6 class="text-secondary">Monitor #{{ $index + 1 }} </h6>
+                            <!-- Esto hira armando el array para el backEnd -->
+                            <input type="hidden" name="monitores[{{ $index }}][id]" value="{{ $monitor->id }}">
+                            <div class="form-group">
+                                <label>Marca</label>
+                                    <!-- Tomar valor Viejo y modificar -->
+                                    <input type="text" name="monitores[{{$index}}][marca]" id=""
+                                    placeholder="waza"
+                                    value=" {{old('monitores.' . $index . '.marca', $monitor->marca ?? '')}} ">
+                            </div>
+
+                            <div class="form-group">
+                                <label>No serial</label>
+                                    <!-- Tomar valor Viejo y modificar -->
+                                    <input type="text" name="monitores[{{$index}}][serial]" id=""
+                                    placeholder="waza"
+                                    value=" {{old('monitores.' . $index . '.serial', $monitor->serial ?? '')}} ">
+                            </div>          
+
+                            <div class="form-group">
+                                <label>Escala en Pulgadas</label>
+                                    <!-- Tomar valor Viejo y modificar -->
+                                    <input type="text" name="monitores[{{$index}}][escala_pulgadas]" id=""
+                                    placeholder="waza"
+                                    value=" {{old('monitores.' . $index . '.escala_pulgadas', $monitor->escala_pulgadas ?? '')}} ">
+                            </div>   
+
+                            <div class="form-group">
+                                <label>Interface</label>
+                                    <!-- Tomar valor Viejo y modificar -->
+                                    <input type="text" name="monitores[{{$index}}][interface]" id=""
+                                    placeholder="waza"
+                                    value=" {{old('monitores.' . $index . '.interface', $monitor->interface ?? '')}} ">
+                            </div>   
+
+                        </div>
+                        @endforeach   
+
+
                             </div>
                     </form>
                 </div>
