@@ -93,7 +93,7 @@ if ($request->has('perifericos')) {
             // Si el periférico tiene un ID, es un registro existente, entramos aqui 
             if (isset($peripheralData['id'])) {
 
-                $periferico = Periferico::find($peripheralData['']);
+                $periferico = Periferico::find($peripheralData['id']);
                 if ($periferico) {
                     //Si los espacios de la cajita ambos estan vacios 
                     //la mauqina interpreta que como estan vacios se borraron, los borramos

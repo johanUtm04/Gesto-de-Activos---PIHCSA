@@ -1,285 +1,372 @@
 @extends('adminlte::page')
 
-@section('title', 'Gestion de Activos')
+@section('title', 'Inventario de Activos TI')
 
-@section('content_header')
-    <h1>Lista de Equipos</h1>
-    <a href="{{ route('equipos.create') }}" class="btn btn-success mb-2">Agregar Equipo</a>
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- Estilos personalizados (mejor legibilidad de datos complejos) --}}
+@section('css')
+<style>
+    /* Estilo para hacer la tabla más legible */
+    .table-assets thead th {
+        /* Un fondo limpio y un borde inferior que resalte */
+        background-color: #e9ecef; /* Light gray background for header */
+        color: #17a2b8; /* Info color text for prominence */
+        font-weight: 700;
+        border-bottom: 3px solid #17a2b8; /* Borde inferior que coincide con el color del título */
+        vertical-align: middle;
+        padding: 10px;
+    }
+
+    /* Estilo para los TDs que contienen la información agrupada */
+    .table-assets tbody td {
+        vertical-align: top; /* Alinear el texto de las celdas agrupadas en la parte superior */
+        font-size: 14px;
+        line-height: 1.4;
+    }
+    
+    /* Resaltar datos complejos o importantes */
+    .component-count {
+        font-weight: 600;
+        color: #28a745; /* Color verde (Success) para indicar existencia */
+    }
+
+    /* Estilo para datos secundarios (ubicación, email) */
+    .secondary-data {
+        color: #6c757d; /* Gris tenue */
+        font-size: 0.85em;
+        display: block; /* Asegurar que ocupe su propia línea si es necesario */
+    }
+
+    /* Estilo para el modal de detalles, más limpio */
+    .modal-detail-row {
+        padding: 8px 0;
+        border-bottom: 1px dashed #ced4da; /* Línea de puntos más sutil */
+    }
+
+    .modal-detail-row:last-child {
+        border-bottom: none;
+    }
+    
+    /* Asegurar que el botón de cerrar del modal sea visible */
+    .modal-header .close {
+        padding: 1rem 1rem;
+        margin: -1rem -1rem -1rem auto;
+    }
+</style>
 @stop
 
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- HEADER PRINCIPAL --}}
+@section('content_header')
+    <div class="d-flex justify-content-between align-items-center">
+        <h1><i class="fas fa-list-alt text-info"></i> Inventario de Activos Fijos (Equipos)</h1>
+        <a href="{{ route('equipos.create') }}" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Agregar Nuevo Equipo
+        </a>
+    </div>
+@stop
+
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- CONTENIDO PRINCIPAL --}}
 @section('content')
-    {{-- Manejo de Mensajes de Sesión (Alertas) --}}
+    
+    {{-- Manejo de Mensajes de Sesión (Alertas AdminLTE) --}}
     @php
-        $alertTypes = ['success', 'danger', 'warning', 'info', 'primary'];
+        $alertTypes = ['success', 'danger', 'warning', 'info'];
     @endphp
 
     @foreach ($alertTypes as $msg)
         @if(Session::has($msg))
             <div class="alert alert-{{ $msg }} alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle mr-2"></i>
                 {{ Session::get($msg) }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         @endif
     @endforeach
-<!-- MODAL -->
 
-<div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen-sm-down">
-        <div class="modal-content">
+    {{-- MODAL DE DETALLES MEJORADO --}}
+    <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title">Detalles del Componente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">ID:</div>
-                        <div class="col" id="modal_id"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">MARCA:</div>
-                        <div class="col" id="modal_marca"></div>
-                    </div>                    
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">TIPO:</div>
-                        <div class="col" id="modal_tipo"></div>
-                    </div>                    
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">SERIAL:</div>
-                        <div class="col" id="modal_serial"></div>
-                    </div>                    
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">SO:</div>
-                        <div class="col" id="modal_so"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">USUARIO:</div>
-                        <div class="col" id="modal_usuario"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">UBICACION:</div>
-                        <div class="col" id="modal_ubicacion"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">VALOR INICIAL:</div>
-                        <div class="col" id="modal_valo_inicial"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">FECHA DE ADQUISISCION:</div>
-                        <div class="col" id="modal_fecha_adquisicion"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold">VIDA UTIL ESTIMADA:</div>
-                        <div class="col" id="modal_vida_util"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold" >MONITORES:</div>
-                        <div class="col" id="modal_monitores"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold" >DISCOS DUROS:</div>
-                        <div class="col" id="modal_discos_duros"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold" >RAM</div>
-                        <div class="col" id="modal_ram"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold" >PERIFERICOS:</div>
-                        <div class="col" id="modal_perifericos"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-3 fw-bold" >PROCESADORES</div>
-                        <div class="col" id="modal_procesadores"></div>
-                    </div>
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="fas fa-search"></i> Detalles Completos del Activo</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
 
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="card card-outline card-info">
+                            <div class="card-header"><h6 class="card-title"><i class="fas fa-info-circle"></i> Información Base</h6></div>
+                            <div class="card-body">
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-hashtag"></i> ID:</div>
+                                    <div class="col-md-8" id="modal_id"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-tag"></i> Marca:</div>
+                                    <div class="col-md-8" id="modal_marca"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-laptop"></i> Tipo:</div>
+                                    <div class="col-md-8" id="modal_tipo"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-barcode"></i> Serial:</div>
+                                    <div class="col-md-8" id="modal_serial"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fab fa-windows"></i> SO:</div>
+                                    <div class="col-md-8" id="modal_so"></div>
+                                </div>
+                            </div>
+                        </div>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-striped">
-        <!-- Encabezados -->
-        <thead>
-            <tr>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">ID</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Marca</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Tipo</th>
+                        <div class="card card-outline card-warning">
+                            <div class="card-header"><h6 class="card-title"><i class="fas fa-link"></i> Asignación y Valor</h6></div>
+                            <div class="card-body">
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-user-tag"></i> Usuario:</div>
+                                    <div class="col-md-8" id="modal_usuario"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-map-marker-alt"></i> Ubicación:</div>
+                                    <div class="col-md-8" id="modal_ubicacion"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-dollar-sign"></i> Valor Inicial:</div>
+                                    <div class="col-md-8" id="modal_valo_inicial"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-calendar-alt"></i> F. Adquisición:</div>
+                                    <div class="col-md-8" id="modal_fecha_adquisicion"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-hourglass-half"></i> Vida Útil Est.:</div>
+                                    <div class="col-md-8" id="modal_vida_util"></div>
+                                </div>
+                            </div>
+                        </div>
 
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Serial</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">SO</th>
-
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">USUARIO</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">UBICACIÓN</th>
-
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Valor Inicial</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Fecha Adq.</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Vida Útil Estimada</th>
-
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Monitores</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Discos Duros</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">RAM</th>
-
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #ffffffff;font-size:14px;font-weight:600;">Periféricos</th>
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #787878ff;font-size:14px;font-weight:600;">Procesadores</th>
-
-                <th style="background:#f5f7fa;color:#2d3e50;padding:12px;border-bottom:3px solid #4A90E2;font-size:14px;font-weight:600;">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($equipos as $equipo)
-                <tr>
-                    <td>{{ $equipo->id }}</td>
-                    <td>{{ $equipo->marca_equipo ?? '-' }}</td>
-                    <td>{{ $equipo->tipo_equipo }}</td>
-                    <td>{{ $equipo->serial }}</td>
-                    <td>{{ $equipo->sistema_operativo }}</td>
-
-                    {{-- USUARIO --}}
-                    <td>
-                        <strong>{{ $equipo->usuario->name ?? 'Sin asignar' }}</strong>
-                        <br>
-                        <small>{{ $equipo->usuario->email ?? '-' }}</small>
-                    </td>
-
-                    {{-- UBICACIÓN --}}
-                    <td>
-                        <strong>{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}</strong>
-                        <br>
-                        <small>{{ $equipo->ubicacion->codigo ?? '-' }}</small>
-                    </td>
-
-                    <td>${{ number_format($equipo->valor_inicial, 2) }}</td>
-                    <td>{{ $equipo->fecha_adquisicion }}</td>
-                    <td>{{ $equipo->vida_util_estimada }}</td>
-                    
-                    <td>
-                        @if($equipo->monitores->isNotEmpty())
-                            <strong>{{ $equipo->monitores->count() }} Monitor(es)</strong>
-                            <br>
-                            <small>Marca: {{ $equipo->monitores->pluck('marca')->implode(', ') }}</small>
-                        @else
-                            Sin Monitor
-                        @endif
-                    </td>
-                    
-                    <td>
-                        @if($equipo->discosDuros->isNotEmpty())
-                            <strong>{{ $equipo->discosDuros->count() }} Disco(s)</strong>
-                            <br>
-                            <small>Capacidad: {{ $equipo->discosDuros->pluck('capacidad')->implode(' + ') }}</small>
-                        @else
-                            Sin Disco Duro
-                        @endif
-                    </td>
-                    
-                    <td>
-                        @if($equipo->rams->isNotEmpty())
-                            <strong>{{ $equipo->rams->count() }} Módulo(s)</strong>
-                            <br>
-                            <small>Capacidad: {{ $equipo->rams->pluck('capacidad_gb') }} GB</small> <br>
-                            <small>Clock: {{ $equipo->rams->pluck('clock_mhz') }} MHz</small> <br>
-                            <small>Tipo de CHZ: {{ $equipo->rams->pluck('tipo_chz') }} MHz</small>
-
-                        @else
-                            Sin RAM
-                        @endif
-                    </td>
-                    
-                    <td>
-                        @if($equipo->perifericos->isNotEmpty())
-                            <strong>{{ $equipo->perifericos->count() }} Periférico(s)</strong>
-                            <br>
-                            <small>Tipos: {{ $equipo->perifericos->pluck('tipo')->implode(', ') }}</small>
-                        @else
-                            Sin Periférico
-                        @endif
-                    </td>
-                    
-                    <td>
-                        @if($equipo->procesadores->isNotEmpty())
-                            <strong>{{ $equipo->procesadores->count() }} Procesador(es)</strong>
-                            <br>
-                            <small>Marca: {{ $equipo->procesadores->first()->marca ?? 'N/A' }}</small>
-                        @else
-                            Sin Procesador
-                        @endif
-                    </td>
-
-                    {{-- Acciones --}}
-                    <div>
-                    <td style="border: 2px solid green">
-                        <button class="btn btn-outline-primary"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#modalDetalle"
-                        data-id = "{{ $equipo->id }}"
-                        data-marca = "{{$equipo ->marca_equipo ?? '-' }}"
-                        data-tipo = "{{$equipo -> tipo_equipo }}"
-                        data-serial = "{{$equipo -> serial }}"
-                        data-so = "{{ $equipo->sistema_operativo }}"
-                        data-usuario = "{{ $equipo->usuario->name ?? 'Sin asignar' }}"
-                        data-ubicacion = "{{ $equipo->ubicacion->nombre ?? 'sin ubicacion' }}"
-                        data-valo-inicial = " {{ $equipo->valor_inicial ?? 'sin asignar' }}"
-                        data-fecha-adquisicion = " {{ $equipo->fecha_adquisicion ?? 'sin asignar' }} "
-                        data-vida-util = " {{ $equipo->vida_util_estimada ?? 'sin asignar'}}"
-                        data-monitores = "{{ $equipo->monitores->count() }}"
-                        data-discos-duros = "{{ $equipo->discosDuros->count() }}"
-                        data-ram = "{{ $equipo->rams->count()}}"
-                        data-perifericos = "{{  $equipo->perifericos->pluck('tipo')->implode(', ')  }}"
-                        data-procesadores = " {{ $equipo->procesadores->count() }}"
-                        >
-                        Ver detalles
-                        </button>
-                         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-warning">Editar</a>
-                        <form action="{{ route('equipos.destroy', $equipo) }}" 
-                              method="POST" 
-                              style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="btn btn-outline-danger"
-                                onclick="return confirm('¿Seguro que quieres eliminar este equipo y todos sus componentes asociados?')">
-                                Eliminar
-                            </button>
-                        </form>
-                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-info">Registrar un mantenimiento</a>
-                    </td>
+                        <div class="card card-outline card-success">
+                            <div class="card-header"><h6 class="card-title"><i class="fas fa-microchip"></i> Componentes (Resumen)</h6></div>
+                            <div class="card-body">
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-tv"></i> Monitores:</div>
+                                    <div class="col-md-8" id="modal_monitores"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-hdd"></i> Discos Duros:</div>
+                                    <div class="col-md-8" id="modal_discos_duros"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-memory"></i> RAM:</div>
+                                    <div class="col-md-8" id="modal_ram"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-microchip"></i> Procesadores:</div>
+                                    <div class="col-md-8" id="modal_procesadores"></div>
+                                </div>
+                                <div class="row modal-detail-row">
+                                    <div class="col-md-4 font-weight-bold"><i class="fas fa-keyboard"></i> Periféricos:</div>
+                                    <div class="col-md-8" id="modal_perifericos"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    </div>
-    
-    <!-- SCRIPT MODAL -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                </div> {{-- /modal-body --}}
+            </div> {{-- /modal-content --}}
+        </div> {{-- /modal-dialog --}}
+    </div> {{-- /modal --}}
 
-        <script>
-        const modalDetalle = document.getElementById('modalDetalle');
 
-        modalDetalle.addEventListener('show.bs.modal', function (event) {
+    {{-- TABLA DE INVENTARIO --}}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-assets">
+                    {{-- Encabezados --}}
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th><i class="fas fa-tag"></i> Activo / Serial</th>
+                            <th><i class="fas fa-user-tag"></i> Asignación</th>
+                            <th><i class="fas fa-map-marker-alt"></i> Ubicación</th>
+                            <th><i class="fas fa-dollar-sign"></i> Valor Inicial</th>
+                            <th><i class="fas fa-microchip"></i> CPU / RAM</th>
+                            <th><i class="fas fa-puzzle-piece"></i> Otros Componentes</th>
+                            <th class="text-center"><i class="fas fa-cogs"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($equipos as $equipo)
+                            <tr>
+                                <td>{{ $equipo->id }}</td>
+                                
+                                {{-- ACTIVO / SERIAL (Agrupado) --}}
+                                <td>
+                                    <strong>{{ $equipo->marca_equipo ?? '-' }}</strong> ({{ $equipo->tipo_equipo }})<br>
+                                    <span class="secondary-data"><i class="fas fa-barcode"></i> Serial: {{ $equipo->serial }}</span><br>
+                                    <span class="secondary-data"><i class="fab fa-windows"></i> SO: {{ $equipo->sistema_operativo }}</span>
+                                </td>
 
-        const button = event.relatedTarget;
+                                {{-- USUARIO --}}
+                                <td>
+                                    <strong>{{ $equipo->usuario->name ?? 'Sin asignar' }}</strong>
+                                    <br>
+                                    <span class="secondary-data"><i class="fas fa-envelope"></i> {{ $equipo->usuario->email ?? '-' }}</span>
+                                </td>
 
-        document.getElementById('modal_id').textContent = button.getAttribute('data-id');
-        document.getElementById('modal_marca').textContent = button.getAttribute('data-marca');
-        document.getElementById('modal_tipo').textContent = button.getAttribute('data-tipo');
-        document.getElementById('modal_serial').textContent = button.getAttribute('data-serial');
-        document.getElementById('modal_so').textContent = button.getAttribute('data-so');
-        document.getElementById('modal_usuario').textContent = button.getAttribute('data-usuario');
-        document.getElementById('modal_ubicacion').textContent= button.getAttribute('data-ubicacion');
-        document.getElementById('modal_valo_inicial').textContent = button.getAttribute('data-valo-inicial');
-        document.getElementById('modal_fecha_adquisicion').textContent = button.getAttribute('data-fecha-adquisicion');
-        document.getElementById('modal_vida_util').textContent = button.getAttribute('data-vida-util');
-        document.getElementById('modal_monitores').textContent = button.getAttribute('data-monitores');
-        document.getElementById('modal_discos_duros').textContent = button.getAttribute('data-discos-duros');
-        document.getElementById('modal_ram').textContent = button.getAttribute('data-ram');
-        document.getElementById('modal_perifericos').textContent = button.getAttribute('data-perifericos');
-        document.getElementById('modal_procesadores').textContent = button.getAttribute('data-procesadores');
+                                {{-- UBICACIÓN --}}
+                                <td>
+                                    <strong>{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}</strong>
+                                    <br>
+                                    <span class="secondary-data"><i class="fas fa-map-pin"></i> Código: {{ $equipo->ubicacion->codigo ?? '-' }}</span>
+                                </td>
+
+                                {{-- VALOR / FECHA --}}
+                                <td>
+                                    <strong class="text-success">${{ number_format($equipo->valor_inicial, 2) }}</strong><br>
+                                    <span class="secondary-data">Adq: {{ $equipo->fecha_adquisicion }}</span><br>
+                                    <span class="secondary-data">Vida Útil: {{ $equipo->vida_util_estimada }}</span>
+                                </td>
+                                
+                                {{-- CPU / RAM (Agrupado) --}}
+                                <td>
+                                    @if($equipo->procesadores->isNotEmpty())
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fas fa-microchip text-primary mr-1"></i>
+                                            <small>CPU: {{ $equipo->procesadores->first()->marca ?? 'N/A' }}</small>
+                                        </div>
+                                    @endif
+                                    @if($equipo->rams->isNotEmpty())
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-memory text-primary mr-1"></i>
+                                            <small>RAM: {{ $equipo->rams->pluck('capacidad_gb') }} GB Total</small>
+                                        </div>
+                                    @endif
+                                </td>
+
+                                {{-- OTROS COMPONENTES (Resumen) --}}
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-tv text-secondary mr-1"></i> Monitores: 
+                                        <span class="component-count ml-1">{{ $equipo->monitores->count() }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-hdd text-secondary mr-1"></i> Discos: 
+                                        <span class="component-count ml-1">{{ $equipo->discosDuros->count() }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-keyboard text-secondary mr-1"></i> Periféricos: 
+                                        <span class="component-count ml-1">{{ $equipo->perifericos->count() }}</span>
+                                    </div>
+                                </td>
+
+                                {{-- Acciones --}}
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        {{-- Botón Ver Detalles (Modal) --}}
+                                        <button class="btn btn-outline-info" title="Ver Detalles"
+                                            data-toggle="modal" 
+                                            data-target="#modalDetalle"
+                                            data-id="{{ $equipo->id }}"
+                                            data-marca="{{$equipo->marca_equipo ?? '-' }}"
+                                            data-tipo="{{$equipo->tipo_equipo }}"
+                                            data-serial="{{$equipo->serial }}"
+                                            data-so="{{ $equipo->sistema_operativo }}"
+                                            data-usuario="{{ $equipo->usuario->name ?? 'Sin asignar' }}"
+                                            data-ubicacion="{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}"
+                                            data-valo-inicial="${{ number_format($equipo->valor_inicial, 2) }}"
+                                            data-fecha-adquisicion="{{ $equipo->fecha_adquisicion ?? 'sin asignar' }}"
+                                            data-vida-util="{{ $equipo->vida_util_estimada ?? 'sin asignar'}}"
+                                            data-monitores="{{ $equipo->monitores->count() }}"
+                                            data-discos-duros="{{ $equipo->discosDuros->count() }}"
+                                            data-ram="{{ $equipo->rams->pluck('capacidad_gb') }} GB ({{ $equipo->rams->count() }} Módulos)"
+                                            data-perifericos="{{ $equipo->perifericos->pluck('tipo')->implode(', ') }}"
+                                            data-procesadores="{{ $equipo->procesadores->count() }}"
+                                            >
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        
+                                        {{-- Botón Editar --}}
+                                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-warning" title="Editar Activo">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
+
+                                        {{-- Botón Mantenimiento --}}
+                                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary" title="Registrar Mantenimiento">
+                                            <i class="fas fa-tools"></i>
+                                        </a>
+
+                                        {{-- Botón Eliminar --}}
+                                        <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button class="btn btn-outline-danger" title="Eliminar Activo"
+                                                onclick="return confirm('¿Confirma la eliminación del equipo: {{ $equipo->marca_equipo }}? Esto eliminará todos sus componentes asociados.')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div> {{-- /table-responsive --}}
+        </div> {{-- /card-body --}}
+    </div> {{-- /card --}}
+
+@stop
+
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- SCRIPTS (AdminLTE usa jQuery para modales, no Bootstrap 5 puro) --}}
+@section('js')
+    {{-- **Nota:** AdminLTE y Bootstrap 4 usan data-toggle/data-target y un modal.addEventListener de jQuery, no el addEventListener de Bootstrap 5. --}}
+    <script>
+        $(document).ready(function() {
+            $('#modalDetalle').on('show.bs.modal', function (event) {
+                const button = $(event.relatedTarget); // Botón que disparó el modal
+                const modal = $(this);
+
+                // Función para obtener atributos y limpiar/formatear valores
+                const getAttr = (attr) => button.data(attr);
+                
+                // Actualizar el título del modal
+                modal.find('.modal-title').text('Detalles del Activo: ' + getAttr('marca'));
+
+                // Información Base
+                modal.find('#modal_id').text(getAttr('id'));
+                modal.find('#modal_marca').text(getAttr('marca'));
+                modal.find('#modal_tipo').text(getAttr('tipo'));
+                modal.find('#modal_serial').text(getAttr('serial'));
+                modal.find('#modal_so').text(getAttr('so'));
+
+                // Asignación y Valor
+                modal.find('#modal_usuario').text(getAttr('usuario'));
+                modal.find('#modal_ubicacion').text(getAttr('ubicacion'));
+                modal.find('#modal_valo_inicial').text(getAttr('valo-inicial'));
+                modal.find('#modal_fecha_adquisicion').text(getAttr('fecha-adquisicion'));
+                modal.find('#modal_vida_util').text(getAttr('vida-util'));
+
+                // Componentes (Detalles)
+                modal.find('#modal_monitores').text(getAttr('monitores'));
+                modal.find('#modal_discos_duros').text(getAttr('discos-duros'));
+                modal.find('#modal_ram').text(getAttr('ram'));
+                modal.find('#modal_procesadores').text(getAttr('procesadores'));
+                
+                // Periféricos requiere un manejo especial por la lista de tipos
+                let perifericos = getAttr('perifericos');
+                modal.find('#modal_perifericos').text(perifericos || 'Ninguno');
+
+            });
         });
-        </script>
-
-    @stop
+    </script>
+@stop
