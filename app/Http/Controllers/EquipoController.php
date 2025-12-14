@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\DiscoDuro;
 use App\Models\Equipo;
 use App\Models\Monitor;
 use App\Models\Ubicacion;
@@ -80,12 +81,11 @@ class EquipoController extends Controller
             'valor_inicial' => 'required|numeric|min:0|max:999999.99',
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
-
             ]);
 
         $equipo->update($request->all());
 
-//El formualario envio el arreglo de perifericos
+//¿Vino algo llamado perifericos?
 if ($request->has('perifericos')) {
     //Recorremos cada periferico enviado por el formulario $peripheralData es como una cajita 
         foreach ($request->input('perifericos') as $peripheralData) {
@@ -93,15 +93,8 @@ if ($request->has('perifericos')) {
             // Si el periférico tiene un ID, es un registro existente, entramos aqui 
             if (isset($peripheralData['id'])) {
 
-                //La guardamos en una variable
-                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
-                //Lo trae de la DB 
-                $periferico = Periferico::find($peripheralData['id']);
-                
-            
+                $periferico = Periferico::find($peripheralData['']);
                 if ($periferico) {
-
-
                     //Si los espacios de la cajita ambos estan vacios 
                     //la mauqina interpreta que como estan vacios se borraron, los borramos
                     if (empty($peripheralData['tipo']) && empty($peripheralData['serial'])) {
@@ -224,6 +217,39 @@ if ($request->has('monitores')) {
                             'marca' => $peripheralData['marca'],
                             'serial' => $peripheralData['serial'],
                             'escala_pulgadas' => $peripheralData['escala_pulgadas'],
+                            'interface' => $peripheralData['interface'],
+                        ]);
+                    }
+                }
+            } 
+        }
+    }
+
+    
+//Si se envia el arreglo de monitores
+if ($request->has('discoDuros')) {
+    //recorremos ese arreglo
+        foreach ($request->input('discoDuros') as $peripheralData) {
+            
+            // Si la ram tiene un ID, es un registro existente, entramos aqui 
+            if (isset($peripheralData['id'])) {
+                //La guardamos en una variable
+                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
+                //Lo trae de la DB 
+                $discoDuro = DiscoDuro::find($peripheralData['id']);
+                
+            
+                if ($discoDuro) {
+                    //Si los espacios de la cajita ambos estan vacios 
+                    //la mauqina interpreta que como estan vacios se borraron, los borramos
+                    if (empty($peripheralData['capacidad']) && empty($peripheralData['tipo_hdd_ssd']) && empty($peripheralData['interface'])) {
+                        $discoDuro->delete(); 
+                    } else {
+
+                        //Caso contrario solo actualizamos el registro existente
+                        $discoDuro->update([
+                            'capacidad' => $peripheralData['capacidad'],
+                            'tipo_hdd_ssd' => $peripheralData['tipo_hdd_ssd'],
                             'interface' => $peripheralData['interface'],
                         ]);
                     }

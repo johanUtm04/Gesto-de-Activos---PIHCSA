@@ -1,379 +1,474 @@
-    @extends('adminlte::page')
+@extends('adminlte::page')
 
-    @section('title', 'Editar Equipo')
+@section('title', 'Editar Equipo | Activos TI')
 
-    @section('content_header')
-    <h1 class="text-center font-weight-bold">
-        EDITAR DATOS DE {{ strtoupper($equipo->marca_equipo) }}
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- Sección de Estilos (Opcional, pero recomendada para consistencia visual) --}}
+@section('css')
+<style>
+    /* Estilo para los títulos de sección dentro de las tarjetas */
+    .section-title {
+        border-bottom: 2px solid #007bff; /* Borde azul de AdminLTE */
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        color: #17a2b8; /* Color azul claro */
+        font-weight: 600;
+    }
+
+    /* Estilo para la lista de datos actuales (lado izquierdo) */
+    .data-item {
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px dashed #ced4da;
+    }
+
+    .data-item:last-child {
+        border-bottom: none;
+    }
+
+    .data-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    /* Estilo para los campos de componentes editables (para que se vean como grupos) */
+    .component-group {
+        border: 1px solid #dee2e6;
+        border-radius: .25rem;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+    }
+</style>
+@stop
+
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- HEADER PRINCIPAL --}}
+@section('content_header')
+    <h1 class="font-weight-bold text-center">
+        <i class="fas fa-desktop text-primary"></i> 
+        Edición de Activo: {{ strtoupper($equipo->marca_equipo) }}
     </h1>
+    <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary btn-sm mt-2">
+        <i class="fas fa-arrow-circle-left"></i> Volver a Inventario
+    </a>
+@stop
 
-    <a href="{{ route('equipos.index') }}" class="btn btn-secondary mt-2">Volver</a>
-    @stop
-
-
-    @section('content')
-    <div class="container mt-4">
-
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- CONTENIDO PRINCIPAL --}}
+@section('content')
+    <div class="container-fluid">
         <div class="row">
 
-            {{-- LEFT SIDE  CURRENT DATA --}}
-            <div class="col-md-6">
-                <div class="card p-3" style="background:#0f0f0f; color:white; border:1px solid #333;">
-                    <h4 class="mb-3 text-info">Datos Actuales</h4>
-
-                    <p><strong>Nombre:</strong><br> {{ $equipo->marca_equipo }}</p>
-                    <hr>
-
-                    <p><strong>Tipo:</strong><br> {{ $equipo->tipo_equipo }}</p>
-                    <hr>
-
-                    <p><strong>Serial:</strong><br> {{ $equipo->serial }}</p>
-                    <hr>
-
-                    <p><strong>Sistema Operativo:</strong><br> {{ $equipo->sistema_operativo }}</p>
-                    <hr>
-
-                    <p><strong>Usuario Responsable:</strong><br> {{ $equipo->usuario->name ?? '-' }}</p>
-                    <hr>
-
-                    <p><strong>Ubicación:</strong><br> {{ $equipo->ubicacion->nombre ?? '-' }}</p>
-                    <hr>
-
-                    <p><strong>Valor Inicial:</strong><br> ${{ number_format($equipo->valor_inicial, 2) }}</p>
-                    <hr>
-
-                    <p><strong>Fecha de Adquisición:</strong><br> {{ $equipo->fecha_adquisicion }}</p>
-                    <hr>
-
-                    <p><strong>Vida Útil Estimada:</strong><br> {{ $equipo->vida_util_estimada }}</p>
-
-                    <h4 class="mb-3 text-info">Otros datos</h4>
-
-                    <!-- Perifericos -->
-                    <div class="perifericos-list-container mb-4">
-                        <h4>Periféricos Asociados ({{ $equipo->perifericos->count() }})</h4>
-                        @forelse($equipo->perifericos as $periferico)
-                        <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
-                            <span class="text-dark">
-                            <strong>{{ $periferico->tipo }}</strong> (Serial: {{ $periferico->serial }})
-                            </span>
-                        </div>
-                        @empty
-                        <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
-                        @endforelse
+            {{-- COLUMNA IZQUIERDA: DATOS ACTUALES Y RELACIONES (Visibilidad) --}}
+            <div class="col-md-5">
+                <div class="card card-outline card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-clipboard-list"></i> **Detalle y Estado Actual**
+                        </h3>
                     </div>
-
-                    <!-- RAMS -->
-                    <div class="perifericos-list-container mb-4">
-                        <h4>Rams Asociados ({{ $equipo->rams->count() }})</h4>
-                        @forelse($equipo->rams as $ram)
-                        <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
-                            <span class="text-dark">
-                            <strong> Capacidad en GB: </strong>{{ $ram->capacidad_gb }}
-                            <strong> Clock: </strong>{{ $ram->clock_mhz }}
-                            <strong> Tipo CHz: </strong>{{ $ram->tipo_chz }}
-                            </span>
-                        </div>
-                        @empty
-                        <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
-                        @endforelse
-                    </div>
-
-                    <!-- Procesadores -->
-                    <div class="perifericos-list-container mb-4">
-                        <h4>Procesadores Asociados ({{ $equipo->procesadores->count() }})</h4>
-                        @forelse($equipo->procesadores as $procesador)
-                        <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
-                            <span class="text-dark">
-                            <strong> Marca: </strong>{{ $procesador->marca }}
-                            <strong> Clock: </strong>{{ $procesador->descripcion_tipo }}
-                            </span>
-                        </div>
-                        @empty
-                        <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
-                        @endforelse
-                    </div>
-
-
-                    <!-- Monitores -->
-                    <div class="perifericos-list-container mb-4">
-                        <!-- Contar Relaciones -->
-                        <h4>Monitores Asociados ({{ $equipo->monitores->count() }})</h4>
-                        <!-- Recorre una lista de relaciones con una variable $ -->
-                        @forelse($equipo->monitores as $monitor)
-                        <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row">
-                            <span class="text-dark">
-                            <!-- Mostrar campos de la relacion, o bien de la tabla -->
-                            <strong> Marca: </strong>{{ $monitor->marca }}
-                            <strong> serial: </strong>{{ $monitor->serial }}
-                            <strong> escala_pulgadas: </strong>{{ $monitor->escala_pulgadas }}
-                            <strong> interface: </strong>{{ $monitor->interface }}
-                            </span>
-                        </div>
-                        @empty
-                        <p class="text-secondary">Este equipo no tiene periféricos asociados.</p>
-                        @endforelse
-                    </div>
-
-                    <!-- Discos Duros -->
-                    <div class="perifericos-list-container mb-4">
-                        <h4>Discos Duros Asociados {{ $equipo->discosDuros->count()}}</h4>
-                        @forelse($equipo->discosDuros as $disco_duro)
-                            <div class="card p-2 mb-2 bg-light d-flex justify-content-between align-items-center flex-row" >
-                                <span class="text-dark">
-                                <strong>Capacidad del Disco Duro</strong>{{ $disco_duro->capacidad }}
-                                <strong>Tipo de HDD/SSD</strong> {{ $disco_duro->tipo_hdd_ssd }}
-                                <strong>Interface </strong> {{ $disco_duro->interface }}
-                                </span>
-                            </div>
-                        @empty
-                        <p class="text-secondary">Este equipo no tiene Discos Duros asociados.</p>
-                        @endforelse
-                    </div>
-
-
-                    
-
-                </div>
-            </div>
-
-            {{-- RIGHT SIDE  FORM TO UPDATE DATA --}}
-            <div class="col-md-6">
-                <div class="card p-3" style="background:#ffffff; border:1px solid #ccc;">
-                    <h4 class="mb-3 text-primary">Datos Modificados</h4>
-
-                    <form action="{{ route('equipos.update', $equipo) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="form-group">
-                            <label>Marca del Equipo</label>
-                            <input type="text" name="marca_equipo" class="form-control"
-                                value="{{ old('marca_equipo', $equipo->marca_equipo) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tipo de Equipo</label>
-                            <input type="text" name="tipo_equipo" class="form-control"
-                                value="{{ old('tipo_equipo', $equipo->tipo_equipo) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Serial</label>
-                            <input type="text" name="serial" class="form-control"
-                                value="{{ old('serial', $equipo->serial) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Sistema Operativo</label>
-                            <input type="text" name="sistema_operativo" class="form-control"
-                                value="{{ old('sistema_operativo', $equipo->sistema_operativo) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Usuario Responsable</label>
-                            <select name="usuario_id" class="form-control">
-                                <option value="">Seleccione...</option>
-                                @foreach($usuarios as $usuario)
-                                <option value="{{ $usuario->id }}"
-                                    {{ $equipo->usuario_id == $usuario->id ? 'selected' : '' }}>
-                                    {{ $usuario->name }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Ubicación</label>
-                            <select name="ubicacion_id" class="form-control">
-                                <option value="">Seleccione...</option>
-                                @foreach($ubicaciones as $ubicacion)
-                                <option value="{{ $ubicacion->id }}"
-                                    {{ $equipo->ubicacion_id == $ubicacion->id ? 'selected' : '' }}>
-                                    {{ $ubicacion->nombre }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Valor Inicial</label>
-                            <input type="number" name="valor_inicial" class="form-control" step="0.01"
-                                value="{{ old('valor_inicial', $equipo->valor_inicial) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Fecha de Adquisición</label>
-                            <input type="date" name="fecha_adquisicion" class="form-control"
-                                value="{{ old('fecha_adquisicion', $equipo->fecha_adquisicion) }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Vida Útil Estimada</label>
-                            <input type="text" name="vida_util_estimada" class="form-control"
-                                value="{{ old('vida_util_estimada', $equipo->vida_util_estimada) }}">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary btn-block mt-3">
-                            Guardar Cambios (Involucrara un registro en el historial)
-                        </button>
+                    <div class="card-body">
                         
-
-                    <!-- Editables extra -->
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
-                    <!-- Perifericos -->
-                     <h4 class="mb-3 text-info">Otros datos</h4>
-
-                     <h4 class="mb-3 text-info">Perifericos :v</h4>
-                    <div id="perifericos-container  ">
-                        <!-- $equipos->perifericos es similar a hacer esto
-                        [
-                            Periferico{id: 10, tipo: 'USB', serial: 'ABC001'},
-                            Periferico{id: 11, tipo: 'HDMI', serial: 'XYZ123'},
-                            Periferico{id: 12, tipo: 'Audio', serial: 'QWE222'},
-                        ] 
-                        -->
-                        @foreach($equipo->perifericos as $index => $periferico)
-                        <div class="periferico-item card p-3 mb-3 border-secondary">
-                            <h6 class="text-secondary">Periférico #{{ $index + 1 }} </h6>
-
-                            <!-- Al hacer name = "perifericos[]" le estoy enviando un array
-                            el id siempre se queda como id, de esta manera -> name="perifericos[0][id]" -->
-                            <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> <!--Tomamos el Id de la relacion--> 
-                            <!-- Osea aqui basicamente estamos armando esto 
-                            perifericos[1][id] = 12
-                            perifericos[1] = {
-                                id: 12
-                            } -->
-
-
-                            <div class="form-group">
-                                <label>Tipo / Marca</label>
-                                <input type="text" name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm"
-                                    placeholder="Ej: Teclado, Monitor, Mouse"
-                                
-                                    value="{{ old('perifericos.' . $index . '.tipo', $periferico->tipo ?? '') }}">  <!--old mantiene el valor aunque salga un error-->
-                            </div>
-
-                            <div class="form-group">
-                                <label>Serial</label>
-                                <input type="text" name="perifericos[{{ $index }}][serial]" class="form-control form-control-sm"
-                                    placeholder="Serial del periférico"
-                                    value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
-                            </div>
-
-                        </div>
-                        @endforeach
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------- -->
-                    <h4 class="mb-3 text-info">Ramsiñas</h4>
-                        <div id="rams-container">
-                        @foreach($equipo->rams as $index => $ram)
-                        <!-- Capacidad en GB -->
-                            <div class="ram item card p-3 mb-3 border-secondary">
-                            <h6 class="text-secondary">RAM #{{ $index + 1 }} </h6>
-                             <input type="hidden" name="rams[{{ $index }}][id]" value="{{ $ram->id }}">
-                            <div class="form-group">
-                                <label>Capacidad de la Memoria Ram</label>
-                                    <input type="text" name="rams[{{$index}}][capacidad_gb]" id=""
-                                    placeholder="waza"
-                                    value=" {{old('rams.' . $index . '.capacidad_gb', $ram->capacidad_gb ?? '')}} "
-                                    >
-                            </div>
-                            <div class="form-group">
-                                <label>Clock MHz</label>
-                                    <input type="text" name="rams[{{$index}}][clock_mhz]"
-                                    placeholder="waza"
-                                    value=" {{old('rams.' . $index . '.clock_mhz', $ram->clock_mhz ?? '')}} "
-                                    >
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo Chz</label>
-                                <input type="text" name="rams[{{$index}}][tipo_chz]"
-                                placeholder="waza"
-                                value=" {{old('rams.' . $index . '.tipo_chz ', $ram->tipo_chz ?? '')}} "
-                                >
-                            </div>                           
+                        <h5 class="section-title"><i class="fas fa-cogs"></i> Especificaciones Generales</h5>
                         
+                        {{-- Datos Principales --}}
+                        <div class="data-item">
+                            <span class="data-label">Marca/Modelo:</span> 
+                            <span class="float-right">{{ $equipo->marca_equipo }}</span>
                         </div>
-                        @endforeach
-
-
-                    <h4 class="mb-3 text-info">Procesadores</h4>
-                        <div id="procesadores-container">
-                        @foreach($equipo->procesadores as $index => $procesador)
-                            <div class="procesador item card p-3 mb-3 border-secondary">
-                            <h6 class="text-secondary">Procesador #{{ $index + 1 }} </h6>
-                             <input type="hidden" name="procesadores[{{ $index }}][id]" value="{{ $procesador->id }}">
-                            <div class="form-group">
-                                <label>Marca</label>
-                                    <input type="text" name="procesadores[{{$index}}][marca]" id=""
-                                    placeholder="waza"
-                                    value=" {{old('procesadores.' . $index . '.marca', $procesador->marca ?? '')}} "
-                                    >
-                            </div>
-                            <div class="form-group">
-                                <label>Descripcion </label>
-                                <input type="text" name="procesadores[{{$index}}][descripcion_tipo]"
-                                placeholder="waza"
-                                value=" {{old('procesadores.' . $index . '.descripcion_tipo ', $procesador->descripcion_tipo ?? '')}} "
-                                >
-                            </div>                           
+                        <div class="data-item">
+                            <span class="data-label">Tipo de Equipo:</span> 
+                            <span class="float-right">{{ $equipo->tipo_equipo }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Serial:</span> 
+                            <span class="float-right text-bold">{{ $equipo->serial }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label"><i class="fab fa-windows"></i> S. Operativo:</span> 
+                            <span class="float-right">{{ $equipo->sistema_operativo }}</span>
+                        </div>
                         
+                        <hr class="mt-4">
+
+                        <h5 class="section-title"><i class="fas fa-users-cog"></i> Responsabilidad y Ubicación</h5>
+
+                        <div class="data-item">
+                            <span class="data-label"><i class="fas fa-user-tag"></i> Usuario:</span> 
+                            <span class="float-right text-primary">{{ $equipo->usuario->name ?? 'Sin asignar' }}</span>
                         </div>
-                        @endforeach
+                        <div class="data-item">
+                            <span class="data-label"><i class="fas fa-map-marker-alt"></i> Ubicación:</span> 
+                            <span class="float-right text-primary">{{ $equipo->ubicacion->nombre ?? 'Sin ubicar' }}</span>
+                        </div>
+
+                        <hr class="mt-4">
+
+                        <h5 class="section-title"><i class="fas fa-money-bill-wave"></i> Información Contable</h5>
+
+                        <div class="data-item">
+                            <span class="data-label">Valor Inicial:</span> 
+                            <span class="float-right text-success text-bold">${{ number_format($equipo->valor_inicial, 2) }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">F. Adquisición:</span> 
+                            <span class="float-right">{{ $equipo->fecha_adquisicion }}</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Vida Útil Estimada:</span> 
+                            <span class="float-right">{{ $equipo->vida_util_estimada }}</span>
+                        </div>
+
+                        <hr class="mt-4">
+
+                        <h5 class="section-title"><i class="fas fa-puzzle-piece"></i> Componentes Asociados ({{ $equipo->perifericos->count() + $equipo->rams->count() + $equipo->procesadores->count() + $equipo->monitores->count() + $equipo->discosDuros->count() }})</h5>
+
+                        {{-- Detalle Periféricos --}}
+                        <h6><i class="fas fa-keyboard text-warning"></i> **Periféricos ({{ $equipo->perifericos->count() }})**</h6>
+                        <ul class="list-unstyled mb-3 ml-3">
+                            @forelse($equipo->perifericos as $p)
+                                <li>- {{ $p->tipo }} (Serial: {{ $p->serial }})</li>
+                            @empty
+                                <li class="text-muted">Ninguno.</li>
+                            @endforelse
+                        </ul>
+
+                        {{-- Detalle RAMs --}}
+                        <h6><i class="fas fa-memory text-warning"></i> **RAM ({{ $equipo->rams->count() }})**</h6>
+                        <ul class="list-unstyled mb-3 ml-3">
+                            @forelse($equipo->rams as $r)
+                                <li>- {{ $r->capacidad_gb }}GB | {{ $r->tipo_chz }}</li>
+                            @empty
+                                <li class="text-muted">Ninguna.</li>
+                            @endforelse
+                        </ul>
                         
+                        {{-- Detalle Procesadores --}}
+                        <h6><i class="fas fa-microchip text-warning"></i> **Procesador ({{ $equipo->procesadores->count() }})**</h6>
+                        <ul class="list-unstyled mb-3 ml-3">
+                            @forelse($equipo->procesadores as $proc)
+                                <li>- {{ $proc->marca }} | {{ $proc->descripcion_tipo }}</li>
+                            @empty
+                                <li class="text-muted">Ninguno.</li>
+                            @endforelse
+                        </ul>
+
+                        {{-- Detalle Monitores --}}
+                        <h6><i class="fas fa-tv text-warning"></i> **Monitores ({{ $equipo->monitores->count() }})**</h6>
+                        <ul class="list-unstyled mb-3 ml-3">
+                            @forelse($equipo->monitores as $mon)
+                                <li>- {{ $mon->marca }} ({{ $mon->escala_pulgadas }}")</li>
+                            @empty
+                                <li class="text-muted">Ninguno.</li>
+                            @endforelse
+                        </ul>
+
+                        {{-- Detalle Discos Duros --}}
+                        <h6><i class="fas fa-hdd text-warning"></i> **Discos ({{ $equipo->discosDuros->count()}})**</h6>
+                        <ul class="list-unstyled mb-3 ml-3">
+                            @forelse($equipo->discosDuros as $dd)
+                                <li>- {{ $dd->capacidad }} {{ $dd->tipo_hdd_ssd }}</li>
+                            @empty
+                                <li class="text-muted">Ninguno.</li>
+                            @endforelse
+                        </ul>
+
+                    </div> {{-- /card-body --}}
+                </div> {{-- /card --}}
+            </div> {{-- /col-md-5 --}}
+
+            {{-- COLUMNA DERECHA: FORMULARIO DE EDICIÓN (Funcionalidad) --}}
+            <div class="col-md-7">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-pen-square"></i> **Modificación de Datos**
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        
+                        <form action="{{ route('equipos.update', $equipo) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            {{-- SECCIÓN DATOS GENERALES EDITABLES --}}
+                            <fieldset class="border p-3 mb-4">
+                                <legend class="w-auto px-2 text-primary"><i class="fas fa-info-circle"></i> Datos Base</legend>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo</label>
+                                        <input type="text" name="marca_equipo" id="marca_equipo" class="form-control"
+                                            value="{{ old('marca_equipo', $equipo->marca_equipo) }}">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
+                                        <input type="text" name="tipo_equipo" id="tipo_equipo" class="form-control"
+                                            value="{{ old('tipo_equipo', $equipo->tipo_equipo) }}">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="serial"><i class="fas fa-barcode"></i> Serial</label>
+                                        <input type="text" name="serial" id="serial" class="form-control"
+                                            value="{{ old('serial', $equipo->serial) }}">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="sistema_operativo"><i class="fab fa-windows"></i> Sistema Operativo</label>
+                                        <input type="text" name="sistema_operativo" id="sistema_operativo" class="form-control"
+                                            value="{{ old('sistema_operativo', $equipo->sistema_operativo) }}">
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            {{-- SECCIÓN DATOS ASOCIADOS (Dropdowns) --}}
+                            <fieldset class="border p-3 mb-4">
+                                <legend class="w-auto px-2 text-primary"><i class="fas fa-link"></i> Asignación</legend>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="usuario_id"><i class="fas fa-user-tag"></i> Usuario Responsable</label>
+                                        <select name="usuario_id" id="usuario_id" class="form-control select2" data-placeholder="Seleccione un usuario">
+                                            <option value="">Seleccione...</option>
+                                            @foreach($usuarios as $usuario)
+                                            <option value="{{ $usuario->id }}"
+                                                {{ $equipo->usuario_id == $usuario->id ? 'selected' : '' }}>
+                                                {{ $usuario->name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="ubicacion_id"><i class="fas fa-map-marker-alt"></i> Ubicación</label>
+                                        <select name="ubicacion_id" id="ubicacion_id" class="form-control select2" data-placeholder="Seleccione la ubicación">
+                                            <option value="">Seleccione...</option>
+                                            @foreach($ubicaciones as $ubicacion)
+                                            <option value="{{ $ubicacion->id }}"
+                                                {{ $equipo->ubicacion_id == $ubicacion->id ? 'selected' : '' }}>
+                                                {{ $ubicacion->nombre }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="valor_inicial"><i class="fas fa-dollar-sign"></i> Valor Inicial</label>
+                                        <input type="number" name="valor_inicial" id="valor_inicial" class="form-control" step="0.01"
+                                            value="{{ old('valor_inicial', $equipo->valor_inicial) }}">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="fecha_adquisicion"><i class="fas fa-calendar-alt"></i> Fecha de Adquisición</label>
+                                        <input type="date" name="fecha_adquisicion" id="fecha_adquisicion" class="form-control"
+                                            value="{{ old('fecha_adquisicion', $equipo->fecha_adquisicion) }}">
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label for="vida_util_estimada"><i class="fas fa-hourglass-half"></i> Vida Útil Estimada</label>
+                                        <input type="text" name="vida_util_estimada" id="vida_util_estimada" class="form-control"
+                                            value="{{ old('vida_util_estimada', $equipo->vida_util_estimada) }}">
+                                    </div>
+                                </div>
+                            </fieldset>
 
 
-                    <!-- Mostrar Editables -->
-                    <h4 class="mb-3 text-info">Monitores</h4>
-                        <div id="monitores-container">
-                        <!-- Recorrer relacion y sumar un contador -->
-                        @foreach($equipo->monitores as $index => $monitor)
-                            <div class="monitor item card p-3 mb-3 border-secondary">
-                            <!-- Ir contando los Monitores -->
-                            <h6 class="text-secondary">Monitor #{{ $index + 1 }} </h6>
-                            <!-- Esto hira armando el array para el backEnd -->
-                            <input type="hidden" name="monitores[{{ $index }}][id]" value="{{ $monitor->id }}">
-                            <div class="form-group">
-                                <label>Marca</label>
-                                    <!-- Tomar valor Viejo y modificar -->
-                                    <input type="text" name="monitores[{{$index}}][marca]" id=""
-                                    placeholder="waza"
-                                    value=" {{old('monitores.' . $index . '.marca', $monitor->marca ?? '')}} ">
+                            {{-- SECCIÓN COMPONENTES EDITABLES --}}
+                            <h5 class="section-title mt-4"><i class="fas fa-tools"></i> Edición Detallada de Componentes</h5>
+
+                            <div id="componentes-editables">
+
+                                {{-- Periféricos --}}
+                                <div class="component-group">
+                                    <h6 class="text-info"><i class="fas fa-keyboard"></i> Periféricos (Editables)</h6>
+                                    <hr class="my-2">
+                                    <div id="perifericos-container">
+                                        @foreach($equipo->perifericos as $index => $periferico)
+                                        <div class="p-2 mb-2 border rounded bg-white">
+                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
+                                            <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
+        
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Tipo / Marca</label>
+                                                    <input type="text" name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm"
+                                                        placeholder="Ej: Teclado, Monitor, Mouse"
+                                                        value="{{ old('perifericos.' . $index . '.tipo', $periferico->tipo ?? '') }}">
+                                                </div>
+        
+                                                <div class="form-group col-md-6">
+                                                    <label>Serial</label>
+                                                    <input type="text" name="perifericos[{{ $index }}][serial]" class="form-control form-control-sm"
+                                                        placeholder="Serial del periférico"
+                                                        value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                {{-- Rams --}}
+                                <div class="component-group">
+                                    <h6 class="text-info"><i class="fas fa-memory"></i> Módulos RAM (Editables)</h6>
+                                    <hr class="my-2">
+                                    <div id="rams-container">
+                                        @foreach($equipo->rams as $index => $ram)
+                                        <div class="p-2 mb-2 border rounded bg-white">
+                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> RAM #{{ $index + 1 }} </h6>
+                                            <input type="hidden" name="rams[{{ $index }}][id]" value="{{ $ram->id }}">
+        
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label>Capacidad (GB)</label>
+                                                    <input type="text" name="rams[{{$index}}][capacidad_gb]" class="form-control form-control-sm"
+                                                        value="{{ old('rams.' . $index . '.capacidad_gb', $ram->capacidad_gb ?? '') }}" placeholder="Ej: 8">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>Clock (MHz)</label>
+                                                    <input type="text" name="rams[{{$index}}][clock_mhz]" class="form-control form-control-sm"
+                                                        value="{{ old('rams.' . $index . '.clock_mhz', $ram->clock_mhz ?? '') }}" placeholder="Ej: 3200">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>Tipo (DDR)</label>
+                                                    <input type="text" name="rams[{{$index}}][tipo_chz]" class="form-control form-control-sm"
+                                                        value="{{ old('rams.' . $index . '.tipo_chz', $ram->tipo_chz ?? '') }}" placeholder="Ej: DDR4">
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                {{-- Procesadores --}}
+                                <div class="component-group">
+                                    <h6 class="text-info"><i class="fas fa-microchip"></i> Procesadores (Editables)</h6>
+                                    <hr class="my-2">
+                                    <div id="procesadores-container">
+                                        @foreach($equipo->procesadores as $index => $procesador)
+                                        <div class="p-2 mb-2 border rounded bg-white">
+                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Procesador #{{ $index + 1 }} </h6>
+                                            <input type="hidden" name="procesadores[{{ $index }}][id]" value="{{ $procesador->id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Marca</label>
+                                                    <input type="text" name="procesadores[{{$index}}][marca]" class="form-control form-control-sm"
+                                                        value="{{ old('procesadores.' . $index . '.marca', $procesador->marca ?? '') }}" placeholder="Ej: Intel, AMD">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Descripción / Modelo</label>
+                                                    <input type="text" name="procesadores[{{$index}}][descripcion_tipo]" class="form-control form-control-sm"
+                                                        value="{{ old('procesadores.' . $index . '.descripcion_tipo', $procesador->descripcion_tipo ?? '') }}" placeholder="Ej: Core i5-10400F">
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                {{-- Monitores --}}
+                                <div class="component-group">
+                                    <h6 class="text-info"><i class="fas fa-tv"></i> Monitores (Editables)</h6>
+                                    <hr class="my-2">
+                                    <div id="monitores-container">
+                                        @foreach($equipo->monitores as $index => $monitor)
+                                        <div class="p-2 mb-2 border rounded bg-white">
+                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Monitor #{{ $index + 1 }} </h6>
+                                            <input type="hidden" name="monitores[{{ $index }}][id]" value="{{ $monitor->id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Marca</label>
+                                                    <input type="text" name="monitores[{{$index}}][marca]" class="form-control form-control-sm"
+                                                        value="{{ old('monitores.' . $index . '.marca', $monitor->marca ?? '') }}" placeholder="Marca">
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>No. Serial</label>
+                                                    <input type="text" name="monitores[{{$index}}][serial]" class="form-control form-control-sm"
+                                                        value="{{ old('monitores.' . $index . '.serial', $monitor->serial ?? '') }}" placeholder="Serial">
+                                                </div> 
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>Pulgadas</label>
+                                                    <input type="text" name="monitores[{{$index}}][escala_pulgadas]" class="form-control form-control-sm"
+                                                        value="{{ old('monitores.' . $index . '.escala_pulgadas', $monitor->escala_pulgadas ?? '') }}" placeholder="Ej: 24">
+                                                </div> 
+
+                                                <div class="form-group col-md-6">
+                                                    <label>Interfaz</label>
+                                                    <input type="text" name="monitores[{{$index}}][interface]" class="form-control form-control-sm"
+                                                        value="{{ old('monitores.' . $index . '.interface', $monitor->interface ?? '') }}" placeholder="Ej: HDMI, DP">
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        @endforeach 
+                                    </div>
+                                </div>
+
+                                {{-- Discos Duros --}}
+                                <div class="component-group">
+                                    <h6 class="text-info"><i class="fas fa-hdd"></i> Discos Duros (Editables)</h6>
+                                    <hr class="my-2">
+                                    <div id="discosDuros-container">
+                                        @foreach($equipo->discosDuros as $index => $discoDuro)
+                                        <div class="p-2 mb-2 border rounded bg-white">
+                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Disco Duro #{{ $index + 1 }} </h6>
+                                            <input type="hidden" name="discoDuros[{{ $index }}][id]" value="{{ $discoDuro->id }}">
+
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label>Capacidad (GB/TB)</label>
+                                                    <input type="text" name="discoDuros[{{$index}}][capacidad]" class="form-control form-control-sm"
+                                                        value="{{ old('discoDuros.' . $index . '.capacidad', $discoDuro->capacidad ?? '') }}" placeholder="Ej: 500GB">
+                                                </div>
+
+                                                <div class="form-group col-md-4">
+                                                    <label>Tipo (HDD/SSD) </label>
+                                                    <input type="text" name="discoDuros[{{$index}}][tipo_hdd_ssd]" class="form-control form-control-sm"
+                                                        value="{{ old('discoDuros.' . $index . '.tipo_hdd_ssd', $discoDuro->tipo_hdd_ssd ?? '') }}" placeholder="Ej: SSD">
+                                                </div> 
+                                                
+                                                <div class="form-group col-md-4">
+                                                    <label>Interface </label>
+                                                    <input type="text" name="discoDuros[{{$index}}][interface]" class="form-control form-control-sm"
+                                                        value="{{ old('discoDuros.' . $index . '.interface', $discoDuro->interface ?? '') }}" placeholder="Ej: SATA, NVMe">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label>No serial</label>
-                                    <!-- Tomar valor Viejo y modificar -->
-                                    <input type="text" name="monitores[{{$index}}][serial]" id=""
-                                    placeholder="waza"
-                                    value=" {{old('monitores.' . $index . '.serial', $monitor->serial ?? '')}} ">
-                            </div>          
-
-                            <div class="form-group">
-                                <label>Escala en Pulgadas</label>
-                                    <!-- Tomar valor Viejo y modificar -->
-                                    <input type="text" name="monitores[{{$index}}][escala_pulgadas]" id=""
-                                    placeholder="waza"
-                                    value=" {{old('monitores.' . $index . '.escala_pulgadas', $monitor->escala_pulgadas ?? '')}} ">
-                            </div>   
-
-                            <div class="form-group">
-                                <label>Interface</label>
-                                    <!-- Tomar valor Viejo y modificar -->
-                                    <input type="text" name="monitores[{{$index}}][interface]" id=""
-                                    placeholder="waza"
-                                    value=" {{old('monitores.' . $index . '.interface', $monitor->interface ?? '')}} ">
-                            </div>   
-
-                        </div>
-                        @endforeach   
-
-
+                            
+                            {{-- BOTÓN FINAL --}}
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-success btn-lg btn-block">
+                                    <i class="fas fa-database"></i> **Aplicar Cambios y Registrar Historial**
+                                </button>
                             </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    @stop
+                        </form>
+                    </div> {{-- /card-body --}}
+                </div> {{-- /card --}}
+            </div> {{-- /col-md-7 --}}
+        </div> {{-- row --}}
+    </div> {{-- container --}}
+@stop
+
+{{-- -------------------------------------------------------------------------------- --}}
+{{-- Scripts Adicionales (Para Select2 si estás usándolo) --}}
+@section('js')
+    {{-- Asegúrate de que Select2 esté inicializado si se usa en los dropdowns --}}
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                theme: 'bootstrap4',
+            });
+        });
+    </script>
+@stop
