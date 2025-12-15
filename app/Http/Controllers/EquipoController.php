@@ -23,6 +23,12 @@ class EquipoController extends Controller
         return view('equipos.index', compact('equipos'));
     }
 
+    //Function to explain the main table
+    public function historial()
+    {
+        return view('equipos.historial');
+    }
+
     //function to create a new 'equipo'
     public function create()
     {

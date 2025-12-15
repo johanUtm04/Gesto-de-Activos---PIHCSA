@@ -59,9 +59,19 @@
 {{-- HEADER PRINCIPAL --}}
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center">
-        <h1><i class="fas fa-list-alt text-info"></i> Inventario de Activos Fijos (Equipos)</h1>
+        <h1><i class="fas fa-list-alt text-info"></i> Inventario de Activos Fijos (Equipos), Eres un usuario 
+        <strong style="color: #007bff;">
+        {{ ucfirst(auth()->user()->rol)}}
+        </strong>
+        </h1>
+        @can('crear-equipo')
         <a href="{{ route('equipos.create') }}" class="btn btn-success">
             <i class="fas fa-plus-circle"></i> Agregar Nuevo Equipo
+        </a>       
+        @endcan
+
+        <a href="{{ route('equipos.historial') }}" class="btn btn-primary">
+        <i class="fas fa-eye"></i> Ver Historial COMPLETO
         </a>
     </div>
 @stop
@@ -272,7 +282,6 @@
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
 
-                                    @if(in_array(auth()->user()->rol,['Admin', 'Sistemas']))
                                         {{-- Botón Ver Detalles (Modal) --}}
                                         <button class="btn btn-outline-info" title="Ver Detalles"
                                             data-toggle="modal" 
@@ -297,17 +306,21 @@
                                         </button>
                                         
                                         {{-- Botón Editar --}}
+                                        @can('editar-equipo')
                                         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-warning" title="Editar Activo">
                                             <i class="fas fa-pen"></i>
                                         </a>
+                                        @endcan
 
                                         {{-- Botón Mantenimiento --}}
+                                        @can('mantenimiento-equipo')
                                         <a href="{{ route('equipos.addwork.index', $equipo) }}" class="btn btn-outline-primary" title="Registrar Mantenimiento">
                                             <i class="fas fa-tools"></i>
                                         </a>
-
+                                        @endcan
+                        
                                         {{-- Botón Eliminar --}}
-                                        @if(in_array(auth()->user()->rol,['Admin']))
+                                        @can('eliminar-equipo')
                                         <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
@@ -317,7 +330,8 @@
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
-                                        @endif
+                                           @endcan
+                                    
                                         
                                     </div>
                                 </td>
