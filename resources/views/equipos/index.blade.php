@@ -271,6 +271,8 @@
                                 {{-- Acciones --}}
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
+
+                                    @if(in_array(auth()->user()->rol,['Admin', 'Sistemas']))
                                         {{-- Botón Ver Detalles (Modal) --}}
                                         <button class="btn btn-outline-info" title="Ver Detalles"
                                             data-toggle="modal" 
@@ -305,6 +307,7 @@
                                         </a>
 
                                         {{-- Botón Eliminar --}}
+                                        @if(in_array(auth()->user()->rol,['Admin']))
                                         <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
@@ -314,6 +317,8 @@
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
+                                        @endif
+                                        
                                     </div>
                                 </td>
                             </tr>
