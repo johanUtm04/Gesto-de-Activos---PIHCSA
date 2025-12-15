@@ -17,6 +17,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/equipos/create', [EquipoController::class, 'create'])->name('equipos.create');
     Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
     Route::get('/equipos/{equipo}/edit', [EquipoController::class, 'edit'])->name('equipos.edit');
+    Route::get('/equipos/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork.index');
+    Route::post('/equipos/{equipo}/addwork', [EquipoController::class, 'addwork'])->name('equipos.addwork.store');
+    // Route::put('/equipos/{equipo}', [EquipoController::class, 'updatework'])->name('equipos.updatework');
     Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
     Route::delete('/equipos/{equipo}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -52,3 +55,16 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+
+
+//Vista de pueba para middleware 
+
+Route::get('/mayorDeEdad', function () {
+return "Unico correo autorizado Correcto";
+})->middleware('age');
+
+Route::get('no-autorizado', function () {
+return "Mentira ese correo ni esta";
+});
+

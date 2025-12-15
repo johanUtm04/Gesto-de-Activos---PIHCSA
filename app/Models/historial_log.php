@@ -9,6 +9,11 @@ class Historial_log extends Model
 {
     use HasFactory;
 
+//  CLAVE PARA JSON
+    protected $casts = [
+        'detalles_json' => 'array',
+    ];
+
     // CRÍTICO: Debe apuntar a la tabla correcta en la DB.
     protected $table = 'historiales_log'; 
     protected $guarded = ['id']; // Permite asignación masiva

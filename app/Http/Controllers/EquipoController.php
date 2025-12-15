@@ -6,11 +6,13 @@ use App\Models\Equipo;
 use App\Models\Monitor;
 use App\Models\Ubicacion;
 use App\Models\discos_duros;
+use App\Models\Historial_log;
 use App\Models\Periferico;
 use App\Models\Procesador;
 use App\Models\Ram;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\FlareClient\View;
 
 class EquipoController extends Controller
 {
@@ -81,6 +83,7 @@ class EquipoController extends Controller
             'valor_inicial' => 'required|numeric|min:0|max:999999.99',
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
+            ''
             ]);
 
         $equipo->update($request->all());
@@ -119,9 +122,8 @@ if ($request->has('perifericos')) {
                     'equipo_id' => $equipo->id, 
                 ]);
             }
-        }
+        } 
     }
-
 
 //El formualario envio el arreglo de rams
 if ($request->has('rams')) {
@@ -258,15 +260,83 @@ if ($request->has('discoDuros')) {
         }
     }
 
+//Si se envia el arreglo de monitores
+if ($request->has('discoDuros')) {
+    //recorremos ese arreglo
+        foreach ($request->input('discoDuros') as $peripheralData) {
+            
+            // Si la ram tiene un ID, es un registro existente, entramos aqui 
+            if (isset($peripheralData['id'])) {
+                //La guardamos en una variable
+                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
+                //Lo trae de la DB 
+                $discoDuro = DiscoDuro::find($peripheralData['id']);
+                
+            
+                if ($discoDuro) {
+                    //Si los espacios de la cajita ambos estan vacios 
+                    //la mauqina interpreta que como estan vacios se borraron, los borramos
+                    if (empty($peripheralData['capacidad']) && empty($peripheralData['tipo_hdd_ssd']) && empty($peripheralData['interface'])) {
+                        $discoDuro->delete(); 
+                    } else {
 
+                        //Caso contrario solo actualizamos el registro existente
+                        $discoDuro->update([
+                            'capacidad' => $peripheralData['capacidad'],
+                            'tipo_hdd_ssd' => $peripheralData['tipo_hdd_ssd'],
+                            'interface' => $peripheralData['interface'],
+                        ]);
+                    }
+                }
+            } 
+        }
+    }
 
     return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');
+}
+
+
+    //function to delete some 'equipo'
+    public function indexaddwork(Equipo $equipo)
+    {
+        return view('equipos.addwork',compact('equipo'));
     }
+
+
+    //function to delete some 'equipo'
+    public function addwork(Equipo $equipo, Request $request)
+    {
+
+    $data = $request->validate([
+        'tipo_evento'  => 'required|string',
+        'fecha_evento' => 'required|date',
+        'contexto'     => 'required|string',
+        'costo'        => 'nullable|numeric',
+    ]);
+
+    $payload = [
+        'tipo_evento'  => $data['tipo_evento'],
+        'fecha_evento' => $data['fecha_evento'],
+        'contexto'     => $data['contexto'],
+        'costo'        => $data['costo'],
+    ];
+
+    Historial_log::create([
+        'activo_id'          => $equipo->id,
+        'usuario_accion_id'  => auth()->id(),
+        'tipo_registro'           => 'MANTENIMIENTO',
+        'detalles_json'            => $payload,
+    ]);
+    $equipos = Equipo::all();
+    return view('equipos.index', compact('equipos') );
+    }
+
+
 
     //function to delete some 'equipo'
     public function destroy(Equipo $equipo)
     {
         $equipo->delete();
-        return redirect()->route('equipos.index')->with('danger', 'Equipo eliminado correctamente');
+        return redirect()->route('equipos.index');
     }
 }

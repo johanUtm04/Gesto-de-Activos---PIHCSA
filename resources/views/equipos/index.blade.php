@@ -300,7 +300,7 @@
                                         </a>
 
                                         {{-- Botón Mantenimiento --}}
-                                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary" title="Registrar Mantenimiento">
+                                        <a href="{{ route('equipos.addwork.index', $equipo) }}" class="btn btn-outline-primary" title="Registrar Mantenimiento">
                                             <i class="fas fa-tools"></i>
                                         </a>
 
