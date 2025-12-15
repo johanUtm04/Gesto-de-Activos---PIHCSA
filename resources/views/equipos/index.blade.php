@@ -339,6 +339,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mt-3">
+                    {{ $equipos->links() }}
+                </div>
             </div> {{-- /table-responsive --}}
         </div> {{-- /card-body --}}
     </div> {{-- /card --}}

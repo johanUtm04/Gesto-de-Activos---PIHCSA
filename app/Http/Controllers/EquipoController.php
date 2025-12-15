@@ -19,7 +19,7 @@ class EquipoController extends Controller
     //Function to explain the main table
     public function index()
     {
-        $equipos = Equipo::all(); 
+        $equipos = Equipo::paginate(5);
         return view('equipos.index', compact('equipos'));
     }
 
