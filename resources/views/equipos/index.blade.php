@@ -2,52 +2,43 @@
 
 @section('title', 'Inventario de Activos TI')
 
-{{-- -------------------------------------------------------------------------------- --}}
-{{-- Estilos personalizados (mejor legibilidad de datos complejos) --}}
 @section('css')
 <style>
-    /* Estilo para hacer la tabla más legible */
     .table-assets thead th {
-        /* Un fondo limpio y un borde inferior que resalte */
-        background-color: #e9ecef; /* Light gray background for header */
-        color: #17a2b8; /* Info color text for prominence */
+        background-color: #e9ecef; 
+        color: #17a2b8; 
         font-weight: 700;
-        border-bottom: 3px solid #17a2b8; /* Borde inferior que coincide con el color del título */
+        border-bottom: 3px solid #17a2b8;
         vertical-align: middle;
         padding: 10px;
     }
 
-    /* Estilo para los TDs que contienen la información agrupada */
     .table-assets tbody td {
-        vertical-align: top; /* Alinear el texto de las celdas agrupadas en la parte superior */
+        vertical-align: top; 
         font-size: 14px;
         line-height: 1.4;
     }
     
-    /* Resaltar datos complejos o importantes */
     .component-count {
         font-weight: 600;
-        color: #28a745; /* Color verde (Success) para indicar existencia */
+        color: #28a745; 
     }
 
-    /* Estilo para datos secundarios (ubicación, email) */
     .secondary-data {
-        color: #6c757d; /* Gris tenue */
+        color: #6c757d; 
         font-size: 0.85em;
-        display: block; /* Asegurar que ocupe su propia línea si es necesario */
+        display: block; 
     }
 
-    /* Estilo para el modal de detalles, más limpio */
     .modal-detail-row {
         padding: 8px 0;
-        border-bottom: 1px dashed #ced4da; /* Línea de puntos más sutil */
+        border-bottom: 1px dashed #ced4da; 
     }
 
     .modal-detail-row:last-child {
         border-bottom: none;
     }
     
-    /* Asegurar que el botón de cerrar del modal sea visible */
     .modal-header .close {
         padding: 1rem 1rem;
         margin: -1rem -1rem -1rem auto;
@@ -55,7 +46,6 @@
 </style>
 @stop
 
-{{-- -------------------------------------------------------------------------------- --}}
 {{-- HEADER PRINCIPAL --}}
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center">
@@ -82,7 +72,7 @@
     
     {{-- Manejo de Mensajes de Sesión (Alertas AdminLTE) --}}
     @php
-        $alertTypes = ['success', 'danger', 'warning', 'info'];
+        $alertTypes = ['success', 'danger', 'warning', 'info', 'primary'];
     @endphp
 
     @foreach ($alertTypes as $msg)

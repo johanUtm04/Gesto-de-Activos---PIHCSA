@@ -20,7 +20,7 @@ class EquipoController extends Controller
     public function index()
     {
         $equipos = Equipo::paginate(5);
-        return view('equipos.index', compact('equipos'));
+        return view('equipos.index', compact('equipos'))->with('info', 'Bienvenido');
     }
 
     //Function to explain the main table
@@ -47,7 +47,7 @@ class EquipoController extends Controller
             'sistema_operativo' => 'required|string|max:11', 
             'usuario_id' => 'required|integer|exists:users,id',
             'ubicacion_id' => 'required|integer|exists:ubicaciones,id',
-            'valor_inicial' => 'required|numeric|min:0|max:999999.99',
+            'valor_inicial' => 'required|numeric|min:0|max:99   9999.99',
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
             ]);
@@ -298,7 +298,7 @@ if ($request->has('discoDuros')) {
         }
     }
 
-    return redirect()->route('equipos.index')->with('primary', 'Equipo actualizado correctamente');
+    return redirect()->route('equipos.index')->with('warning', 'Equipo actualizado correctamente');
 }
 
 
@@ -343,6 +343,6 @@ if ($request->has('discoDuros')) {
     public function destroy(Equipo $equipo)
     {
         $equipo->delete();
-        return redirect()->route('equipos.index');
+        return redirect()->route('equipos.index')->with('danger', 'Equipo Eliminado correctamente');
     }
 }
