@@ -6,7 +6,6 @@
 {{-- Estilos personalizados --}}
 @section('css')
 <style>
-    /* Estilo para los fieldsets que agrupan información */
     .fieldset-group {
         border: 1px solid #ced4da;
         padding: 15px;
@@ -20,10 +19,9 @@
         border-bottom: none;
         font-size: 1.1em;
         font-weight: 600;
-        color: #007bff; /* Color primario de AdminLTE */
+        color: #007bff; 
     }
 
-    /* Resaltar campos requeridos de forma visual (aunque Laravel ya lo maneja) */
     .form-group label {
         font-weight: 500;
         color: #343a40;
@@ -82,19 +80,19 @@
 
                         {{-- Marca --}}
                         <div class="form-group">
-                            <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo *</label>
+                            <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo</label>
                             <input 
                                 type="text" 
                                 name="marca_equipo" 
                                 id="marca_equipo"
                                 class="form-control"
                                 placeholder="Ej. Dell, HP, Lenovo"
-                                value="{{ old('marca_equipo') }}">
+                                value="{{ old('marca_equipo') }}" >
                         </div>
 
-                        {{-- Tipo --}}
+                        {{-- Tipo de Equipo --}}
                         <div class="form-group">
-                            <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo *</label>
+                            <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
                             <input 
                                 type="text" 
                                 name="tipo_equipo" 
@@ -107,7 +105,7 @@
 
                         {{-- Serial --}}
                         <div class="form-group">
-                            <label for="serial"><i class="fas fa-barcode"></i> Serial *</label>
+                            <label for="serial"><i class="fas fa-barcode"></i> Serial</label>
                             <input 
                                 type="text" 
                                 name="serial" 
@@ -115,7 +113,7 @@
                                 class="form-control"
                                 placeholder="Número de serie"
                                 value="{{ old('serial') }}" 
-                                required>
+                                >
                         </div>
 
                         {{-- Sistema Operativo --}}
@@ -157,7 +155,7 @@
                         {{-- Ubicación --}}
                         <div class="form-group">
                             <label for="ubicacion_id"><i class="fas fa-map-marker-alt"></i> Ubicación *</label>
-                            <select name="ubicacion_id" id="ubicacion_id" class="form-control select2">
+                            <select name="ubicacion_id" id="ubicacion_id" class="form-control select2" required>
                                 <option value="">Seleccione una ubicación</option>
                                 @foreach($ubicaciones as $ubicacion)
                                     <option 
@@ -182,7 +180,7 @@
                                 class="form-control"
                                 placeholder="Ej. 15000.00"
                                 value="{{ old('valor_inicial') }}" 
-                                required>
+                                >
                         </div>
 
                         {{-- Fecha de adquisición --}}

@@ -43,26 +43,30 @@ class EquipoController extends Controller
     $request->validate([
         'marca_equipo' => 'nullable|string|max:255',
         'tipo_equipo' => 'required|string|max:255',
-        'serial' => 'required|string|max:255',
+        'serial' => 'nullable|string|max:255',
         'sistema_operativo' => 'required|string|max:35', 
         'usuario_id' => 'required|integer|exists:users,id',
         'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
-        'valor_inicial' => 'required|numeric|min:0|max:999999.99',
+        'valor_inicial' => 'nullable|numeric|min:0|max:999999.99',
         'fecha_adquisicion' => 'required|date',
         'vida_util_estimada' => 'required|string|max:255',
         ]);
 
-        $equipo = Equipo::create([
-            'marca_equipo' => $request->marca_equipo,
-            'tipo_equipo' => $request->tipo_equipo,
-            'serial' => $request->serial,
-            'sistema_operativo' => $request->sistema_operativo,
-            'usuario_id' => $request->usuario_id,
-            'ubicacion_id' => $request->ubicacion_id,
-            'valor_inicial' => $request->valor_inicial,
-            'fecha_adquisicion' => $request->fecha_adquisicion,
-            'vida_util_estimada' => $request->vida_util_estimada,
-        ]);
+        $data = $request->all();
+
+        if (empty($request->serial)) {
+            $data['serial'] = 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+        }
+        
+        if (empty($request->marca_equipo)) {
+            $data['marca_equipo'] = 'Sin marca asignada';
+        }
+
+        if (empty($request->valor_inicial)) {
+            $data['valor_inicial'] = 0;
+        }
+
+        $equipo = Equipo::create($data);
 
         return redirect()->route('equipos.wizard-ubicacion', $equipo->id);
     }

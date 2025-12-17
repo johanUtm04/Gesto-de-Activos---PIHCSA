@@ -171,7 +171,7 @@ class EquipoWizardController extends Controller
 
         if ($request->has('skip')) {
             return redirect()->route('equipos.index')
-            ->with('success', 'Equipo registrado correctamente');
+            ->with('success', 'Equipo registrado correctamente)');
         }
 
         return redirect()->route('equipos.index', $equipo->id)
