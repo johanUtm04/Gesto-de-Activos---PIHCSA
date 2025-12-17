@@ -89,7 +89,7 @@
                                 id="marca_equipo"
                                 class="form-control"
                                 placeholder="Ej. Dell, HP, Lenovo"
-                                value="{{ old('marca_equipo') }}" required>
+                                value="{{ old('marca_equipo') }}">
                         </div>
 
                         {{-- Tipo --}}
