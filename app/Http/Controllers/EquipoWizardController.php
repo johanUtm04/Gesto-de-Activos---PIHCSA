@@ -169,6 +169,11 @@ class EquipoWizardController extends Controller
             'descripcion_tipo' => $request->descripcion_tipo,
         ]);
 
+        if ($request->has('skip')) {
+            return redirect()->route('equipos.index')
+            ->with('success', 'Equipo registrado correctamente');
+        }
+
         return redirect()->route('equipos.index', $equipo->id)
             ->with('success', 'Equipo registrado correctamente');
     }

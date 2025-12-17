@@ -57,7 +57,14 @@
                     <button type="submit" class="btn btn-primary btn-lg">
                         <i class="fas fa-chevron-circle-right"></i> Guardar y Continuar al Paso 3
                     </button>
+                    <!-- Boton de Omitir -->
+                    <!-- <button type="" class="btn btn btn-lg">
+                        <i class="fas fa-chevron-circle-right"></i> Omitir
+                    </button> -->
                     {{-- Si hay una ruta de retroceso, puedes poner un botón aquí --}}
+                    <a href="{{ route('equipos.wizard-monitores', $equipo) }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-forward"></i> Omitir este paso
+                    </a>
                 </div>
 
             </form>

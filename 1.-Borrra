@@ -93,3 +93,41 @@ Cache / Limpieza
     php artisan config:clear
     php artisan route:clear
 
+
+
+
+🔹 Sprint 2 – Interfaz y módulo de historial
+
+Objetivo: Mejorar la experiencia de usuario y completar el módulo de historial.
+
+Actividades:
+
+Desarrollo de formularios modulares
+
+Formularios con pestañas.
+
+Separación por secciones funcionales.
+
+Validaciones básicas.
+
+Detalles estéticos
+
+Ajustes visuales.
+
+Consistencia de estilos (AdminLTE).
+
+Mejora de legibilidad y orden de información.
+
+Desarrollo completo del módulo de historial
+
+Registro de cambios.
+
+Visualización por usuario y acción.
+
+Preparación para futuras exportaciones.
+
+Pausa para retroalimentación
+
+Revisión del avance con el ingeniero.
+
+Ajustes según comentarios.

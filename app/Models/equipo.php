@@ -27,7 +27,7 @@ class Equipo extends Model
         'sistema_operativo',
         'usuario_id',
         'ubicacion_id',
-        'valor_inicial',
+        'valor_inicial'=>'required|string',
         'fecha_adquisicion',
         'vida_util_estimada',
     ];

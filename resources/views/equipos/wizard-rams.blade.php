@@ -86,7 +86,11 @@
                     <button type="submit" class="btn btn-success btn-lg">
                         <i class="fas fa-chevron-circle-right"></i> Guardar RAM y Continuar
                     </button>
-                    
+                
+                    <a href="{{ route('equipos.wizard-periferico', $equipo) }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-forward"></i> Omitir este paso
+                    </a>
+
                 </div>
             </form>
         </div>

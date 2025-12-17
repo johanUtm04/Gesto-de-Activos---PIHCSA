@@ -47,7 +47,7 @@ class EquipoController extends Controller
             'sistema_operativo' => 'required|string|max:11', 
             'usuario_id' => 'required|integer|exists:users,id',
             'ubicacion_id' => 'required|integer|exists:ubicaciones,id',
-            'valor_inicial' => 'required|numeric|min:0|max:99   9999.99',
+            'valor_inicial' => 'required|numeric|min:0|max:999999.99',
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
             ]);

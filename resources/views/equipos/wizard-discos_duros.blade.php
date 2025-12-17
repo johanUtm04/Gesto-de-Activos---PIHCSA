@@ -82,6 +82,10 @@
                     <button type="submit" class="btn btn-success btn-lg">
                         <i class="fas fa-chevron-circle-right"></i> Guardar Disco Duro y Continuar
                     </button>
+                    <a href="{{ route('equipos.wizard-ram', $equipo) }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-forward"></i> Omitir este paso
+                    </a>
+
                 </div>
             </form>
         </div>

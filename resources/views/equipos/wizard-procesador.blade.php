@@ -68,10 +68,12 @@
                 </div>
 
                 <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="fas fa-check-double"></i> Finalizar Asistente y Ver Activo
-                    </button>
-
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-check-double"></i> Finalizar Asistente y Ver Activo
+                </button>
+                <button type="submit" name="skip" value="1" class="btn btn-outline-secondary btn-lg" formnovalidate>
+                    <i class="fas fa-chevron-circle-right"></i> Omitir
+                </button>
                 </div>
             </form>
         </div>

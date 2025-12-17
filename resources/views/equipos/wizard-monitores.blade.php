@@ -90,8 +90,13 @@
                         <i class="fas fa-save"></i> Guardar Monitor y Continuar
                     </button>
 
+                    <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-forward"></i> Omitir este paso
+                    </a>
+
                 </div>
             </form>
+
         </div>
     </div>
 @endsection

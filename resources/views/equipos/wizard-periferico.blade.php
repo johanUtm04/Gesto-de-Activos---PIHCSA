@@ -89,7 +89,10 @@
                     <button type="submit" class="btn btn-success btn-lg">
                         <i class="fas fa-check-circle"></i> Guardar y Finalizar
                     </button>
-                    
+
+                    <a href="{{ route('equipos.wizard-procesador', $equipo) }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-forward"></i> Omitir este paso
+                    </a>
 
                 </div>
             </form>
