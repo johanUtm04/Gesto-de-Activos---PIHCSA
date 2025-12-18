@@ -3,12 +3,22 @@
 Sistema web desarrollado en **Laravel + AdminLTE** para el control, registro y administración de activos de TI (equipos, componentes y periféricos) mediante un **wizard paso a paso**, con enfoque en buena UX, claridad visual y mantenibilidad.
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 25px;">
-  <img src="/public/vendor/adminlte/dist/img/logohd.png" alt="Inventario de Activos TI" width="200">
-  <img src="/public/vendor/adminlte/dist/img/laravel.png" alt="Inventario de Activos TI" width="200">
-  <img src="/public/vendor/adminlte/dist/img/mysql.png" alt="Inventario de Activos TI" width="200">
-  <img src="/public/vendor/adminlte/dist/img/php.png" alt="Inventario de Activos TI" width="200">
-
-</div>
+<table align="center" border="0">
+  <tr>
+    <td align="center" valign="center">
+      <img src="/public/vendor/adminlte/dist/img/logohd.png" width="150" alt="Logo">
+    </td>
+    <td align="center" valign="center">
+      <img src="/public/vendor/adminlte/dist/img/laravel.png" width="150" alt="Laravel">
+    </td>
+    <td align="center" valign="center">
+      <img src="/public/vendor/adminlte/dist/img/mysql.png" width="150" alt="MySQL">
+    </td>
+    <td align="center" valign="center">
+      <img src="/public/vendor/adminlte/dist/img/php.png" width="150" alt="PHP">
+    </td>
+  </tr>
+</table>
 
 
 ---
