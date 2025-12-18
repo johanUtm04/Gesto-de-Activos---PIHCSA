@@ -257,7 +257,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'equipos',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -328,6 +328,23 @@ return [
             'icon' => 'fas fa-dollar-sign',
         ],
 
+        [
+            'text' => 'Papelera_Activos_Eliminados',
+            'url' => 'admin/settings',
+            'icon' => 'fas fa-trash',
+        ],
+
+        //Solo ADMIN
+        [
+            'text' => 'gestion_usuarios',
+            'url' => 'admin/settings',
+            'icon' => 'fas fa-users-cog',
+        ],
+        [
+            'text' => 'gestion_ubicaciones',
+            'url' => 'admin/settings',
+            'icon' => 'fas fa-map-marker-alt',
+        ],
     ],
 
     /*

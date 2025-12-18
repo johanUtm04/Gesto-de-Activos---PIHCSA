@@ -260,7 +260,7 @@ if ($request->has('discoDuros')) {
 
     return redirect()->route('equipos.index')
     ->with('warning', 'Equipo editado correctamente')
-    ->with('highlight_id', $equipo->id);;
+    ->with('actualizado-id', $equipo->id);
 }
 
 

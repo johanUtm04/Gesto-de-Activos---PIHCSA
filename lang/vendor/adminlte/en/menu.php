@@ -25,10 +25,13 @@ return [
 
     // Configuración de Cuenta y Perfil
     'account_settings'             => 'AJUSTES DE CUENTA',
-    'profile'                      => 'Mi Perfil (Pihcsa)',
+    'profile'                      => 'Mi Perfil',
     'change_password'              => 'Cambiar Contraseña',
     'Calcular_depreciacion'        => 'Calcular Depreciacion',
-    
+    'Papelera_Activos_Eliminados'  => 'Papelera',
+    'gestion_usuarios'             => 'Gestion de Usuarios',
+    'gestion_ubicaciones'           => 'Gestion de Ubicaciones',
+
     // Etiquetas de estado
     'labels'                       => 'ESTADOS DE EQUIPO',
     'important'                    => 'Crítico (En Uso)',

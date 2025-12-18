@@ -176,7 +176,7 @@ class EquipoWizardController extends Controller
 
         return redirect()->route('equipos.index', $equipo->id)
                 ->with('success', 'Equipo creado correctamente')
-                ->with('highlight_id', $equipo->id);
+                ->with('new_id', $equipo->id);
     }
 
 }

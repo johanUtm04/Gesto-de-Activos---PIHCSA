@@ -49,17 +49,6 @@
         padding: 6px 8px;
     }
 
-    .highlight-row {
-        animation: rowGlow 2s ease-out;
-        background-color: rgba(40,167,69,.15);
-    }
-
-    @keyframes rowGlow {
-        0%   { background-color: rgba(40,167,69,0); }
-        50%  { background-color: rgba(40,167,69,.35); }
-        100% { background-color: rgba(40,167,69,.15); }
-    }
-
 </style>
 @stop
 
@@ -71,7 +60,7 @@
             <i class="fas fa-boxes text-info"></i> Inventario de Activos
         </h1>
         <small class="text-muted">
-            Rol actual: {{ ucfirst(auth()->user()->rol) }}
+            Rol actual:  <strong>{{ ucfirst(auth()->user()->rol) }}</strong> 
         </small>
     </div>
 
@@ -230,11 +219,17 @@
                     </thead>
                     <tbody>
                         @foreach($equipos as $equipo)
-                            <tr class="{{ session('highlight_id') == $equipo->id ? 'highlight-row' : '' }}">
+                            <tr id="equipo-{{ $equipo->id }}">
                                 <td>{{ $equipo->id }}</td>
                                 
                                 {{-- ACTIVO / SERIAL (Agrupado) --}}
                                 <td>
+                                    @if(session('new_id') == $equipo->id)
+                                        <span class="badge badge-success ml-1">Nuevo</span>
+                                    @endif
+                                    @if(session('actualizado-id') == $equipo->id)
+                                        <span class="badge badge-warning ml-1">Editado</span>
+                                    @endif
                                     <strong>{{ $equipo->marca_equipo ?? '-' }}</strong> ({{ $equipo->tipo_equipo }})<br>
                                     <span class="secondary-data"><i class="fas fa-barcode"></i> Serial: {{ $equipo->serial }}</span><br>
                                     <span class="secondary-data"><i class="fab fa-windows"></i> SO: {{ $equipo->sistema_operativo }}</span>
@@ -350,6 +345,22 @@
 
 @stop
 
+
+@section('footer')
+<footer class="main-footer text-sm">
+    <div class="float-right d-none d-sm-inline">
+        <i class="fas fa-code"></i> PIHCSA · Gestion de Activos
+    </div>
+
+    <strong>
+        <i class="fas fa-boxes"></i> Inventario de Activos TI
+    </strong>
+    &copy; {{ date('Y') }} |
+    Desarrollado por <strong>Johan</strong>
+
+</footer>
+@endsection
+
 {{-- -------------------------------------------------------------------------------- --}}
 {{-- SCRIPTS (AdminLTE usa jQuery para modales, no Bootstrap 5 puro) --}}
 @section('js')
@@ -392,5 +403,17 @@
 
             });
         });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const id = "{{ session('new_id') ?? session('actualizado-id') }}";
+
+    if (id) {
+        const row = document.getElementById('equipo-' + id);
+        if (row) {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+});
+
     </script>
 @stop

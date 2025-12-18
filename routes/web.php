@@ -8,8 +8,7 @@ use App\Http\Controllers\ProfileController;
 
 //Main Route
 Route::get('/', function () {
-    return view('welcome');
-});
+return view('auth.login');});
 
 //Full crud to 'equipos'
 Route::middleware(['auth'])->group(function () {
