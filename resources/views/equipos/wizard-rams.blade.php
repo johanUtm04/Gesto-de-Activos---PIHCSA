@@ -2,97 +2,202 @@
 
 @section('title', 'Wizard | Asignar RAM')
 
-@section('content_header')
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h1 class="font-weight-bold">
-                <i class="fas fa-magic text-info"></i> Asistente de Configuración (Paso 5)
-            </h1>
-        </div>
-        <div class="col-md-4 text-right">
-            {{-- Simulación de Breadcrumb o barra de progreso simple --}}
-            <span class="badge badge-success"><i class="fas fa-check"></i> 1. Datos Base</span>
-            <span class="badge badge-success"><i class="fas fa-check"></i> 2. Ubicación</span>
-            <span class="badge badge-success"><i class="fas fa-check"></i> 3. Monitor</span>
-            <span class="badge badge-success"><i class="fas fa-check"></i> 4. Disco Duro</span>
-            <span class="badge badge-warning"><i class="fas fa-memory"></i> 5. RAM</span>
-        </div>
-    </div>
+{{-- ================================================================================= --}}
+{{-- ESTILOS --}}
+@section('css')
+<style>
+    .wizard-steps {
+        font-size: 14px;
+    }
+
+    .wizard-step {
+        color: #adb5bd;
+    }
+
+    .wizard-step i {
+        font-size: 22px;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .wizard-step.active {
+        color: #ffc107;
+        font-weight: 600;
+    }
+
+    .wizard-step.completed {
+        color: #28a745;
+    }
+
+    .fieldset-group {
+        border: 1px solid #ced4da;
+        padding: 25px;
+        border-radius: .25rem;
+        background-color: #ffffff;
+    }
+
+    .fieldset-group i.fa-3x {
+        opacity: 0.25;
+    }
+</style>
 @stop
 
-@section('content')
-    <div class="container-fluid mt-4">
+{{-- ================================================================================= --}}
+{{-- HEADER --}}
+@section('content_header')
+<div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="font-weight-bold mb-1">
+                <i class="fas fa-memory text-warning"></i> Memoria RAM
+            </h1>
+            <small class="text-muted">
+                Paso 5 de 6 · Registro de memoria del activo
+            </small>
+        </div>
 
-        <div class="card card-warning card-outline">
+        <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}" class="btn btn-outline-secondary">
+            <i class="fas fa-chevron-left"></i> Anterior
+        </a>
+    </div>
+</div>
 
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-memory"></i> 
-                    Registro de Memoria RAM (Para el activo: <strong>{{ $equipo->serial }}</strong>)
-                </h3>
+{{-- WIZARD --}}
+<div class="card mb-3">
+    <div class="card-body p-3">
+        <div class="d-flex justify-content-between text-center wizard-steps">
+
+            <div class="wizard-step completed">
+                <i class="fas fa-desktop"></i>
+                <div>Activo</div>
             </div>
 
-            <form action="{{ route('equipos.wizard.saveRam', $equipo) }}" method="POST">
-                @csrf
-                
-                <div class="card-body">
+            <div class="wizard-step completed">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>Ubicación</div>
+            </div>
 
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle mr-1"></i> 
-                        Registre la capacidad y especificaciones del módulo RAM.
-                    </div>
+            <div class="wizard-step completed">
+                <i class="fas fa-tv"></i>
+                <div>Monitor</div>
+            </div>
 
-                    <div class="row">
-                        {{-- COLUMNA IZQUIERDA --}}
-                        <div class="col-md-6">
-                            
-                            {{-- Capacidad en GB --}}
-                            <div class="form-group">
-                                <label for="capacidad_gb"><i class="fas fa-tachometer-alt"></i> Capacidad en GB</label>
-                                <input type="text" id="capacidad_gb" class="form-control" name="capacidad_gb" 
-                                    value="{{ old('capacidad_gb') }}" placeholder="Ej. 8, 16, 32">
-                                @error('capacidad_gb') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
+            <div class="wizard-step completed">
+                <i class="fas fa-hdd"></i>
+                <div>Disco</div>
+            </div>
 
-                            {{-- Clock (Velocidad) --}}
-                            <div class="form-group">
-                                <label for="clock_mhz"><i class="fas fa-clock"></i> Clock (MHz)</label>
-                                {{-- **CORRECCIÓN:** Se asume que el campo debe llamarse 'clock_mhz' para coincidir con el error/validación. --}}
-                                <input type="text" id="clock_mhz" class="form-control" name="clock_mhz" 
-                                    value="{{ old('clock_mhz') }}" placeholder="Ej. 3200, 2666">
-                                @error('clock_mhz') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-                            
-                        </div>
+            <div class="wizard-step active">
+                <i class="fas fa-memory"></i>
+                <div>RAM</div>
+            </div>
 
-                        {{-- COLUMNA DERECHA --}}
-                        <div class="col-md-6">
+            <div class="wizard-step">
+                <i class="fas fa-flag-checkered"></i>
+                <div>Final</div>
+            </div>
 
-                            {{-- Tipo CHZ (Generación) --}}
-                            <div class="form-group">
-                                <label for="tipo_chz"><i class="fas fa-sitemap"></i> Tipo (Generación)</label>
-                                <input type="text" id="tipo_chz" class="form-control" name="tipo_chz" 
-                                    value="{{ old('tipo_chz') }}" placeholder="Ej. DDR4, DDR5">
-                                @error('tipo_chz') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-
-
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="fas fa-chevron-circle-right"></i> Guardar RAM y Continuar
-                    </button>
-                
-                    <a href="{{ route('equipos.wizard-periferico', $equipo) }}" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-forward"></i> Omitir este paso
-                    </a>
-
-                </div>
-            </form>
         </div>
     </div>
-@endsection
+</div>
+@stop
+
+{{-- ================================================================================= --}}
+{{-- CONTENIDO --}}
+@section('content')
+
+<div class="card card-outline card-warning">
+    <div class="card-body">
+
+        <form action="{{ route('equipos.wizard.saveRam', $equipo) }}" method="POST">
+            @csrf
+
+            <fieldset class="fieldset-group">
+
+                <legend class="mb-3">
+                    <i class="fas fa-memory"></i> Datos de la Memoria RAM
+                </legend>
+
+                {{-- Silueta --}}
+                <div class="text-center mb-4 text-muted">
+                    <i class="fas fa-microchip fa-3x"></i>
+                    <div class="small mt-1">Módulo de memoria</div>
+                </div>
+
+                {{-- Info activo --}}
+                <div class="alert alert-light border mb-4">
+                    <i class="fas fa-barcode"></i>
+                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                </div>
+
+                <div class="row">
+                    {{-- COLUMNA IZQUIERDA --}}
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="capacidad_gb">
+                                <i class="fas fa-tachometer-alt"></i> Capacidad (GB)
+                            </label>
+                            <input type="text"
+                                   id="capacidad_gb"
+                                   name="capacidad_gb"
+                                   class="form-control"
+                                   value="{{ old('capacidad_gb') }}"
+                                   placeholder="Ej. 8, 16, 32">
+                            @error('capacidad_gb') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clock_mhz">
+                                <i class="fas fa-clock"></i> Velocidad (MHz)
+                            </label>
+                            <input type="text"
+                                   id="clock_mhz"
+                                   name="clock_mhz"
+                                   class="form-control"
+                                   value="{{ old('clock_mhz') }}"
+                                   placeholder="Ej. 2666, 3200">
+                            @error('clock_mhz') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                    </div>
+
+                    {{-- COLUMNA DERECHA --}}
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="tipo_chz">
+                                <i class="fas fa-sitemap"></i> Tipo / Generación
+                            </label>
+                            <input type="text"
+                                   id="tipo_chz"
+                                   name="tipo_chz"
+                                   class="form-control"
+                                   value="{{ old('tipo_chz') }}"
+                                   placeholder="Ej. DDR4, DDR5">
+                            @error('tipo_chz') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {{-- FOOTER --}}
+            <div class="text-right mt-4">
+                <button type="submit" class="btn btn-warning btn-lg">
+                    <i class="fas fa-arrow-right"></i> Guardar y continuar
+                </button>
+
+                <a href="{{ route('equipos.wizard-periferico', $equipo) }}"
+                   class="btn btn-outline-secondary btn-lg">
+                    Omitir este paso
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@stop

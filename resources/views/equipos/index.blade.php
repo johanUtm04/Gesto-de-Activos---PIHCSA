@@ -43,28 +43,52 @@
         padding: 1rem 1rem;
         margin: -1rem -1rem -1rem auto;
     }
+
+    .table td .badge {
+        font-weight: 500;
+        padding: 6px 8px;
+    }
+
+    .highlight-row {
+        animation: rowGlow 2s ease-out;
+        background-color: rgba(40,167,69,.15);
+    }
+
+    @keyframes rowGlow {
+        0%   { background-color: rgba(40,167,69,0); }
+        50%  { background-color: rgba(40,167,69,.35); }
+        100% { background-color: rgba(40,167,69,.15); }
+    }
+
 </style>
 @stop
 
-{{-- HEADER PRINCIPAL --}}
+{{-- HEADER  --}}
 @section('content_header')
-    <div class="d-flex justify-content-between align-items-center">
-        <h1><i class="fas fa-list-alt text-info"></i> Inventario de Activos Fijos (Equipos), Eres un usuario 
-        <strong style="color: #007bff;">
-        {{ ucfirst(auth()->user()->rol)}}
-        </strong>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+        <h1 class="mb-0">
+            <i class="fas fa-boxes text-info"></i> Inventario de Activos
         </h1>
+        <small class="text-muted">
+            Rol actual: {{ ucfirst(auth()->user()->rol) }}
+        </small>
+    </div>
+
+    <div class="btn-group">
         @can('crear-equipo')
         <a href="{{ route('equipos.create') }}" class="btn btn-success">
-            <i class="fas fa-plus-circle"></i> Agregar Nuevo Equipo
-        </a>       
+            <i class="fas fa-plus"></i> Nuevo
+        </a>
         @endcan
 
-        <a href="{{ route('equipos.historial') }}" class="btn btn-primary">
-        <i class="fas fa-eye"></i> Ver Historial COMPLETO
+        <a href="{{ route('equipos.historial') }}" class="btn btn-outline-primary">
+            <i class="fas fa-history"></i> Historial
         </a>
     </div>
+</div>
 @stop
+
 
 {{-- -------------------------------------------------------------------------------- --}}
 {{-- CONTENIDO PRINCIPAL --}}
@@ -86,6 +110,8 @@
             </div>
         @endif
     @endforeach
+
+
 
     {{-- MODAL DE DETALLES MEJORADO --}}
     <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
@@ -198,14 +224,13 @@
                             <th><i class="fas fa-user-tag"></i> Asignación</th>
                             <th><i class="fas fa-map-marker-alt"></i> Ubicación</th>
                             <th><i class="fas fa-dollar-sign"></i> Valor Inicial</th>
-                            <th><i class="fas fa-microchip"></i> CPU / RAM</th>
-                            <th><i class="fas fa-puzzle-piece"></i> Otros Componentes</th>
+                            <th><i class="fas fa-puzzle-piece"></i>Componentes</th>
                             <th class="text-center"><i class="fas fa-cogs"></i> Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($equipos as $equipo)
-                            <tr>
+                            <tr class="{{ session('highlight_id') == $equipo->id ? 'highlight-row' : '' }}">
                                 <td>{{ $equipo->id }}</td>
                                 
                                 {{-- ACTIVO / SERIAL (Agrupado) --}}
@@ -236,36 +261,23 @@
                                     <span class="secondary-data">Vida Útil: {{ $equipo->vida_util_estimada }}</span>
                                 </td>
                                 
-                                {{-- CPU / RAM (Agrupado) --}}
-                                <td>
-                                    @if($equipo->procesadores->isNotEmpty())
-                                        <div class="d-flex align-items-center mb-1">
-                                            <i class="fas fa-microchip text-primary mr-1"></i>
-                                            <small>CPU: {{ $equipo->procesadores->first()->marca ?? 'N/A' }}</small>
-                                        </div>
-                                    @endif
-                                    @if($equipo->rams->isNotEmpty())
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-memory text-primary mr-1"></i>
-                                            <small>RAM: {{ $equipo->rams->pluck('capacidad_gb') }} GB Total</small>
-                                        </div>
-                                    @endif
-                                </td>
-
                                 {{-- OTROS COMPONENTES (Resumen) --}}
                                 <td>
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-tv text-secondary mr-1"></i> Monitores: 
-                                        <span class="component-count ml-1">{{ $equipo->monitores->count() }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-hdd text-secondary mr-1"></i> Discos: 
-                                        <span class="component-count ml-1">{{ $equipo->discosDuros->count() }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-keyboard text-secondary mr-1"></i> Periféricos: 
-                                        <span class="component-count ml-1">{{ $equipo->perifericos->count() }}</span>
-                                    </div>
+                                    <span class="badge badge-light">
+                                        <i class="fas fa-tv"></i> {{ $equipo->monitores->count() }}
+                                    </span>
+
+                                    <span class="badge badge-light ml-1">
+                                        <i class="fas fa-hdd"></i> {{ $equipo->discosDuros->count() }}
+                                    </span>
+
+                                    <span class="badge badge-light ml-1">
+                                        <i class="fas fa-memory"></i> {{ $equipo->rams->count() }}
+                                    </span>
+
+                                    <span class="badge badge-light ml-1">
+                                        <i class="fas fa-keyboard"></i> {{ $equipo->perifericos->count() }}
+                                    </span>
                                 </td>
 
                                 {{-- Acciones --}}

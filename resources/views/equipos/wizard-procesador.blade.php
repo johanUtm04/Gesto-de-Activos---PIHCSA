@@ -2,80 +2,191 @@
 
 @section('title', 'Wizard | Asignar Procesador')
 
-@section('content_header')
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h1 class="font-weight-bold">
-                <i class="fas fa-magic text-info"></i> Asistente de Configuración (Paso 7 - Final)
-            </h1>
-        </div>
-        <div class="col-md-4 text-right">
-            {{-- Simulación de Breadcrumb o barra de progreso simple --}}
-            <span class="badge badge-success"><i class="fas fa-check"></i> 1-6. Componentes</span>
-            <span class="badge badge-success"><i class="fas fa-microchip"></i> 7. Procesador</span>
-        </div>
-    </div>
+{{-- ================================================================================= --}}
+{{-- ESTILOS --}}
+@section('css')
+<style>
+    .wizard-steps {
+        font-size: 14px;
+    }
+
+    .wizard-step {
+        color: #adb5bd;
+    }
+
+    .wizard-step i {
+        font-size: 22px;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .wizard-step.active {
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .wizard-step.completed {
+        color: #28a745;
+    }
+
+    .fieldset-group {
+        border: 1px solid #ced4da;
+        padding: 25px;
+        border-radius: .25rem;
+        background-color: #ffffff;
+    }
+
+    .fieldset-group i.fa-3x {
+        opacity: 0.25;
+    }
+</style>
 @stop
 
-@section('content')
-    <div class="container-fluid mt-4">
+{{-- ================================================================================= --}}
+{{-- HEADER --}}
+@section('content_header')
+<div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="font-weight-bold mb-1">
+                <i class="fas fa-microchip text-success"></i> Procesador (CPU)
+            </h1>
+            <small class="text-muted">
+                Paso final · Información del procesador del equipo
+            </small>
+        </div>
 
-        <div class="card card-success card-outline">
+        <a href="{{ route('equipos.wizard-periferico', $equipo) }}"
+           class="btn btn-outline-secondary">
+            <i class="fas fa-chevron-left"></i> Anterior
+        </a>
+    </div>
+</div>
 
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-microchip"></i> 
-                    Registro de Procesador (CPU) (Para el activo: <strong>{{ $equipo->serial }}</strong>)
-                </h3>
+{{-- WIZARD --}}
+<div class="card mb-3">
+    <div class="card-body p-3">
+        <div class="d-flex justify-content-between text-center wizard-steps">
+
+            <div class="wizard-step completed">
+                <i class="fas fa-desktop"></i>
+                <div>Activo</div>
             </div>
 
-            <form action="{{ route('equipos.wizard.saveProcesador', $equipo) }}" method="POST">
-                @csrf
-                
-                <div class="card-body">
+            <div class="wizard-step completed">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>Ubicación</div>
+            </div>
 
-                    <div class="alert alert-success">
-                        <i class="fas fa-info-circle mr-1"></i> 
-                        Este es el último paso. Registre el componente principal del equipo, el Procesador. 
-                    </div>
+            <div class="wizard-step completed">
+                <i class="fas fa-tv"></i>
+                <div>Monitor</div>
+            </div>
 
-                    <div class="row">
-                        {{-- COLUMNA IZQUIERDA --}}
-                        <div class="col-md-6">
-                            
-                            {{-- Marca --}}
-                            <div class="form-group">
-                                <label for="marca"><i class="fas fa-tag"></i> Marca</label>
-                                <input type="text" id="marca" class="form-control" name="marca" 
-                                    value="{{ old('marca') }}" placeholder="Ej. Intel, AMD">
-                                @error('marca') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
+            <div class="wizard-step completed">
+                <i class="fas fa-hdd"></i>
+                <div>Disco</div>
+            </div>
 
-                        {{-- COLUMNA DERECHA --}}
-                        <div class="col-md-6">
-                            
-                            {{-- Tipo (Descripción) --}}
-                            <div class="form-group">
-                                <label for="descripcion_tipo"><i class="fas fa-list-alt"></i> Tipo (Descripción/Modelo)</label>
-                                <input type="text" id="descripcion_tipo" class="form-control" name="descripcion_tipo" 
-                                    value="{{ old('descripcion_tipo') }}" placeholder="Ej. Core i7-11700, Ryzen 5 5600X">
-                                @error('descripcion_tipo') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
+            <div class="wizard-step completed">
+                <i class="fas fa-memory"></i>
+                <div>RAM</div>
+            </div>
 
-                    </div>
-                </div>
+            <div class="wizard-step completed">
+                <i class="fas fa-keyboard"></i>
+                <div>Periféricos</div>
+            </div>
 
-                <div class="card-footer text-right">
-                <button type="submit" class="btn btn-success btn-lg">
-                    <i class="fas fa-check-double"></i> Finalizar Asistente y Ver Activo
-                </button>
-                <button type="submit" name="skip" value="1" class="btn btn-outline-secondary btn-lg" formnovalidate>
-                    <i class="fas fa-chevron-circle-right"></i> Omitir
-                </button>
-                </div>
-            </form>
+            <div class="wizard-step active">
+                <i class="fas fa-microchip"></i>
+                <div>CPU</div>
+            </div>
+
         </div>
     </div>
-@endsection
+</div>
+@stop
+
+{{-- ================================================================================= --}}
+{{-- CONTENIDO --}}
+@section('content')
+
+<div class="card card-outline card-success">
+    <div class="card-body">
+
+        <form action="{{ route('equipos.wizard.saveProcesador', $equipo) }}" method="POST">
+            @csrf
+
+            <fieldset class="fieldset-group">
+
+                <legend class="mb-3">
+                    <i class="fas fa-microchip"></i> Datos del Procesador
+                </legend>
+
+                {{-- Silueta --}}
+                <div class="text-center mb-4 text-muted">
+                    <i class="fas fa-microchip fa-3x"></i>
+                    <div class="small mt-1">Unidad central de procesamiento</div>
+                </div>
+
+                {{-- Info activo --}}
+                <div class="alert alert-light border mb-4">
+                    <i class="fas fa-barcode"></i>
+                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                </div>
+
+                <div class="row">
+                    {{-- Marca --}}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="marca">
+                                <i class="fas fa-tag"></i> Marca
+                            </label>
+                            <input type="text"
+                                   id="marca"
+                                   name="marca"
+                                   class="form-control"
+                                   value="{{ old('marca') }}"
+                                   placeholder="Intel, AMD">
+                            @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+                    </div>
+
+                    {{-- Modelo --}}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="descripcion_tipo">
+                                <i class="fas fa-list-alt"></i> Modelo / Descripción
+                            </label>
+                            <input type="text"
+                                   id="descripcion_tipo"
+                                   name="descripcion_tipo"
+                                   class="form-control"
+                                   value="{{ old('descripcion_tipo') }}"
+                                   placeholder="Core i7-11700, Ryzen 5 5600X">
+                            @error('descripcion_tipo') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {{-- FOOTER FINAL --}}
+            <div class="text-right mt-4">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-check-double"></i> Finalizar y ver activo
+                </button>
+
+                <a href="{{ route('equipos.index') }}"
+                   class="btn btn-outline-secondary btn-lg">
+                    Ir al inventario
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@stop

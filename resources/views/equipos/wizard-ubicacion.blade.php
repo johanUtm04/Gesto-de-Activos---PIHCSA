@@ -2,88 +2,169 @@
 
 @section('title', 'Wizard | Asignar Ubicación')
 
-@section('content_header')
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h1 class="font-weight-bold">
-                <i class="fas fa-magic text-info"></i> Asistente de Configuración (Paso 2)
-            </h1>
-        </div>
-        <div class="col-md-4 text-right">
-            {{-- Simulación de Breadcrumb o barra de progreso simple --}}
-            <span class="badge badge-success"><i class="fas fa-check"></i> 1. Datos Base</span>
-            <span class="badge badge-primary"><i class="fas fa-map-marker-alt"></i> 2. Ubicación</span>
-            <span class="badge badge-secondary">3. Componentes</span>
-        </div>
-    </div>
+{{-- ================================================================================= --}}
+{{-- ESTILOS --}}
+@section('css')
+<style>
+    /* Wizard */
+    .wizard-steps {
+        font-size: 14px;
+    }
+
+    .wizard-step {
+        color: #adb5bd;
+    }
+
+    .wizard-step i {
+        font-size: 22px;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .wizard-step.active {
+        color: #007bff;
+        font-weight: 600;
+    }
+
+    .wizard-step.completed {
+        color: #28a745;
+    }
+
+    /* Fieldsets */
+    .fieldset-group {
+        border: 1px solid #ced4da;
+        padding: 25px;
+        border-radius: .25rem;
+        background-color: #ffffff;
+    }
+
+    .fieldset-group i.fa-3x {
+        opacity: 0.25;
+    }
+</style>
 @stop
 
-@section('content')
-    <div class="container-fluid mt-4">
-        
-        <div class="card card-primary card-outline">
-            
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-map-signs"></i> 
-                    Asignar Ubicación para el Activo: <strong>{{ $equipo->serial }}</strong>
-                </h3>
+{{-- ================================================================================= --}}
+{{-- HEADER --}}
+@section('content_header')
+<div class="mb-3">
+    <h1 class="font-weight-bold mb-1">
+        <i class="fas fa-map-marker-alt text-info"></i> Asignar Ubicación
+    </h1>
+    <small class="text-muted">
+        Paso 2 de 4 · Define dónde se encuentra físicamente el activo
+    </small>
+</div>
+
+{{-- WIZARD --}}
+<div class="card mb-3">
+    <div class="card-body p-3">
+        <div class="d-flex justify-content-between text-center wizard-steps">
+
+            <div class="wizard-step completed">
+                <i class="fas fa-desktop"></i>
+                <div>Activo</div>
             </div>
 
-            <form action="{{ route('equipos.wizard.saveUbicacion', $equipo) }}" method="POST">
-                @csrf
-                
-                <div class="card-body">
-                    
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle mr-1"></i> 
-                        Seleccione el lugar físico donde se instalará este equipo.
-                    </div>
+            <div class="wizard-step active">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>Ubicación</div>
+            </div>
 
-                    {{-- Ubicación --}}
-                    <div class="form-group">
-                        <label for="ubicacion_id"><i class="fas fa-warehouse"></i> Ubicación Actual</label>
-                        <select name="ubicacion_id" id="ubicacion_id" class="form-control select2" required>
-                            <option value="">Seleccione una ubicación...</option>
-                            @foreach(\App\Models\Ubicacion::all() as $ubicacion)
-                            <option value="{{ $ubicacion->id }}">
-                                {{ $ubicacion->nombre }} (CP {{ $ubicacion->codigo }})
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
+            <div class="wizard-step">
+                <i class="fas fa-microchip"></i>
+                <div>Componentes</div>
+            </div>
 
-                </div>
+            <div class="wizard-step">
+                <i class="fas fa-flag-checkered"></i>
+                <div>Final</div>
+            </div>
 
-                <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="fas fa-chevron-circle-right"></i> Guardar y Continuar al Paso 3
-                    </button>
-                    <!-- Boton de Omitir -->
-                    <!-- <button type="" class="btn btn btn-lg">
-                        <i class="fas fa-chevron-circle-right"></i> Omitir
-                    </button> -->
-                    {{-- Si hay una ruta de retroceso, puedes poner un botón aquí --}}
-                    <a href="{{ route('equipos.wizard-monitores', $equipo) }}" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-forward"></i> Omitir este paso
-                    </a>
-                </div>
-
-            </form>
         </div>
     </div>
-@endsection
+</div>
+@stop
 
+{{-- ================================================================================= --}}
+{{-- CONTENIDO --}}
+@section('content')
+
+<div class="card card-outline card-primary">
+    <div class="card-body">
+
+        <form action="{{ route('equipos.wizard.saveUbicacion', $equipo) }}" method="POST">
+            @csrf
+
+            <fieldset class="fieldset-group">
+
+                <legend class="mb-3">
+                    <i class="fas fa-warehouse"></i> Ubicación del Activo
+                </legend>
+
+                {{-- Silueta --}}
+                <div class="text-center mb-4 text-muted">
+                    <i class="fas fa-building fa-3x"></i>
+                    <div class="small mt-1">Área física asignada</div>
+                </div>
+
+                {{-- Info del activo --}}
+                <div class="alert alert-light border mb-4">
+                    <i class="fas fa-desktop"></i>
+                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                </div>
+
+                {{-- Ubicación --}}
+                <div class="form-group">
+                    <label for="ubicacion_id">
+                        <i class="fas fa-map-signs"></i> Selecciona la ubicación *
+                    </label>
+
+                    <select name="ubicacion_id" id="ubicacion_id"
+                            class="form-control select2" required>
+                        <option value="">Buscar o seleccionar ubicación…</option>
+                        @foreach(\App\Models\Ubicacion::all() as $ubicacion)
+                            <option value="{{ $ubicacion->id }}">
+                                {{ $ubicacion->nombre }} — CP {{ $ubicacion->codigo }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <small class="form-text text-muted">
+                        Define dónde se encuentra el activo dentro de la organización.
+                    </small>
+                </div>
+
+            </fieldset>
+
+            {{-- FOOTER --}}
+            <div class="text-right mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-arrow-right"></i> Guardar y continuar
+                </button>
+
+                <a href="{{ route('equipos.wizard-monitores', $equipo) }}"
+                   class="btn btn-outline-secondary btn-lg">
+                    Omitir este paso
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@stop
+
+{{-- ================================================================================= --}}
+{{-- JS --}}
 @section('js')
-    {{-- Script para inicializar Select2 --}}
-    <script>
-        $(document).ready(function() {
-            // Inicializa Select2 en el dropdown de Ubicación para búsqueda y mejor UX
-            $('#ubicacion_id').select2({
-                theme: 'bootstrap4',
-                placeholder: 'Buscar o seleccionar ubicación...',
-                allowClear: true
-            });
+<script>
+    $(document).ready(function () {
+        $('#ubicacion_id').select2({
+            theme: 'bootstrap4',
+            placeholder: 'Buscar o seleccionar ubicación…',
+            allowClear: true
         });
-    </script>
+    });
+</script>
 @stop

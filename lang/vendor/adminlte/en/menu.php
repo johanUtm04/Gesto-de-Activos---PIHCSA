@@ -1,19 +1,37 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Menu Items - Pihcsa Morelia
+    |--------------------------------------------------------------------------
+    */
+    'main_navigation'               => 'MENÚ PRINCIPAL',
+    
+    // Sección de Inventario (Lo que ya estás trabajando)
+    'inventory'                    => 'INVENTARIO',
+    'assets'                       => 'Equipos Médicos / Computo',
+    'peripherals'                  => 'Periféricos (Mouse, Teclados)',
+    
+    // Sección de Historial solicitada
+    'history_section'              => 'MOVIMIENTOS Y RASTREO',
+    'history'                      => 'Historial de Asignaciones',
+    'maintenance_logs'             => 'Bitácora de Mantenimiento',
 
-    'main_navigation' => 'MAIN NAVIGATION',
-    'blog' => 'Blog',
-    'pages' => 'Pages',
-    'account_settings' => 'ACCOUNT SETTINGS',
-    'profile' => 'Profile',
-    'change_password' => 'Change Password',
-    'multilevel' => 'Multi Level',
-    'level_one' => 'Level 1',
-    'level_two' => 'Level 2',
-    'level_three' => 'Level 3',
-    'labels' => 'LABELS',
-    'important' => 'Important',
-    'warning' => 'Warning',
-    'information' => 'Information',
+    // Sección de Depreciación solicitada
+    'finance_section'              => 'CONTROL FINANCIERO',
+    'depreciation'                 => 'Cálculo de Depreciación',
+    'asset_value'                  => 'Valor de Activos',
+
+    // Configuración de Cuenta y Perfil
+    'account_settings'             => 'AJUSTES DE CUENTA',
+    'profile'                      => 'Mi Perfil (Pihcsa)',
+    'change_password'              => 'Cambiar Contraseña',
+    'Calcular_depreciacion'        => 'Calcular Depreciacion',
+    
+    // Etiquetas de estado
+    'labels'                       => 'ESTADOS DE EQUIPO',
+    'important'                    => 'Crítico (En Uso)',
+    'warning'                      => 'En Mantenimiento',
+    'information'                  => 'Disponible / Stock',
 ];

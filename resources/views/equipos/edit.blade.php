@@ -6,16 +6,14 @@
 {{-- Sección de Estilos (Opcional, pero recomendada para consistencia visual) --}}
 @section('css')
 <style>
-    /* Estilo para los títulos de sección dentro de las tarjetas */
     .section-title {
-        border-bottom: 2px solid #007bff; /* Borde azul de AdminLTE */
+        border-bottom: 2px solid #007bff; 
         padding-bottom: 5px;
         margin-bottom: 15px;
-        color: #17a2b8; /* Color azul claro */
+        color: #17a2b8; 
         font-weight: 600;
     }
 
-    /* Estilo para la lista de datos actuales (lado izquierdo) */
     .data-item {
         margin-bottom: 10px;
         padding-bottom: 5px;
@@ -31,7 +29,6 @@
         color: #495057;
     }
 
-    /* Estilo para los campos de componentes editables (para que se vean como grupos) */
     .component-group {
         border: 1px solid #dee2e6;
         border-radius: .25rem;

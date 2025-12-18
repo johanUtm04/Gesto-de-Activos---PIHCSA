@@ -2,101 +2,205 @@
 
 @section('title', 'Wizard | Asignar Monitor')
 
-@section('content_header')
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h1 class="font-weight-bold">
-                <i class="fas fa-magic text-info"></i> Asistente de Configuración (Paso 3)
-            </h1>
-        </div>
-        <div class="col-md-4 text-right">
-            {{-- Simulación de Breadcrumb o barra de progreso simple --}}
-            <span class="badge badge-success"><i class="fas fa-check"></i> 1. Datos Base</span>
-            <span class="badge badge-success"><i class="fas fa-check"></i> 2. Ubicación</span>
-            <span class="badge badge-primary"><i class="fas fa-tv"></i> 3. Monitores</span>
-        </div>
-    </div>
+{{-- ================================================================================= --}}
+{{-- ESTILOS --}}
+@section('css')
+<style>
+    .wizard-steps {
+        font-size: 14px;
+    }
+
+    .wizard-step {
+        color: #adb5bd;
+    }
+
+    .wizard-step i {
+        font-size: 22px;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .wizard-step.active {
+        color: #ffc107;
+        font-weight: 600;
+    }
+
+    .wizard-step.completed {
+        color: #28a745;
+    }
+
+    .fieldset-group {
+        border: 1px solid #ced4da;
+        padding: 25px;
+        border-radius: .25rem;
+        background-color: #ffffff;
+    }
+
+    .fieldset-group i.fa-3x {
+        opacity: 0.25;
+    }
+</style>
 @stop
 
-@section('content')
-    <div class="container-fluid mt-4">
+{{-- ================================================================================= --}}
+{{-- HEADER --}}
+@section('content_header')
+<div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="font-weight-bold mb-1">
+                <i class="fas fa-tv text-warning"></i> Monitor
+            </h1>
+            <small class="text-muted">
+                Paso 3 de 4 · Registro de monitor asociado al activo
+            </small>
+        </div>
 
-        <div class="card card-warning card-outline">
+        <a href="{{ route('equipos.wizard-ubicacion', $equipo) }}" class="btn btn-outline-secondary">
+            <i class="fas fa-chevron-left"></i> Anterior
+        </a>
+    </div>
+</div>
 
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-tv"></i> 
-                    Registro de Monitor (Para el activo: <strong>{{ $equipo->serial }}</strong>)
-                </h3>
+{{-- WIZARD --}}
+<div class="card mb-3">
+    <div class="card-body p-3">
+        <div class="d-flex justify-content-between text-center wizard-steps">
+
+            <div class="wizard-step completed">
+                <i class="fas fa-desktop"></i>
+                <div>Activo</div>
             </div>
 
-            <form action="{{ route('equipos.wizard.saveMonitor', $equipo) }}" method="POST">
-                @csrf
-                
-                <div class="card-body">
+            <div class="wizard-step completed">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>Ubicación</div>
+            </div>
 
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle mr-1"></i> 
-                        Registre un monitor principal para el equipo. Puede agregar monitores adicionales o componentes en la edición avanzada, o saltar este paso.
-                    </div>
+            <div class="wizard-step active">
+                <i class="fas fa-tv"></i>
+                <div>Monitor</div>
+            </div>
 
-                    <div class="row">
-                        {{-- COLUMNA IZQUIERDA --}}
-                        <div class="col-md-6">
-                            
-                            {{-- Marca --}}
-                            <div class="form-group">
-                                <label for="marca"><i class="fas fa-tag"></i> Marca</label>
-                                <input type="text" id="marca" class="form-control" name="marca" 
-                                    value="{{ old('marca') }}" placeholder="Ej. Samsung, LG">
-                                @error('marca') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-
-                            {{-- Serial --}}
-                            <div class="form-group">
-                                <label for="serial"><i class="fas fa-barcode"></i> Serial</label>
-                                <input type="text" id="serial" class="form-control" name="serial" 
-                                value="{{ old('serial') }}" placeholder="Ej. ABC12345DEF6789">
-                                @error('serial') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-                            
-                        </div>
-
-                        {{-- COLUMNA DERECHA --}}
-                        <div class="col-md-6">
-
-                            {{-- Escala en Pulgadas --}}
-                            <div class="form-group">
-                                <label for="escala_pulgadas"><i class="fas fa-ruler-combined"></i> Escala en Pulgadas</label>
-                                <input type="text" id="escala_pulgadas" class="form-control" name="escala_pulgadas" 
-                                    value="{{ old('escala_pulgadas') }}" placeholder="Ej. 24, 32">
-                                @error('escala_pulgadas') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-
-                            {{-- Interface --}}
-                            <div class="form-group">
-                                <label for="interface"><i class="fas fa-plug"></i> Interfaz de Conexión</label>
-                                <input type="text" id="interface" class="form-control" name="interface" 
-                                    value="{{ old('interface') }}" placeholder="Ej. HDMI, DisplayPort, VGA">
-                                @error('interface') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="fas fa-save"></i> Guardar Monitor y Continuar
-                    </button>
-
-                    <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-forward"></i> Omitir este paso
-                    </a>
-
-                </div>
-            </form>
+            <div class="wizard-step">
+                <i class="fas fa-flag-checkered"></i>
+                <div>Final</div>
+            </div>
 
         </div>
     </div>
-@endsection
+</div>
+@stop
+
+{{-- ================================================================================= --}}
+{{-- CONTENIDO --}}
+@section('content')
+
+<div class="card card-outline card-warning">
+    <div class="card-body">
+
+        <form action="{{ route('equipos.wizard.saveMonitor', $equipo) }}" method="POST">
+            @csrf
+
+            <fieldset class="fieldset-group">
+
+                <legend class="mb-3">
+                    <i class="fas fa-tv"></i> Datos del Monitor
+                </legend>
+
+                {{-- Silueta --}}
+                <div class="text-center mb-4 text-muted">
+                    <i class="fas fa-desktop fa-3x"></i>
+                    <div class="small mt-1">Monitor asociado</div>
+                </div>
+
+                {{-- Info activo --}}
+                <div class="alert alert-light border mb-4">
+                    <i class="fas fa-barcode"></i>
+                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                </div>
+
+                <div class="row">
+                    {{-- COLUMNA IZQUIERDA --}}
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="marca">
+                                <i class="fas fa-tag"></i> Marca
+                            </label>
+                            <input type="text"
+                                   id="marca"
+                                   name="marca"
+                                   class="form-control"
+                                   value="{{ old('marca') }}"
+                                   placeholder="Ej. Samsung, LG">
+                            @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="serial">
+                                <i class="fas fa-barcode"></i> Serial
+                            </label>
+                            <input type="text"
+                                   id="serial"
+                                   name="serial"
+                                   class="form-control"
+                                   value="{{ old('serial') }}"
+                                   placeholder="Ej. ABC12345">
+                            @error('serial') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                    </div>
+
+                    {{-- COLUMNA DERECHA --}}
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="escala_pulgadas">
+                                <i class="fas fa-ruler-combined"></i> Tamaño (pulgadas)
+                            </label>
+                            <input type="text"
+                                   id="escala_pulgadas"
+                                   name="escala_pulgadas"
+                                   class="form-control"
+                                   value="{{ old('escala_pulgadas') }}"
+                                   placeholder="Ej. 24, 27, 32">
+                            @error('escala_pulgadas') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="interface">
+                                <i class="fas fa-plug"></i> Interfaz
+                            </label>
+                            <input type="text"
+                                   id="interface"
+                                   name="interface"
+                                   class="form-control"
+                                   value="{{ old('interface') }}"
+                                   placeholder="HDMI, DisplayPort, VGA">
+                            @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {{-- FOOTER --}}
+            <div class="text-right mt-4">
+                <button type="submit" class="btn btn-warning btn-lg">
+                    <i class="fas fa-arrow-right"></i> Guardar y continuar
+                </button>
+
+                <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}"
+                   class="btn btn-outline-secondary btn-lg">
+                    Omitir este paso
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@stop

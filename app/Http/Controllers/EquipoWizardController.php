@@ -65,7 +65,7 @@ class EquipoWizardController extends Controller
         ]);
 
         return redirect()->route('equipos.wizard-discos_duros', $equipo->id)
-            ->with('success', 'Monitor registrado correctamente');
+        ->with('success', 'Monitor registrado correctamente');
     }
 
 
@@ -175,7 +175,8 @@ class EquipoWizardController extends Controller
         }
 
         return redirect()->route('equipos.index', $equipo->id)
-            ->with('success', 'Equipo registrado correctamente');
+                ->with('success', 'Equipo creado correctamente')
+                ->with('highlight_id', $equipo->id);
     }
 
 }
