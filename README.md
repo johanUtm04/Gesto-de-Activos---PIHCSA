@@ -1,66 +1,167 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Inventario de Activos TI
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web desarrollado en **Laravel + AdminLTE** para el control, registro y administración de activos de TI (equipos, componentes y periféricos) mediante un **wizard paso a paso**, con enfoque en buena UX, claridad visual y mantenibilidad.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tecnologías utilizadas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* **Laravel** (Backend / MVC)
+* **Blade** (Vistas)
+* **AdminLTE 3** (UI / Dashboard)
+* **Bootstrap 4** (Estilos base)
+* **jQuery** (Interacciones UI)
+* **MySQL** (Base de datos)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Funcionalidad principal
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ✔ Registro de Activos TI
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+El registro de un activo se realiza mediante un **Wizard guiado**, dividido en pasos claros:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Datos base del equipo**
+2. **Ubicación**
+3. **Monitor(es)** *(opcional)*
+4. **Disco(s) duro(s)** *(opcional)*
+5. **Memoria RAM** *(opcional)*
+6. **Periféricos** *(opcional)*
+7. **Procesador (final)**
 
-## Laravel Sponsors
+Cada paso:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* Puede **guardarse u omitirse**
+* Muestra el **progreso visual**
+* Mantiene consistencia de diseño con AdminLTE
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## UX / UI destacadas
 
-## Contributing
+### 🔹 Resaltado visual al crear / editar
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Cuando se crea un nuevo equipo:
 
-## Code of Conduct
+* Se redirige automáticamente a la **página correcta de la paginación**
+* La fila del equipo recién creado se **resalta visualmente**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Blade (fila resaltada)
 
-## Security Vulnerabilities
+```blade
+<tr class="{{ session('highlight_id') == $equipo->id ? 'highlight-row' : '' }}">
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### CSS
 
-## License
+```css
+.highlight-row {
+    animation: highlightFade 2.5s ease-out;
+    background-color: #d4edda !important;
+}
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+@keyframes highlightFade {
+    0% { background-color: #c3e6cb; }
+    100% { background-color: transparent; }
+}
+```
+
+---
+
+## 📄 Listado de inventario
+
+* Tabla paginada
+* Resumen visual de componentes (badges)
+* Acciones por fila:
+
+  * Ver detalles (modal)
+  * Editar
+  * Registrar mantenimiento
+  * Eliminar
+
+### Modal de detalles
+
+Muestra información completa del activo:
+
+* Datos base
+* Asignación y valor
+* Componentes asociados
+
+Se alimenta vía **data-attributes** del botón.
+
+---
+
+## Paginación inteligente
+
+Para asegurar que el highlight funcione incluso con paginación:
+
+### Cálculo de página al crear equipo
+
+```php
+$perPage = 12;
+$position = Equipo::where('id', '<=', $equipo->id)->count();
+$page = ceil($position / $perPage);
+
+return redirect()
+    ->route('equipos.index', ['page' => $page])
+    ->with('success', 'Equipo creado correctamente')
+    ->with('highlight_id', $equipo->id);
+```
+
+---
+
+## Validación de formularios
+
+### Ejemplo: Validación de datos base + arreglo de periféricos
+
+```php
+$request->validate([
+    'marca_equipo' => 'nullable|string|max:255',
+    'tipo_equipo' => 'required|string|max:255',
+    'serial' => 'nullable|string|max:255',
+    'sistema_operativo' => 'required|string|max:50',
+    'usuario_id' => 'required|integer|exists:users,id',
+    'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
+    'valor_inicial' => 'required|numeric|min:0|max:999999.99',
+    'fecha_adquisicion' => 'required|date',
+    'vida_util_estimada' => 'required|string|max:255',
+
+    // Periféricos (arreglo)
+    'perifericos' => 'nullable|array',
+    'perifericos.*.tipo' => 'required|string|max:255',
+    'perifericos.*.marca' => 'nullable|string|max:255',
+    'perifericos.*.serial' => 'nullable|string|max:255',
+    'perifericos.*.interface' => 'nullable|string|max:255',
+]);
+```
+
+---
+
+## Estructura mental del proyecto
+
+* **Controllers** → lógica de negocio
+* **Views (Blade)** → presentación
+* **Models** → relaciones y datos
+* **Session flash** → UX (mensajes, highlights)
+* **Wizard** → flujo controlado y claro
+
+---
+
+## Buenas prácticas aplicadas
+
+* Separación de responsabilidades
+* Validaciones centralizadas
+* UX clara (feedback visual)
+* Componentes opcionales (no forzados)
+
+---
+
+
+
+## ✨ Autor
+Johan Jael Lòpez Reyes (Universidad Tecnologica de Morelia)
+Proyecto desarrollado como sistema de gestión de activos TI con enfoque académico y profesional.
+
+---
+
+> "Primero que funcione, luego que se vea bien, y al final que se sienta
