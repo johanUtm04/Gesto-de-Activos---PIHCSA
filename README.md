@@ -2,9 +2,10 @@
 
 Sistema web desarrollado en **Laravel + AdminLTE** para el control, registro y administración de activos de TI (equipos, componentes y periféricos) mediante un **wizard paso a paso**, con enfoque en buena UX, claridad visual y mantenibilidad.
 
-<p align="center">
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
   <img src="/public/vendor/adminlte/dist/img/logohd.png" alt="Inventario de Activos TI" width="200">
-</p>
+  <img src="/public/vendor/adminlte/dist/img/laravel.png" alt="Inventario de Activos TI" width="200">
+</div>
 
 
 ---
