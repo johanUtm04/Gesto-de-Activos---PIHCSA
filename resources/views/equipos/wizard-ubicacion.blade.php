@@ -46,7 +46,9 @@
                         <select name="ubicacion_id" id="ubicacion_id" class="form-control select2" required>
                             <option value="">Seleccione una ubicación...</option>
                             @foreach(\App\Models\Ubicacion::all() as $ubicacion)
-                                <option value="{{ $ubicacion->id }}">{{ $ubicacion->nombre }}</option>
+                            <option value="{{ $ubicacion->id }}">
+                                {{ $ubicacion->nombre }} (CP {{ $ubicacion->codigo }})
+                            </option>
                             @endforeach
                         </select>
                     </div>

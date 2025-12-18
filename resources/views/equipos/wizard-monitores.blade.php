@@ -56,7 +56,7 @@
                             <div class="form-group">
                                 <label for="serial"><i class="fas fa-barcode"></i> Serial</label>
                                 <input type="text" id="serial" class="form-control" name="serial" 
-                                    value="{{ old('serial') }}" placeholder="Ej. ABC12345DEF6789">
+                                value="{{ old('serial') }}" placeholder="Ej. ABC12345DEF6789">
                                 @error('serial') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             

@@ -153,7 +153,7 @@
                         </div>
 
                         {{-- Ubicación --}}
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="ubicacion_id"><i class="fas fa-map-marker-alt"></i> Ubicación *</label>
                             <select name="ubicacion_id" id="ubicacion_id" class="form-control select2" required>
                                 <option value="">Seleccione una ubicación</option>
@@ -165,7 +165,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> -->
 
                         <hr>
 

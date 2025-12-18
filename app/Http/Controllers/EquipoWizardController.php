@@ -53,6 +53,7 @@ class EquipoWizardController extends Controller
             'marca' => 'required|string',
             'serial' => 'required|string',
             'escala_pulgadas' => 'required|string',
+            'interface' => 'required|string'
         ]);
 
         Monitor::create([
@@ -79,9 +80,9 @@ class EquipoWizardController extends Controller
     public function saveDiscoduro(Request $request, Equipo $equipo)
     {
         $request->validate([
-            'capacidad' => 'nullable|string',
-            'tipo_hdd_ssd' => 'nullable|string',
-            'interface' => 'nullable|string',
+            'capacidad' => 'required|string',
+            'tipo_hdd_ssd' => 'required|string',
+            'interface' => 'required|string',
         ]);
 
         DiscoDuro::create([
@@ -105,15 +106,14 @@ class EquipoWizardController extends Controller
     public function saveRam(Request $request, Equipo $equipo)
     {
         $request->validate([
-            'capacidad_gb' => 'nullable|string',
-            'clock_m' => 'nullable|string',
-            'tipo_chz' => 'nullable|string',
+            'capacidad_gb' => 'required|string',
+            'clock_mhz' => 'required|string',
         ]);
 
         Ram::create([
             'equipo_id' => $equipo->id,
             'capacidad_gb' => $request->capacidad_gb,
-            'clock_mhz' => $request->clock_m,
+            'clock_mhz' => $request->clock_mhz,
             'tipo_chz' => $request->tipo_chz,
         ]);
 
@@ -131,10 +131,10 @@ class EquipoWizardController extends Controller
     public function savePeriferico(Request $request, Equipo $equipo)
     {
         $request->validate([
-            'tipo' => 'nullable|string',
-            'marca' => 'nullable|string',
-            'serial' => 'nullable|string',
-            'interface' => 'nullable|string',
+            'tipo' => 'required|string',
+            'marca' => 'required|string',
+            'serial' => 'required|string',
+            'interface' => 'required|string',
         ]);
 
         Periferico::create([
@@ -159,8 +159,8 @@ class EquipoWizardController extends Controller
     public function saveProcesador(Request $request, Equipo $equipo)
     {
         $request->validate([
-            'marca' => 'nullable|string',
-            'descripcion_tipo' => 'nullable|string',
+            'marca' => 'required|string',
+            'descripcion_tipo' => 'required|string',
         ]);
 
         Procesador::create([

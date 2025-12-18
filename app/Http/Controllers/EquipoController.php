@@ -50,7 +50,7 @@ class EquipoController extends Controller
         'valor_inicial' => 'nullable|numeric|min:0|max:999999.99',
         'fecha_adquisicion' => 'required|date',
         'vida_util_estimada' => 'required|string|max:255',
-        ]);
+    ]);
 
         $data = $request->all();
 
