@@ -20,7 +20,6 @@ Sistema web desarrollado en **Laravel + AdminLTE** para el control, registro y a
   </tr>
 </table>
 
-
 ---
 
 ## Tecnologías utilizadas

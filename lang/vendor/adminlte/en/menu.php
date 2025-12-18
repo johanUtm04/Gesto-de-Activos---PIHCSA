@@ -24,7 +24,7 @@ return [
     'asset_value'                  => 'Valor de Activos',
 
     // Configuración de Cuenta y Perfil
-    'account_settings'             => 'AJUSTES DE CUENTA',
+    'account_settings'             => 'Ajustes',
     'profile'                      => 'Mi Perfil',
     'change_password'              => 'Cambiar Contraseña',
     'Calcular_depreciacion'        => 'Calcular Depreciacion',

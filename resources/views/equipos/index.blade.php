@@ -7,7 +7,7 @@
     .table-assets thead th {
         background-color: #e9ecef; 
         color: #17a2b8; 
-        font-weight: 700;
+        font-weight: 900;
         border-bottom: 3px solid #17a2b8;
         vertical-align: middle;
         padding: 10px;
@@ -15,13 +15,8 @@
 
     .table-assets tbody td {
         vertical-align: top; 
-        font-size: 14px;
+        font-size: 18px;
         line-height: 1.4;
-    }
-    
-    .component-count {
-        font-weight: 600;
-        color: #28a745; 
     }
 
     .secondary-data {
