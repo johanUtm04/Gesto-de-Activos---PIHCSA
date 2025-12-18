@@ -5,6 +5,8 @@ Sistema web desarrollado en **Laravel + AdminLTE** para el control, registro y a
 <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
   <img src="/public/vendor/adminlte/dist/img/logohd.png" alt="Inventario de Activos TI" width="200">
   <img src="/public/vendor/adminlte/dist/img/laravel.png" alt="Inventario de Activos TI" width="200">
+  <img src="/public/vendor/adminlte/dist/img/mysql.png" alt="Inventario de Activos TI" width="200">
+
 </div>
 
 
