@@ -20,8 +20,18 @@ class EquipoWizardController extends Controller
     }
     
     //function to show ubication's form
-    public function ubicacionForm(Equipo $equipo)
+    public function ubicacionForm($uuid)
     {
+        $wizard = session('wizard_equipo');
+
+        if (!$wizard || $wizard['uuid'] !== $uuid) {
+            abort(403, 'Wiazard Invalido o no funcional');
+        }
+
+        // dd($wizard);
+        $equipo = data_get($wizard, 'equipo.marca_equipo');
+
+        
         return view('equipos.wizard-ubicacion', compact('equipo'));
     }
 
@@ -36,7 +46,7 @@ class EquipoWizardController extends Controller
         $equipo->save();
 
         return redirect()->route('equipos.wizard-monitores', $equipo->id)
-            ->with('success', 'Ubicación registrada');
+        ->with('success', 'Ubicación registrada');
     }
 
     //function to show monitores' form

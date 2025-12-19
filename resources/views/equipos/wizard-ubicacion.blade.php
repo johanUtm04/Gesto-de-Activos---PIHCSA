@@ -111,7 +111,7 @@
                 {{-- Info del activo --}}
                 <div class="alert alert-light border mb-4">
                     <i class="fas fa-desktop"></i>
-                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }} 
                 </div>
 
                 {{-- Ubicación --}}

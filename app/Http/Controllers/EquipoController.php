@@ -13,6 +13,8 @@ use App\Models\Ram;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\FlareClient\View;
+use Illuminate\Support\Str;
+
 
 class EquipoController extends Controller
 {
@@ -41,17 +43,17 @@ class EquipoController extends Controller
     //function to send the data from index's form
     public function store(Request $request)
     {
-    $request->validate([
-        'marca_equipo' => 'nullable|string|max:255',
-        'tipo_equipo' => 'required|string|max:255',
-        'serial' => 'nullable|string|max:255',
-        'sistema_operativo' => 'required|string|max:35', 
-        'usuario_id' => 'required|integer|exists:users,id',
-        'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
-        'valor_inicial' => 'nullable|numeric|min:0|max:999999.99',
-        'fecha_adquisicion' => 'required|date',
-        'vida_util_estimada' => 'required|string|max:255',
-    ]);
+        $request->validate([
+            'marca_equipo' => 'nullable|string|max:255',
+            'tipo_equipo' => 'required|string|max:255',
+            'serial' => 'nullable|string|max:255',
+            'sistema_operativo' => 'required|string|max:35', 
+            'usuario_id' => 'required|integer|exists:users,id',
+            'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
+            'valor_inicial' => 'nullable|numeric|min:0|max:999999.99',
+            'fecha_adquisicion' => 'required|date',
+            'vida_util_estimada' => 'required|string|max:255',
+        ]);
 
         $data = $request->all();
 
@@ -67,9 +69,15 @@ class EquipoController extends Controller
             $data['valor_inicial'] = 0;
         }
 
-        $equipo = Equipo::create($data);
+        $uuid = Str::uuid()->toString();
 
-        return redirect()->route('equipos.wizard-ubicacion', $equipo->id);
+        //Insert intoo equipos table 
+        session()->put('wizard_equipo.uuid', $uuid);
+
+        //Data ya baja solito xd
+        session()->put('wizard_equipo.equipo', $data);
+
+        return redirect()->route('equipos.wizard-ubicacion', $uuid );
     }
 
 

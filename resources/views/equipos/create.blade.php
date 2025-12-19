@@ -148,7 +148,7 @@
                         <label>Serial</label>
                         <input type="text" name="serial" class="form-control"
                                placeholder="Número de serie"
-                               value="{{ old('serial') }}">
+                               value="{{ old('serial, session(wizard_equipo.equipo.serial')}}">
                         <small class="form-text text-muted">
                             Identificador único del activo
                         </small>
