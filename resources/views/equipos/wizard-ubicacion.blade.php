@@ -92,8 +92,7 @@
 
 <div class="card card-outline card-primary">
     <div class="card-body">
-
-        <form action="{{ route('equipos.wizard.saveUbicacion', $equipo) }}" method="POST">
+        <form action="{{ route('equipos.wizard.saveUbicacion', $uuid) }}" method="POST">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -140,10 +139,10 @@
             {{-- FOOTER --}}
             <div class="text-right mt-4">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <i class="fas fa-arrow-right"></i> Guardar y continuar
+                    <i class="fas fa-arrow-right"></i> Continuar
                 </button>
 
-                <a href="{{ route('equipos.wizard-monitores', $equipo) }}"
+                <a href="{{ route('equipos.wizard-monitores', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
                     Omitir este paso
                 </a>

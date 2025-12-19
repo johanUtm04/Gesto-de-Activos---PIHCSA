@@ -92,14 +92,12 @@
 </div>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- CONTENIDO --}}
 @section('content')
 
 <div class="card card-outline card-warning">
     <div class="card-body">
 
-        <form action="{{ route('equipos.wizard.saveMonitor', $equipo) }}" method="POST">
+        <form action="{{ route('equipos.wizard.saveMonitor', $uuid) }}" method="POST">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -117,7 +115,7 @@
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
                     <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }}
                 </div>
 
                 <div class="row">
@@ -192,7 +190,7 @@
                     <i class="fas fa-arrow-right"></i> Guardar y continuar
                 </button>
 
-                <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}"
+                <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
                     Omitir este paso
                 </a>

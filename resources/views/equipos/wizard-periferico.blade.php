@@ -109,7 +109,7 @@
 <div class="card card-outline card-info">
     <div class="card-body">
 
-        <form action="{{ route('equipos.wizard.savePeriferico', $equipo) }}" method="POST">
+        <form action="{{ route('equipos.wizard.savePeriferico', $uuid) }}" method="POST">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -127,7 +127,7 @@
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
                     <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }}
                 </div>
 
                 <div class="row">

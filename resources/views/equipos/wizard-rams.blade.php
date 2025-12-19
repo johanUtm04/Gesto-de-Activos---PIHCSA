@@ -127,7 +127,7 @@
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
                     <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                    <strong>Activo:</strong> {{ $equipo ?? '—' }}
                 </div>
 
                 <div class="row">

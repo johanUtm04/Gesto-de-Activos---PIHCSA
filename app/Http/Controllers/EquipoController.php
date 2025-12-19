@@ -57,6 +57,7 @@ class EquipoController extends Controller
 
         $data = $request->all();
 
+        //Condicionales en caso de que el usuario no mande esos campos
         if (empty($request->serial)) {
             $data['serial'] = 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
         }
@@ -71,7 +72,6 @@ class EquipoController extends Controller
 
         $uuid = Str::uuid()->toString();
 
-        //Insert intoo equipos table 
         session()->put('wizard_equipo.uuid', $uuid);
 
         //Data ya baja solito xd
