@@ -37,7 +37,7 @@ class EquipoController extends Controller
     {
         $usuarios = User::all();
         $ubicaciones = Ubicacion::all();
-        return view('equipos.create', compact('usuarios', 'ubicaciones'));
+        return view('equipo.wizard.create', compact('usuarios', 'ubicaciones'));
     }
 
     //function to send the data from index's form

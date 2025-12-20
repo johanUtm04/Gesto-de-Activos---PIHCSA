@@ -2,11 +2,8 @@
 
 @section('title', 'Registrar Nuevo Activo TI')
 
-{{-- ================================================================================= --}}
-{{-- ESTILOS --}}
 @section('css')
 <style>
-    /* Wizard */
     .wizard-steps {
         font-size: 14px;
     }
@@ -128,21 +125,21 @@
                         <label>Marca</label>
                         <input type="text" name="marca_equipo" class="form-control"
                                placeholder="Dell, HP, Lenovo"
-                               value="{{ old('marca_equipo') }}">
+                               value="{{ old('marca_equipo', $equipo['marca_equipo'] ?? '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label>Tipo de equipo *</label>
+                        <label>Tipo de equipo </label>
                         <input type="text" name="tipo_equipo" class="form-control"
                                placeholder="Laptop, PC, Tablet"
-                               value="{{ old('tipo_equipo') }}" required>
+                               value="{{ old('tipo_equipo', $equipo['tipo_equipo'] ?? '') }}" required>
                     </div>
 
                     <div class="form-group">
                         <label>Serial</label>
                         <input type="text" name="serial" class="form-control"
                                placeholder="Número de serie"
-                               value="{{ old('serial, session(wizard_equipo.equipo.serial')}}">
+                               value="{{ old('serial', $equipo['serial'] ?? '') }}">
                         <small class="form-text text-muted">
                             Identificador único del activo
                         </small>
@@ -152,7 +149,7 @@
                         <label>Sistema Operativo *</label>
                         <input type="text" name="sistema_operativo" class="form-control"
                                placeholder="Windows 10, macOS, Linux"
-                               value="{{ old('sistema_operativo') }}" required>
+                               value="{{ old('sistema_operativo', $equipo['sistema_operativo'] ?? '') }}" required>
                     </div>
                 </fieldset>
             </div>
@@ -188,20 +185,20 @@
                         <label>Valor inicial *</label>
                         <input type="number" name="valor_inicial" class="form-control"
                                step="0.01" placeholder="15000.00"
-                               value="{{ old('valor_inicial') }}">
+                               value="{{ old('valor_inicial', $equipo['valor_inicial'] ?? '') }}">
                     </div>
 
                     <div class="form-group">
                         <label>Fecha de adquisición *</label>
                         <input type="date" name="fecha_adquisicion" class="form-control"
-                               value="{{ old('fecha_adquisicion') }}" required>
+                               value="{{ old('fecha_adquisicion', $equipo['fecha_adquisicion'] ?? '') }}" required>
                     </div>
 
                     <div class="form-group">
                         <label>Vida útil estimada *</label>
                         <input type="text" name="vida_util_estimada" class="form-control"
                                placeholder="5 años / 60 meses"
-                               value="{{ old('vida_util_estimada') }}" required>
+                               value="{{ old('vida_util_estimada', $equipo['vida_util_estimada'] ?? '') }}" required>
                     </div>
                 </fieldset>
             </div>

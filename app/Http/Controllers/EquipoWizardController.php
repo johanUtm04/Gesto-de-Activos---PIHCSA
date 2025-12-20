@@ -9,11 +9,22 @@ use App\Models\Equipo;
 use App\Models\Monitor;
 use App\Models\Periferico;
 use App\Models\Procesador;
-use App\Models\Ram;
+use App\Models\user;
 use Illuminate\Support\Str;
 
 class EquipoWizardController extends Controller
 {
+
+
+public function create()
+{
+    $wizard = session('wizard_equipo');
+    $usuarios = User::all();
+    $equipo = data_get($wizard, 'equipo', []);
+
+    return view('equipos.create', compact('equipo', 'usuarios'));
+}
+
     //Function to show wizard menu
     public function show(Equipo $equipo)
     {
@@ -25,18 +36,13 @@ class EquipoWizardController extends Controller
     {
         $wizard = session('wizard_equipo');
 
-        // dd($wizard);
 
         if (!$wizard || $wizard['uuid'] !== $uuid) {
             abort(403, 'Wiazard Invalido o no funcional');
         }
 
         $equipo = $wizard['equipo'];
-        // $wizard[equipo]
-        // equipo => [
-        //     "marca" => ['lenovo'],
-        //     "serial" => ['091279486234987']
-        // ]
+
         
         //equipo es para tener acceso a serial y demas mmda y uuid para el que estamos llenando
         return view('equipos.wizard-ubicacion', compact('equipo','uuid'));

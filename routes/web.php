@@ -15,7 +15,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
     Route::get('/equipos/Historial', [EquipoController::class, 'historial'])->name('equipos.historial');
 
-    Route::get('/equipos/create', [EquipoController::class, 'create'])->name('equipos.create');
+Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])
+->name('equipos.wizard.create');
+
     Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
 
     //Editar un equipo

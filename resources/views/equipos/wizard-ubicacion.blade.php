@@ -2,11 +2,8 @@
 
 @section('title', 'Wizard | Asignar Ubicación')
 
-{{-- ================================================================================= --}}
-{{-- ESTILOS --}}
 @section('css')
 <style>
-    /* Wizard */
     .wizard-steps {
         font-size: 14px;
     }
@@ -30,7 +27,6 @@
         color: #28a745;
     }
 
-    /* Fieldsets */
     .fieldset-group {
         border: 1px solid #ced4da;
         padding: 25px;
@@ -44,8 +40,6 @@
 </style>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- HEADER --}}
 @section('content_header')
 <div class="mb-3">
     <h1 class="font-weight-bold mb-1">
@@ -54,6 +48,9 @@
     <small class="text-muted">
         Paso 2 de 4 · Define dónde se encuentra físicamente el activo
     </small>
+        <a href="{{ route('equipos.wizard.create') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-chevron-left"></i> Anterior
+    </a>
 </div>
 
 {{-- WIZARD --}}

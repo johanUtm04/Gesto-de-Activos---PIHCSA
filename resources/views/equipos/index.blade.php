@@ -61,7 +61,7 @@
 
     <div class="btn-group">
         @can('crear-equipo')
-        <a href="{{ route('equipos.create') }}" class="btn btn-success">
+        <a href="{{ route('equipos.wizard.create') }}" class="btn btn-success">
             <i class="fas fa-plus"></i> Nuevo
         </a>
         @endcan
