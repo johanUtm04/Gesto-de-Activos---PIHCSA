@@ -130,7 +130,7 @@
                                    id="marca"
                                    name="marca"
                                    class="form-control"
-                                   value="{{ old('marca') }}"
+                                    value="{{ old('marca', session('wizard_equipo.monitor.marca')) }}"
                                    placeholder="Ej. Samsung, LG">
                             @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -143,7 +143,7 @@
                                    id="serial"
                                    name="serial"
                                    class="form-control"
-                                   value="{{ old('serial') }}"
+                                   value="{{ old('serial, session(wizard_equipo.monitor.serial')}}"
                                    placeholder="Ej. ABC12345">
                             @error('serial') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -161,7 +161,7 @@
                                    id="escala_pulgadas"
                                    name="escala_pulgadas"
                                    class="form-control"
-                                   value="{{ old('escala_pulgadas') }}"
+                                   value="{{ old('escala_pulgadas, session(wizard_equipo.monitor.escala_pulgado')}}"
                                    placeholder="Ej. 24, 27, 32">
                             @error('escala_pulgadas') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -174,7 +174,7 @@
                                    id="interface"
                                    name="interface"
                                    class="form-control"
-                                   value="{{ old('interface') }}"
+                                   value="{{ old('interface, session(wizard_equipo.monitor.interface')}}"
                                    placeholder="HDMI, DisplayPort, VGA">
                             @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>

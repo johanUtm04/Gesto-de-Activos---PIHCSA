@@ -92,7 +92,7 @@ class EquipoWizardController extends Controller
         ]);
         session()->put('wizard_equipo.monitor', [
             'marca' => $request->marca,
-            'serial' => $request->serie,
+            'serial' => $request->serial,
             'escala_pulgadas' => $request->escala_pulgadas,
             'interface' => $request->interface,
         ]);
@@ -126,7 +126,7 @@ class EquipoWizardController extends Controller
         ]);
         //2.-Agregarlos al wizard
         session()->put('wizard_equipo.disco_duro', [
-            'capacidad' => $request->marca,
+            'capacidad' => $request->capacidad,
             'tipo_hdd_ssd' => $request->tipo_hdd_ssd,
             'interface' => $request->interface,
         ]);
@@ -164,12 +164,14 @@ class EquipoWizardController extends Controller
         $request->validate([
             'capacidad_gb' => 'required|string',
             'clock_mhz' => 'required|string',
+            'tipo_chz' => 'required|string'
         ]);
 
         //2.-Los Agregamos al wizard 
         session()->put('wizard_equipo.ram', [
-            'capacidad_gb' => $request->capacidad,
-            'clock_mhz' => $request->clock_mh,
+            'capacidad_gb' => $request->capacidad_gb,
+            'clock_mhz' => $request->clock_mhz,
+            'tipo_chz' => $request->tipo_chz,
         ]);
 
         //3.-Jalamoe al papau wizard
@@ -259,18 +261,39 @@ class EquipoWizardController extends Controller
             abort(403, 'Wizard inválido');
         }
 
+        //Crear base del registro 
         $equipo = Equipo::create([
             ...$wizard['equipo'],
             'ubicacion_id' => $wizard['ubicacion']['ubicacion_id'] ?? null,
         ]);
+        
+        //Llaves Foraneas del registro
+        if (!empty($wizard['monitor'])) {
+            $equipo->monitores()->create($wizard['monitor']);
+        }
 
+        if (!empty($wizard['disco_duro'])) {
+            $equipo->discosDuros()->create($wizard['disco_duro']);
+        }
+    
+        if (!empty($wizard['ram'])) {
+            $equipo->rams()->create($wizard['ram']);
+        }
 
+        if (!empty($wizard['periferico'])) {
+            $equipo->perifericos()->create($wizard['periferico']);
+        }
 
+        if (!empty($wizard['procesador'])) {
+            $equipo->procesadores()->create($wizard['procesador']);
+        };
 
+        //Limpiar sesion
+        session()->forget('wizard_equipo');
 
         return redirect()->route('equipos.index', $uuid)
         ->with('success', 'Equipo registrado correctamente')
-        ->with('success', 'Equipo registrado correctamente')
+        ->with('highlight_id', $equipo->id);
         ;
     }
 

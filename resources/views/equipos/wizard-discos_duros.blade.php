@@ -42,8 +42,6 @@
 </style>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- HEADER --}}
 @section('content_header')
 <div class="mb-3">
     <div class="d-flex justify-content-between align-items-center">
@@ -56,7 +54,7 @@
             </small>
         </div>
 
-        <a href="{{ route('equipos.wizard-monitores', $equipo) }}" class="btn btn-outline-secondary">
+        <a href="{{ route('equipos.wizard-monitores', $uuid) }}" class="btn btn-outline-secondary">
             <i class="fas fa-chevron-left"></i> Anterior
         </a>
     </div>
@@ -97,8 +95,6 @@
 </div>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- CONTENIDO --}}
 @section('content')
 
 <div class="card card-outline card-info">

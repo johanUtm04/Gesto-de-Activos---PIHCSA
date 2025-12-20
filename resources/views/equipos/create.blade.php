@@ -26,7 +26,6 @@
         font-weight: 600;
     }
 
-    /* Fieldsets */
     .fieldset-group {
         border: 1px solid #ced4da;
         padding: 20px;
@@ -54,8 +53,6 @@
 </style>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- HEADER --}}
 @section('content_header')
 <div class="mb-3">
     <h1 class="font-weight-bold mb-1">
@@ -91,8 +88,6 @@
 </div>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- CONTENIDO --}}
 @section('content')
 
 {{-- ERRORES --}}
