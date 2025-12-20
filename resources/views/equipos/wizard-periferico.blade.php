@@ -108,6 +108,7 @@
 
 <div class="card card-outline card-info">
     <div class="card-body">
+        
 
         <form action="{{ route('equipos.wizard.savePeriferico', $uuid) }}" method="POST">
             @csrf

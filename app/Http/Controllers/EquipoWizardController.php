@@ -158,7 +158,7 @@ class EquipoWizardController extends Controller
     }
     
         //function to send saveDiscoduro's mini-form
-    public function saveRam(Request $request, Equipo $equipo)
+    public function saveRam(Request $request, $uuid)
     {
         //1.-VAlidamos lo del formulario alv
         $request->validate([
@@ -167,7 +167,7 @@ class EquipoWizardController extends Controller
         ]);
 
         //2.-Los Agregamos al wizard 
-        session()->put('wizard-controler.ram', [
+        session()->put('wizard_equipo.ram', [
             'capacidad_gb' => $request->capacidad,
             'clock_mhz' => $request->clock_mh,
         ]);
@@ -184,18 +184,15 @@ class EquipoWizardController extends Controller
     //function to show periferico's form
     public function perifericoForm($uuid)
     {
-        //1.-Llamar al wizard
-        $wizard = session('wizard_equipo');
-
-        //2.-Validar que el Token sobre el que vamos a estar trabajando Funcione
-        if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Wiazard Invalido o no funcional');
-        }
-
-        //3.-Tomar el id y el equipo para pasarlo al formulario (esta mal pero Igual)
-        $equipo = data_get($wizard, 'equipo.marca_equipo');
-
-        return view('equipos.wizard-periferico', compact('equipo', 'uuid'));
+    //1.-Llamar al wizard
+    $wizard = session('wizard_equipo');
+    //2.-Validar que el Token sobre el que vamos a estar trabajando Funcione
+    if (!$wizard || $wizard['uuid'] !== $uuid) {
+        abort(403, 'Wiazard Invalido o no funcional');
+    }
+    //3.-Tomar el id y el equipo para pasarlo al formulario (esta mal pero Igual)
+    $equipo = data_get($wizard, 'equipo.marca_equipo');
+    return view('equipos.wizard-periferico', compact('equipo', 'uuid'));
     }
     
     //Guardar el periferico en la session
@@ -208,52 +205,73 @@ class EquipoWizardController extends Controller
             'serial' => 'required|string',
             'interface' => 'required|string',
         ]);
-
         //2.-Creamos esta parte en el wizard
-        session()->put('wizard-controler.periferico', [
+        session()->put('wizard_equipo.periferico', [
             'tipo' => $request->tipo,
             'marca' => $request->marca,
             'serial' => $request->serial,
             'interface' => $request->interface,
         ]);
-
         //3.-Jalamoe al papau wizard
         $wizard = session ('wizard_equipo');
         //4.-El token detergente lo tomamos de la session
         $uuid = $wizard['uuid'];
 
-
         return redirect()->route('equipos.wizard-procesador', $uuid);
     }
 
     //function to show periferico's form
-    public function ProcesadorForm(Equipo $equipo)
+    public function ProcesadorForm($uuid)
     {
-        return view('equipos.wizard-procesador', compact('equipo'));
+        // dd($uuid);
+        //1.-Llamar al wizard
+        $wizard = session('wizard_equipo');
+
+        //2.-Validar que el toquen sobre el que estamos trabajando Funcione
+        if (!$wizard || $wizard['uuid'] !== $uuid) {
+            abort(403, 'Wiazard Invalido o no funcional');
+        }
+
+        //3.-Tomar el id... aunque no funciona
+        $equipo = data_get($wizard, 'equipos.marca_equipo');
+        // dd($uuid);
+        // dd($equipo);
+        return view('equipos.wizard-procesador', compact('uuid'));
     }
     
-    //function to send periferico
-    public function saveProcesador(Request $request, Equipo $equipo)
-    {
+    //function to send procesador
+    public function saveProcesador(Request $request, $uuid)
+    {   //1.-Validamos los datos
         $request->validate([
             'marca' => 'required|string',
             'descripcion_tipo' => 'required|string',
         ]);
-
-        Procesador::create([
-            'equipo_id' => $equipo->id,
+        //2.-Guardamos esta parte en el Wizard
+        session()->put('wizard_equipo.procesador', [
             'marca' => $request->marca,
             'descripcion_tipo' => $request->descripcion_tipo,
         ]);
+        //3.-Jalamoe al papau wizard
+        $wizard = session ('wizard_equipo');
 
-        if ($request->has('skip')) {
-            return redirect()->route('equipos.index')
-            ->with('success', 'Equipo registrado correctamente)');
+        //Validar que el detergente es valido o no
+        if (!$wizard || $wizard['uuid'] !== $uuid) {
+            abort(403, 'Wizard inválido');
         }
 
-        return redirect()->route('equipos.index', $equipo->id)
-                ->with('success', 'Equipo creado correctamente')
-                ->with('new_id', $equipo->id);
+        $equipo = Equipo::create([
+            ...$wizard['equipo'],
+            'ubicacion_id' => $wizard['ubicacion']['ubicacion_id'] ?? null,
+        ]);
+
+
+
+
+
+        return redirect()->route('equipos.index', $uuid)
+        ->with('success', 'Equipo registrado correctamente')
+        ->with('success', 'Equipo registrado correctamente')
+        ;
     }
 
 }

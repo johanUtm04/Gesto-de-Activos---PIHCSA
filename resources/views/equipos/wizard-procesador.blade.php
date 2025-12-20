@@ -56,7 +56,7 @@
             </small>
         </div>
 
-        <a href="{{ route('equipos.wizard-periferico', $equipo) }}"
+        <a href="{{ route('equipos.wizard-periferico', $uuid) }}"
            class="btn btn-outline-secondary">
             <i class="fas fa-chevron-left"></i> Anterior
         </a>
@@ -115,7 +115,8 @@
 <div class="card card-outline card-success">
     <div class="card-body">
 
-        <form action="{{ route('equipos.wizard.saveProcesador', $equipo) }}" method="POST">
+    
+        <form action="{{ route('equipos.wizard.saveProcesador', $uuid) }}" method="POST">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -133,7 +134,7 @@
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
                     <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo->marca_equipo }} ({{ $equipo->serial }})
+                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }}
                 </div>
 
                 <div class="row">

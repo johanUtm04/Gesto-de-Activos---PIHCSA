@@ -56,8 +56,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/equipos/{uuid}/periferico', [EquipoWizardController::class, 'perifericoForm'])->name('equipos.wizard-periferico');
     Route::post('/equipos/{uuid}/periferico', [EquipoWizardController::class, 'savePeriferico'])->name('equipos.wizard.savePeriferico');
 
-    Route::get('/equipos/{equipo}/precesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard-procesador');
-    Route::post('/equipos/{equipo}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
+    Route::get('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard-procesador');
+    Route::post('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
 
 });
 
