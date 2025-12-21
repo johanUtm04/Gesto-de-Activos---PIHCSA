@@ -27,6 +27,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-8">
+
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <h3 class="card-title font-weight-bold">
@@ -34,12 +35,6 @@
                         Perfil de Usuario
                     </h3>
                 </div>
-
-                @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
 
                 <form method="POST" action="{{ route('profile.update') }}">
                     @csrf
@@ -68,41 +63,21 @@
                         <fieldset class="fieldset-group">
                             <legend><i class="fas fa-lock"></i> Seguridad</legend>
 
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        @foreach ($errors->all() as $error)
-                                            <li>Error: <strong>{{ $error }}</strong></li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
                             <div class="form-group">
                                 <label>Contraseña actual <span class="text-danger">*</span></label>
-                                <input type="password" class="form-control @error('current_password') is-invalid @enderror" 
-                                name="current_password" >
+                                <input type="password" class="form-control" name="current_password" required>
                             </div>
 
-                            @error('current_password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-
-                            <hr class="my-4">
-
-                            <h5 class="mt-3">¿Necesitas cambiar tu contraseña?</h5>
-                            <p class="text-muted">
-                                Solo completa los siguientes campos si deseas cambiar tu contraseña.
-                            </p>
                             <div class="form-group">
                                 <label>Nueva contraseña</label>
                                 <input type="password" class="form-control" name="password">
                             </div>
 
                             <div class="form-group">
-                                <label>Confirmar Nueva contraseña</label>
+                                <label>Confirmar contraseña</label>
                                 <input type="password" class="form-control" name="password_confirmation">
                             </div>
+
                         </fieldset>
 
                         {{-- Información del sistema --}}
@@ -135,37 +110,6 @@
 
                 </form>
 
-                @if(session('saved'))
-                <div class="modal fade show" id="successModal" tabindex="-1" style="display:block;">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-
-                            <div class="modal-header bg-success">
-                                <h5 class="modal-title">
-                                    <i class="fas fa-check-circle"></i> Cambios guardados
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal">
-                                    <span>&times;</span>
-                                </button>
-                            </div>
-
-                            <div class="modal-body text-center">
-                                <p>La información del perfil se actualizó correctamente.</p>
-                            </div>
-
-                            <div class="modal-footer justify-content-center">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">
-                                    Aceptar
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                @endif
-
-
             </div>
 
         </div>
@@ -173,12 +117,4 @@
 </div>
 @stop
 
-@section('js')
 
-<script>
-    $(document).ready(function () {
-        $('#successModal').modal('show');
-    });
-</script>
-
-@stop

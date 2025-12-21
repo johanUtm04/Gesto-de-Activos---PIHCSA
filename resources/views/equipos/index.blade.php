@@ -47,7 +47,6 @@
 </style>
 @stop
 
-{{-- HEADER  --}}
 @section('content_header')
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
@@ -73,9 +72,6 @@
 </div>
 @stop
 
-
-{{-- -------------------------------------------------------------------------------- --}}
-{{-- CONTENIDO PRINCIPAL --}}
 @section('content')
     
     {{-- Manejo de Mensajes de Sesión (Alertas AdminLTE) --}}
@@ -356,59 +352,51 @@
 </footer>
 @endsection
 
-{{-- -------------------------------------------------------------------------------- --}}
-{{-- SCRIPTS (AdminLTE usa jQuery para modales, no Bootstrap 5 puro) --}}
 @section('js')
     {{-- **Nota:** AdminLTE y Bootstrap 4 usan data-toggle/data-target y un modal.addEventListener de jQuery, no el addEventListener de Bootstrap 5. --}}
     <script>
         $(document).ready(function() {
             $('#modalDetalle').on('show.bs.modal', function (event) {
-                const button = $(event.relatedTarget); // Botón que disparó el modal
+                const button = $(event.relatedTarget); 
                 const modal = $(this);
 
-                // Función para obtener atributos y limpiar/formatear valores
                 const getAttr = (attr) => button.data(attr);
                 
-                // Actualizar el título del modal
                 modal.find('.modal-title').text('Detalles del Activo: ' + getAttr('marca'));
 
-                // Información Base
                 modal.find('#modal_id').text(getAttr('id'));
                 modal.find('#modal_marca').text(getAttr('marca'));
                 modal.find('#modal_tipo').text(getAttr('tipo'));
                 modal.find('#modal_serial').text(getAttr('serial'));
                 modal.find('#modal_so').text(getAttr('so'));
 
-                // Asignación y Valor
                 modal.find('#modal_usuario').text(getAttr('usuario'));
                 modal.find('#modal_ubicacion').text(getAttr('ubicacion'));
                 modal.find('#modal_valo_inicial').text(getAttr('valo-inicial'));
                 modal.find('#modal_fecha_adquisicion').text(getAttr('fecha-adquisicion'));
                 modal.find('#modal_vida_util').text(getAttr('vida-util'));
 
-                // Componentes (Detalles)
                 modal.find('#modal_monitores').text(getAttr('monitores'));
                 modal.find('#modal_discos_duros').text(getAttr('discos-duros'));
                 modal.find('#modal_ram').text(getAttr('ram'));
                 modal.find('#modal_procesadores').text(getAttr('procesadores'));
                 
-                // Periféricos requiere un manejo especial por la lista de tipos
                 let perifericos = getAttr('perifericos');
                 modal.find('#modal_perifericos').text(perifericos || 'Ninguno');
 
             });
         });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const id = "{{ session('new_id') ?? session('actualizado-id') }}";
+    document.addEventListener('DOMContentLoaded', function () {
+        const id = "{{ session('new_id') ?? session('actualizado-id') }}";
 
-    if (id) {
-        const row = document.getElementById('equipo-' + id);
-        if (row) {
-            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (id) {
+            const row = document.getElementById('equipo-' + id);
+            if (row) {
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
-    }
-});
+    });
 
     </script>
 @stop

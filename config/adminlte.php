@@ -308,19 +308,21 @@ return [
         ],
         [
             'text' => 'blog',
-            'url' => 'admin/blog',
+            'url' => '/profile',
             'can' => 'manage-blog',
         ],
         ['header' => 'account_settings'],
+
+        //Inicio
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'Inicio',
+            'url' => '/equipos',
+            'icon' => 'fas fa-fw fa-home',
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text' => 'profile',
+            'url' => '/profile',
+            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Calcular_depreciacion',

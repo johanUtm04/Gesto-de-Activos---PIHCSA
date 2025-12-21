@@ -4,90 +4,109 @@
 
 @section('css')
 <style>
-    .maintenance-card {
-        background: #ffffffff;
-        border-radius: 12px;
-        padding: 25px;
-        color: #000000ff;
-        box-shadow: 0 0 15px rgba(0,0,0,.6);
-    }
-
-    .maintenance-card label {
-        font-weight: 700;
-        letter-spacing: .5px;
-        margin-top: 15px;
-    }
-
-    .maintenance-card .form-control,
-    .maintenance-card .custom-select {
-        background: transparent;
-        border: 2px solid #fff;
-        color: #000000ff;
-        border-radius: 8px;
-    }
-
-    .maintenance-card .form-control::placeholder {
-        color: #ccc;
-    }
-
-    .maintenance-card .btn-register {
-        margin-top: 25px;
-        background: #007bff;
-        border: none;
-        padding: 10px 30px;
-        border-radius: 8px;
-        font-weight: 700;
-        letter-spacing: 1px;
-    }
-
-    .maintenance-title {
-        font-size: 1.3rem;
-        font-weight: 800;
+    .fieldset-group {
+        border: 1px solid #ced4da;
+        padding: 20px;
         margin-bottom: 20px;
+        border-radius: .25rem;
+        background-color: #ffffff;
+    }
+
+    .fieldset-group legend {
+        width: inherit;
+        padding: 0 10px;
+        border-bottom: none;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #007bff;
+    }
+
+    .form-group label {
+        font-weight: 600;
     }
 </style>
 @stop
 
+@section('content_header')
+<div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+
+        <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-chevron-left"></i> Anterior
+        </a>
+    </div>
+</div>
+@stop
+
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="maintenance-card">
 
-                <div class="maintenance-title">
-                    Mantenimiento de {{ $equipo->marca_equipo ?? '[Nombre_Activo]' }}
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title font-weight-bold">
+                        <i class="fas fa-tools"></i>
+                        Mantenimiento de {{ $equipo->marca_equipo ?? '[Activo]' }}
+                    </h3>
                 </div>
-
-
-                <!-- <form action="{{ route('equipos.update', $equipo) }}" method="POST"> -->
 
                 <form method="POST" action="{{ route('equipos.addwork.store', $equipo) }}">
                     @csrf
 
-                    <label>TIPO EVENTO</label>
-                    <select class="custom-select" name="tipo_evento">
-                        <option value="">Seleccione una opción</option>
-                        <option>Mantenimiento preventivo</option>
-                        <option>Mantenimiento correctivo</option>
-                        <option>Actualización</option>
-                    </select>
+                    <div class="card-body">
 
-                    <label>FECHA EVENTO</label>
-                    <input type="date" class="form-control" name="fecha_evento">
+                        <fieldset class="fieldset-group">
+                            <legend>
+                                <i class="fas fa-clipboard-list"></i>
+                                Detalle del evento
+                            </legend>
 
-                    <label>CONTEXTO DEL EVENTO</label>
-                    <textarea class="form-control" rows="4" name="contexto" placeholder="Descripción del mantenimiento..."></textarea>
+                            <div class="form-group">
+                                <label>Tipo de evento *</label>
+                                <select class="form-control" name="tipo_evento" required>
+                                    <option value="">Seleccione una opción</option>
+                                    <option>Mantenimiento preventivo</option>
+                                    <option>Mantenimiento correctivo</option>
+                                    <option>Actualización</option>
+                                </select>
+                            </div>
 
-                    <label>COSTO (de tenerlo)</label>
-                    <input type="number" step="0.01" class="form-control" name="costo" placeholder="$0.00">
+                            <div class="form-group">
+                                <label>Fecha del evento *</label>
+                                <input type="date" class="form-control" name="fecha_evento" required>
+                            </div>
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-register">REGISTRAR</button>
+                            <div class="form-group">
+                                <label>Contexto del evento *</label>
+                                <textarea class="form-control" rows="4" name="contexto"
+                                    placeholder="Descripción del mantenimiento..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Costo (opcional)</label>
+                                <input type="number" step="0.01" class="form-control"
+                                    name="costo" placeholder="$0.00">
+                            </div>
+                        </fieldset>
+
+                    </div>
+
+                    <div class="card-footer text-right">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Registrar mantenimiento
+                        </button>
+
+                        <a href="{{ route('equipos.index') }}" class="btn btn-secondary">
+                            Cancelar
+                        </a>
                     </div>
                 </form>
 
             </div>
+
         </div>
     </div>
 </div>
 @stop
+

@@ -143,7 +143,7 @@
                                    id="marca"
                                    name="marca"
                                    class="form-control"
-                                   value="{{ old('marca', session('wizard_equipo.procesador.marca')) }}"
+                                   value="{{ old('marca', session('wizard_equipo.procesador.marcaa')) }}"
                                    placeholder="Intel, AMD">
                             @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
