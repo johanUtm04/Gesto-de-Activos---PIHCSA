@@ -2,8 +2,7 @@
 
 @section('title', 'Wizard | Asignar RAM')
 
-{{-- ================================================================================= --}}
-{{-- ESTILOS --}}
+
 @section('css')
 <style>
     .wizard-steps {
@@ -42,8 +41,6 @@
 </style>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- HEADER --}}
 @section('content_header')
 <div class="mb-3">
     <div class="d-flex justify-content-between align-items-center">
@@ -56,7 +53,7 @@
             </small>
         </div>
 
-        <a href="{{ route('equipos.wizard-discos_duros', $equipo) }}" class="btn btn-outline-secondary">
+        <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}" class="btn btn-outline-secondary">
             <i class="fas fa-chevron-left"></i> Anterior
         </a>
     </div>
@@ -102,14 +99,14 @@
 </div>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- CONTENIDO --}}
+
 @section('content')
 
 <div class="card card-outline card-warning">
     <div class="card-body">
 
-        <form action="{{ route('equipos.wizard.saveRam', $equipo) }}" method="POST">
+        <form action="{{ route('equipos.wizard.saveRam', $uuid) }}" method="POST">
+           
             @csrf
 
             <fieldset class="fieldset-group">
@@ -126,8 +123,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo ?? '—' }}
+                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -142,7 +140,7 @@
                                    id="capacidad_gb"
                                    name="capacidad_gb"
                                    class="form-control"
-                                   value="{{ old('capacidad_gb') }}"
+                                   value="{{ old('capacidad_gb', session('wizard_equipo.ram.capacidad_gb')) }}"
                                    placeholder="Ej. 8, 16, 32">
                             @error('capacidad_gb') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -155,7 +153,7 @@
                                    id="clock_mhz"
                                    name="clock_mhz"
                                    class="form-control"
-                                   value="{{ old('clock_mhz') }}"
+                                   value="{{ old('clock_mhz', session('wizard_equipo.ram.clock_mhz')) }}"
                                    placeholder="Ej. 2666, 3200">
                             @error('clock_mhz') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -173,7 +171,7 @@
                                    id="tipo_chz"
                                    name="tipo_chz"
                                    class="form-control"
-                                   value="{{ old('tipo_chz') }}"
+                                   value="{{ old('tipo_chz', session('wizard_equipo.ram.tipo_chz')) }}"
                                    placeholder="Ej. DDR4, DDR5">
                             @error('tipo_chz') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -189,7 +187,7 @@
                     <i class="fas fa-arrow-right"></i> Guardar y continuar
                 </button>
 
-                <a href="{{ route('equipos.wizard-periferico', $equipo) }}"
+                <a href="{{ route('equipos.wizard-periferico', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
                     Omitir este paso
                 </a>

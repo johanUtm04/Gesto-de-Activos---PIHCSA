@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Disco_Duro;
-use App\Models\DiscoDuro;
 use Illuminate\Http\Request;
 use App\Models\Equipo;
-use App\Models\Monitor;
-use App\Models\Periferico;
-use App\Models\Procesador;
+
 use App\Models\user;
-use Illuminate\Support\Str;
 
 class EquipoWizardController extends Controller
 {
@@ -41,9 +36,9 @@ public function create()
             abort(403, 'Wiazard Invalido o no funcional');
         }
 
-        $equipo = $wizard['equipo'];
+        $equipo = data_get($wizard, 'equipo');
+      
 
-        
         //equipo es para tener acceso a serial y demas mmda y uuid para el que estamos llenando
         return view('equipos.wizard-ubicacion', compact('equipo','uuid'));
     }
@@ -80,8 +75,9 @@ public function create()
             abort(403, 'Wiazard Invalido o no funcional');
         }
 
-        $equipo = data_get($wizard, 'equipo.marca_equipo');
+        $equipo = data_get($wizard, 'equipo');
 
+        // dd($equipo);
 
         //Vamonos ahora si a la vista
          return view('equipos.wizard-monitores', compact('equipo', 'uuid'));
@@ -102,7 +98,7 @@ public function create()
             'escala_pulgadas' => $request->escala_pulgadas,
             'interface' => $request->interface,
         ]);
-    $wizard = session('wizard_equipo');
+    $wizard = session ('wizard_equipo');
     $uuid = $wizard['uuid'];
         return redirect()->route('equipos.wizard-discos_duros', $uuid);
     }
@@ -116,7 +112,7 @@ public function create()
             abort(403, 'Wiazard Invalido o no funcional');
         }
 
-        $equipo = data_get($wizard, 'equipo.marca_equipo');
+        $equipo = data_get($wizard, 'equipo');
 
         return view('equipos.wizard-discos_duros', compact('equipo','uuid'));
     }
@@ -136,9 +132,7 @@ public function create()
             'tipo_hdd_ssd' => $request->tipo_hdd_ssd,
             'interface' => $request->interface,
         ]);
-        //4.-Jalamoe al papau wizard
         $wizard = session ('wizard_equipo');
-        //5.-El token detergente lo tomamos de la session
         $uuid = $wizard['uuid'];
         //6.-Pasamos esa vaina
         return redirect()->route('equipos.wizard-ram', $uuid);    
@@ -157,7 +151,7 @@ public function create()
         }
 
         //GUardamos el equipo pero esta mal alv
-        $equipo = data_get($wizard, 'equipo.marca_equipo');
+        $equipo = data_get($wizard, 'equipo');
 
         //Reyornamos ahora si la vista con el equipo que esta mal ALV y el detergente
         return view('equipos.wizard-rams', compact('equipo', 'uuid'));
@@ -199,7 +193,7 @@ public function create()
         abort(403, 'Wiazard Invalido o no funcional');
     }
     //3.-Tomar el id y el equipo para pasarlo al formulario (esta mal pero Igual)
-    $equipo = data_get($wizard, 'equipo.marca_equipo');
+    $equipo = data_get($wizard, 'equipo');
     return view('equipos.wizard-periferico', compact('equipo', 'uuid'));
     }
     
@@ -224,6 +218,7 @@ public function create()
         $wizard = session ('wizard_equipo');
         //4.-El token detergente lo tomamos de la session
         $uuid = $wizard['uuid'];
+        
 
         return redirect()->route('equipos.wizard-procesador', $uuid);
     }
@@ -231,20 +226,16 @@ public function create()
     //function to show periferico's form
     public function ProcesadorForm($uuid)
     {
-        // dd($uuid);
-        //1.-Llamar al wizard
+
         $wizard = session('wizard_equipo');
 
-        //2.-Validar que el toquen sobre el que estamos trabajando Funcione
         if (!$wizard || $wizard['uuid'] !== $uuid) {
             abort(403, 'Wiazard Invalido o no funcional');
         }
 
-        //3.-Tomar el id... aunque no funciona
-        $equipo = data_get($wizard, 'equipos.marca_equipo');
-        // dd($uuid);
-        // dd($equipo);
-        return view('equipos.wizard-procesador', compact('uuid'));
+        $equipo = data_get($wizard, 'equipo');
+
+        return view('equipos.wizard-procesador', compact('uuid', 'equipo'));
     }
     
     //function to send procesador

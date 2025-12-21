@@ -2,8 +2,6 @@
 
 @section('title', 'Wizard | Asignar Procesador')
 
-{{-- ================================================================================= --}}
-{{-- ESTILOS --}}
 @section('css')
 <style>
     .wizard-steps {
@@ -42,8 +40,6 @@
 </style>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- HEADER --}}
 @section('content_header')
 <div class="mb-3">
     <div class="d-flex justify-content-between align-items-center">
@@ -108,8 +104,6 @@
 </div>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- CONTENIDO --}}
 @section('content')
 
 <div class="card card-outline card-success">
@@ -133,8 +127,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }}
+                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -148,7 +143,7 @@
                                    id="marca"
                                    name="marca"
                                    class="form-control"
-                                   value="{{ old('marca') }}"
+                                   value="{{ old('marca', session('wizard_equipo.procesador.marca')) }}"
                                    placeholder="Intel, AMD">
                             @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -164,7 +159,7 @@
                                    id="descripcion_tipo"
                                    name="descripcion_tipo"
                                    class="form-control"
-                                   value="{{ old('descripcion_tipo') }}"
+                                   value="{{ old('descripcion_tipo', session('wizard_equipo.procesador.descripcion_tipo')) }}"
                                    placeholder="Core i7-11700, Ryzen 5 5600X">
                             @error('descripcion_tipo') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>

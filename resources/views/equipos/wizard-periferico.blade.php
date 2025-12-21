@@ -2,8 +2,6 @@
 
 @section('title', 'Wizard | Asignar Periférico')
 
-{{-- ================================================================================= --}}
-{{-- ESTILOS --}}
 @section('css')
 <style>
     .wizard-steps {
@@ -42,8 +40,6 @@
 </style>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- HEADER --}}
 @section('content_header')
 <div class="mb-3">
     <div class="d-flex justify-content-between align-items-center">
@@ -56,7 +52,7 @@
             </small>
         </div>
 
-        <a href="{{ route('equipos.wizard-ram', $equipo) }}" class="btn btn-outline-secondary">
+        <a href="{{ route('equipos.wizard-ram', $uuid) }}" class="btn btn-outline-secondary">
             <i class="fas fa-chevron-left"></i> Anterior
         </a>
     </div>
@@ -102,8 +98,6 @@
 </div>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- CONTENIDO --}}
 @section('content')
 
 <div class="card card-outline card-info">
@@ -127,8 +121,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }}
+                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -143,7 +138,7 @@
                                    id="tipo"
                                    name="tipo"
                                    class="form-control"
-                                   value="{{ old('tipo') }}"
+                                   value="{{ old('tipo', session('wizard_equipo.periferico.tipo')) }}"
                                    placeholder="Teclado, Mouse, Webcam">
                             @error('tipo') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -156,7 +151,7 @@
                                    id="marca"
                                    name="marca"
                                    class="form-control"
-                                   value="{{ old('marca') }}"
+                                   value="{{ old('marca', session('wizard_equipo.periferico.marca')) }}"
                                    placeholder="Logitech, HP, Dell">
                             @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -174,7 +169,7 @@
                                    id="serial"
                                    name="serial"
                                    class="form-control"
-                                   value="{{ old('serial') }}"
+                                   value="{{ old('serial', session('wizard_equipo.periferico.serial')) }}"
                                    placeholder="Número de serie">
                             @error('serial') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -187,7 +182,7 @@
                                    id="interface"
                                    name="interface"
                                    class="form-control"
-                                   value="{{ old('interface') }}"
+                                   value="{{ old('interface', session('wizard_equipo.periferico.interface')) }}"
                                    placeholder="USB, Bluetooth">
                             @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -203,7 +198,7 @@
             <i class="fas fa-arrow-right"></i> Guardar y continuar
                 </button>
 
-                <a href="{{ route('equipos.wizard-procesador', $equipo) }}"
+                <a href="{{ route('equipos.wizard-procesador', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
                     Omitir este paso
                 </a>

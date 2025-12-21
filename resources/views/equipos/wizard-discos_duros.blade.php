@@ -117,8 +117,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }}
+                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -133,7 +134,7 @@
                                    id="capacidad"
                                    name="capacidad"
                                    class="form-control"
-                                   value="{{ old('capacidad') }}"
+                                   value="{{ old('capacidad', session('wizard_equipo.disco_duro.capacidad')) }}"
                                    placeholder="Ej. 256GB, 512GB, 1TB">
                             @error('capacidad') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -146,7 +147,7 @@
                                    id="tipo_hdd_ssd"
                                    name="tipo_hdd_ssd"
                                    class="form-control"
-                                   value="{{ old('tipo_hdd_ssd') }}"
+                                   value="{{ old('tipo_hdd_ssd', session('wizard_equipo.disco_duro.tipo_hdd_ssd') ) }}"
                                    placeholder="SSD, NVMe, HDD">
                             @error('tipo_hdd_ssd') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -164,7 +165,7 @@
                                    id="interface"
                                    name="interface"
                                    class="form-control"
-                                   value="{{ old('interface') }}"
+                                   value="{{ old('interface', session('wizard_equipo.disco_duro.interface')) }}"
                                    placeholder="SATA III, PCIe, M.2">
                             @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>

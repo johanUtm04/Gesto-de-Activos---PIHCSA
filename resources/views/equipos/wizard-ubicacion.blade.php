@@ -42,6 +42,7 @@
 
 @section('content_header')
 <div class="mb-3">
+<div class="d-flex justify-content-between align-items-center">
     <h1 class="font-weight-bold mb-1">
         <i class="fas fa-map-marker-alt text-info"></i> Asignar Ubicación
     </h1>
@@ -51,6 +52,7 @@
         <a href="{{ route('equipos.wizard.create') }}" class="btn btn-outline-secondary">
         <i class="fas fa-chevron-left"></i> Anterior
     </a>
+        </div>
 </div>
 
 {{-- WIZARD --}}
@@ -83,8 +85,6 @@
 </div>
 @stop
 
-{{-- ================================================================================= --}}
-{{-- CONTENIDO --}}
 @section('content')
 
 <div class="card card-outline card-primary">
@@ -106,8 +106,9 @@
 
                 {{-- Info del activo --}}
                 <div class="alert alert-light border mb-4">
-                    <i class="fas fa-desktop"></i>
-                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }} 
+                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 {{-- Ubicación --}}
@@ -151,8 +152,6 @@
 
 @stop
 
-{{-- ================================================================================= --}}
-{{-- JS --}}
 @section('js')
 <script>
     $(document).ready(function () {

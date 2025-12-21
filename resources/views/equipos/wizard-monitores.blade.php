@@ -111,8 +111,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <i class="fas fa-barcode"></i>
-                    <strong>Activo:</strong> {{ $equipo['marca_equipo'] ?? '—' }}
+                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -140,7 +141,7 @@
                                    id="serial"
                                    name="serial"
                                    class="form-control"
-                                   value="{{ old('serial, session(wizard_equipo.monitor.serial')}}"
+                                   value="{{ old('serial', session('wizard_equipo.monitor.serial')) }}"
                                    placeholder="Ej. ABC12345">
                             @error('serial') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -158,7 +159,7 @@
                                    id="escala_pulgadas"
                                    name="escala_pulgadas"
                                    class="form-control"
-                                   value="{{ old('escala_pulgadas, session(wizard_equipo.monitor.escala_pulgado')}}"
+                                   value="{{ old('escala_pulgadas', session('wizard_equipo.monitor.escala_pulgadas')) }}"
                                    placeholder="Ej. 24, 27, 32">
                             @error('escala_pulgadas') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -171,7 +172,7 @@
                                    id="interface"
                                    name="interface"
                                    class="form-control"
-                                   value="{{ old('interface, session(wizard_equipo.monitor.interface')}}"
+                                   value="{{ old('interface', session('wizard_equipo.monitor.interface')) }}"
                                    placeholder="HDMI, DisplayPort, VGA">
                             @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
