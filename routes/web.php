@@ -65,8 +65,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
     //Depreciacon de una Activo
     Route::get('/depreciacion', [DepreciacionController::class, 'index'])->name('depreciacion.index');
-    Route::get('/depreciacion/{equipo}', [DepreciacionController::class, 'show'])->name('depreciacion.show');
     Route::get('/depreciacion/reporte/pdf', [DepreciacionController::class, 'exportPdf'])->name('depreciacion.pdf');
+    Route::get('/depreciacion/{equipo}', [DepreciacionController::class, 'show'])->name('depreciacion.show');
+
 
     //Papelera
     Route::get('/papelera', [PapeleraController::class, 'index'])->name('papelera.index');

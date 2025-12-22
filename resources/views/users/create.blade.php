@@ -38,9 +38,25 @@
     </h1>
 
     <a href="{{ route('users.index') }}" class="btn btn-secondary btn-sm">
-        <i class="fas fa-arrow-left"></i> Volver a usuarios
+        <i class="fas fa-arrow-left"></i> Volver
     </a>
 </div>
+{{-- WIZARD SIMPLE --}}
+<div class="card mb-3">
+    <div class="card-body p-3">
+        <div class="d-flex justify-content-around text-center">
+            <div class="wizard-step active">
+                <i class="fas fa-user"></i>
+                <div>Usuario</div>
+            </div>
+            <div class="wizard-step">
+                <i class="fas fa-check-circle"></i>
+                <div>Confirmar</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @section('content')
