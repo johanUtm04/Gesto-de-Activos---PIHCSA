@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\EquipoWizardController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\DepreciacionController;
+use App\Http\Controllers\PapeleraController;
+use App\Http\Controllers\GestionUsuariosController;
+use App\Http\Controllers\GestionUbicacionesController;
 //Main Route
 Route::get('/', function () {
 return view('auth.login');});
@@ -14,9 +17,9 @@ return view('auth.login');});
 Route::middleware(['auth'])->group(function () {
     Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
     Route::get('/equipos/Historial', [EquipoController::class, 'historial'])->name('equipos.historial');
+    
 
-Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])
-->name('equipos.wizard.create');
+Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])->name('equipos.wizard.create');
 
     Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
 
@@ -60,6 +63,27 @@ Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])
 
     Route::get('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard-procesador');
     Route::post('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
+    //Depreciacon de una Activo
+    Route::get('/depreciacion', [DepreciacionController::class, 'index'])->name('depreciacion.index');
+    Route::get('/depreciacion/{equipo}', [DepreciacionController::class, 'show'])->name('depreciacion.show');
+    Route::get('/depreciacion/reporte/pdf', [DepreciacionController::class, 'exportPdf'])->name('depreciacion.pdf');
+
+    //Papelera
+    Route::get('/papelera', [PapeleraController::class, 'index'])->name('papelera.index');
+
+    //Gestion de Usuarios
+    Route::get('/gestionUsuarios', [GestionUsuariosController::class, 'index'])->name('users.index');
+    Route::get('/gestionUsuarios/{user}/edit', [GestionUsuariosController::class, 'edit'])->name('users.edit');
+    Route::delete('/gestionUsuarios/{user}', [GestionUsuariosController::class, 'destroy'])->name('users.destroy');
+    Route::put('/gestionUsuarios/{user}', [GestionUsuariosController::class, 'update'])->name('users.update');
+
+
+    //Gestion de Ubicaciones 
+    Route::get('/gestionUbicaciones', [GestionUbicacionesController::class, 'index'])->name('ubicaciones.index');
+    Route::get('/gestionUbicaciones/{ubicacion}/edit', [GestionUbicacionesController::class, 'edit'])->name('ubicaciones.edit');
+    Route::delete('/gestionUbicaciones/{ubicacion}', [GestionUbicacionesController::class, 'destroy'])->name('ubicaciones.destroy');
+    Route::put('/gestionUbicaciones/{ubicacion}', [GestionUbicacionesController::class, 'update'])->name('ubicaciones.update');
+
 
 });
 

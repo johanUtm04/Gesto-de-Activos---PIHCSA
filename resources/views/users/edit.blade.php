@@ -1,0 +1,174 @@
+@extends('adminlte::page')
+
+@section('title', 'Editar Equipo | Activos TI')
+
+@section('css')
+<style>
+    .section-title {
+        border-bottom: 2px solid #007bff; 
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+        color: #17a2b8; 
+        font-weight: 600;
+    }
+
+    .data-item {
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px dashed #ced4da;
+    }
+
+    .data-item:last-child {
+        border-bottom: none;
+    }
+
+    .data-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .component-group {
+        border: 1px solid #dee2e6;
+        border-radius: .25rem;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+    }
+</style>
+@stop
+
+@section('content_header')
+    <h1 class="font-weight-bold text-center">
+        <i class="fas fa-desktop text-primary"></i> 
+        Edición del Usuario: {{ strtoupper($user->name) }}
+    </h1>
+    <a href="{{ route('users.index') }}" class="btn btn-outline-secondary btn-sm mt-2">
+        <i class="fas fa-arrow-circle-left"></i> Volver a Usuarios
+    </a>
+@stop
+
+@section('content')
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- columna Izquierda -->
+            <div class="col-md-5">
+                <div class="card card-outline card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-clipboard-list"></i> Detalle y Estado Actual
+                        </h3>
+                    </div>
+                    <!-- Comienzo a escribir la informacion (Lado Derecho) -->
+
+                    <div class="card-body">
+
+                        <h5 class="section-title">
+                            <i class="fas fa-cogs"></i> Especificaciones Generales
+                        </h5>
+
+                        {{-- Datos Principales --}}
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-id-badge"></i> ID del Usuario:
+                            </span> 
+                            <span class="float-right">{{ $user->id }}</span>
+                        </div>
+
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-user"></i> Nombre:
+                            </span> 
+                            <span class="float-right">{{ $user->name }}</span>
+                        </div>
+
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-envelope"></i> Correo Electrónico:
+                            </span> 
+                            <span class="float-right text-bold">{{ $user->email }}</span>
+                        </div>
+
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-building"></i> Departamento:
+                            </span> 
+                            <span class="float-right">{{ $user->departamento }}</span>
+                        </div>
+
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-toggle-on"></i> Estatus:
+                            </span> 
+                            <span class="float-right">{{ $user->estatus }}</span>
+                        </div>
+
+                    </div> {{-- /card-body --}}
+                </div> {{-- /card --}}
+            </div> {{-- /col-md-5 --}}
+
+
+        <!-- Inicio columna Derecha -->
+            <div class="col-md-6">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-pen-square"></i> Modificación de Datos
+                        </h3>
+                    </div>
+
+                    <!-- Formulario -->
+                     <form action="{{ route('users.update', $user) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <fieldset class="border p-3 mb-4">
+                                <legend class="w-auto px-2 text-primary"><i class="fas fa-info-circle"></i> Datos Base</legend>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="name"><i class="fas fa-laptop"></i> Nombre: </label>
+                                        <input type="text" name="name" id="name" class="form-control"
+                                            value="{{ old('name', $user->name) }}">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="estatus"><i class="fas fa-barcode"></i> Estatus:</label>
+                                        <input type="text" name="estatus" id="estatus" class="form-control"
+                                        value="{{ old('estatus', $user->estatus) }}">
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="email"><i class="fas fa-barcode"></i> Correo Electronico:</label>
+                                        <input type="text" name="email" id="email" class="form-control"
+                                        value="{{ old('email', $user->email) }}">
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="departamento"><i class="fab fa-windows"></i> Departamento: </label>
+                                        <input type="text" name="departamento" id="departamento" class="form-control"
+                                            value="{{ old('departamento', $user->departamento) }}">
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                            {{-- BOTÓN FINAL --}}
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                    <i class="fas fa-database"></i> Aplicar Cambios y Registrar Historial
+                                </button>
+                            </div>
+                        </form>
+                    </div> {{-- /card-body --}}
+                </div> {{-- /card --}}
+            </div> {{-- /col-md-7 --}}
+
+
+
+
+        </div> {{-- row --}}
+    </div> {{-- container --}}
+
+@stop

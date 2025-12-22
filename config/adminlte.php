@@ -326,26 +326,32 @@ return [
         ],
         [
             'text' => 'Calcular_depreciacion',
-            'url' => 'admin/settings',
+            'url' => '/depreciacion',
             'icon' => 'fas fa-dollar-sign',
         ],
 
         [
             'text' => 'Papelera_Activos_Eliminados',
-            'url' => 'admin/settings',
+            'url' => '/papelera',
             'icon' => 'fas fa-trash',
         ],
 
         //Solo ADMIN
         [
             'text' => 'gestion_usuarios',
-            'url' => 'admin/settings',
+            'url' => '/gestionUsuarios',
             'icon' => 'fas fa-users-cog',
         ],
         [
             'text' => 'gestion_ubicaciones',
-            'url' => 'admin/settings',
+            'url' => '/gestionUbicaciones',
             'icon' => 'fas fa-map-marker-alt',
+        ],
+
+        [
+            'text' => 'historial',
+            'url' => '/equipos/Historial',
+            'icon' => 'fas fa-history',
         ],
     ],
 

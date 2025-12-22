@@ -58,23 +58,13 @@
         </small>
     </div>
 
-    <div class="btn-group">
-        @can('crear-equipo')
-        <a href="{{ route('equipos.wizard.create') }}" class="btn btn-success">
-            <i class="fas fa-plus"></i> Nuevo
-        </a>
-        @endcan
 
-        <a href="{{ route('equipos.historial') }}" class="btn btn-outline-primary">
-            <i class="fas fa-history"></i> Historial
-        </a>
-    </div>
 </div>
 @stop
 
 @section('content')
     
-    {{-- Manejo de Mensajes de Sesión (Alertas AdminLTE) --}}
+    {{--(Alertas AdminLTE)--}}
     @php
         $alertTypes = ['success', 'danger', 'warning', 'info', 'primary'];
     @endphp
@@ -320,7 +310,7 @@
                                         </form>
                                            @endcan
                                     
-                                        
+                            
                                     </div>
                                 </td>
                             </tr>
@@ -353,7 +343,6 @@
 @endsection
 
 @section('js')
-    {{-- **Nota:** AdminLTE y Bootstrap 4 usan data-toggle/data-target y un modal.addEventListener de jQuery, no el addEventListener de Bootstrap 5. --}}
     <script>
         $(document).ready(function() {
             $('#modalDetalle').on('show.bs.modal', function (event) {

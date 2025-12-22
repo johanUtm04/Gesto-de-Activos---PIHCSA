@@ -32,6 +32,7 @@ return [
     'Papelera_Activos_Eliminados'  => 'Papelera',
     'gestion_usuarios'             => 'Gestion de Usuarios',
     'gestion_ubicaciones'           => 'Gestion de Ubicaciones',
+    'historial'                      => 'Historial',
 
     // Etiquetas de estado
     'labels'                       => 'ESTADOS DE EQUIPO',

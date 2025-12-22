@@ -2,8 +2,6 @@
 
 @section('title', 'Editar Equipo | Activos TI')
 
-{{-- -------------------------------------------------------------------------------- --}}
-{{-- Sección de Estilos (Opcional, pero recomendada para consistencia visual) --}}
 @section('css')
 <style>
     .section-title {
@@ -39,8 +37,6 @@
 </style>
 @stop
 
-{{-- -------------------------------------------------------------------------------- --}}
-{{-- HEADER PRINCIPAL --}}
 @section('content_header')
     <h1 class="font-weight-bold text-center">
         <i class="fas fa-desktop text-primary"></i> 
@@ -51,8 +47,7 @@
     </a>
 @stop
 
-{{-- -------------------------------------------------------------------------------- --}}
-{{-- CONTENIDO PRINCIPAL --}}
+
 @section('content')
     <div class="container-fluid">
         <div class="row">
