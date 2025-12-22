@@ -42,7 +42,7 @@
 
     <div class="btn-group">
         <a href="{{ route('users.create') }}" class="btn btn-success">
-            <i class="fas fa-plus"></i> Nuevo
+            <i class="fas fa-plus"></i> Agregar Usuario
         </a>
     </div>
     

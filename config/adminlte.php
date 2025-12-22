@@ -330,12 +330,6 @@ return [
             'icon' => 'fas fa-dollar-sign',
         ],
 
-        [
-            'text' => 'Papelera_Activos_Eliminados',
-            'url' => '/papelera',
-            'icon' => 'fas fa-trash',
-        ],
-
         //Solo ADMIN
         [
             'text' => 'gestion_usuarios',
@@ -352,6 +346,11 @@ return [
             'text' => 'historial',
             'url' => '/equipos/Historial',
             'icon' => 'fas fa-history',
+        ],
+        [
+            'text' => 'Papelera_Activos_Eliminados',
+            'url' => '/papelera',
+            'icon' => 'fas fa-trash',
         ],
     ],
 

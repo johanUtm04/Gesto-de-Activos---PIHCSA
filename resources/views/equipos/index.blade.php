@@ -58,7 +58,17 @@
         </small>
     </div>
 
-
+    <div class="btn-group">
+        @can('crear-equipo')
+        <a href="{{ route('equipos.wizard.create') }}" class="btn btn-info">
+            <i class="fas fa-plus"></i> Agregar Equipo
+        </a>
+        @endcan
+        <!-- 
+        <a href="{{ route('equipos.historial') }}" class="btn btn-outline-primary">
+            <i class="fas fa-history"></i> Historial
+        </a> -->
+    </div>
 </div>
 @stop
 

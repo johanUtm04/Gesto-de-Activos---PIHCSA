@@ -5,8 +5,8 @@
 @section('css')
 <style>
     .table-ubicaciones thead th {
-        background-color: #fdecea; /* rojo suave */
-        color: #dc3545; /* rojo Bootstrap */
+        background-color: #fdecea;
+        color: #dc3545; 
         font-weight: 900;
         border-bottom: 3px solid #dc3545;
         vertical-align: middle;
@@ -43,6 +43,14 @@
             Control y administración de ubicaciones físicas
         </small>
     </div>
+
+    <div class="btn-group">
+        <a href="{{ route('ubicaciones.create') }}" class="btn btn-danger">
+            <i class="fas fa-plus"></i> Agregar Ubicacion
+        </a>
+    </div>
+
+
 </div>
 @stop
 
@@ -146,4 +154,20 @@
     </div>
 </div>
 
+@endsection
+
+
+@section('footer')
+<footer class="main-footer text-sm">
+    <div class="float-right d-none d-sm-inline">
+        <i class="fas fa-code"></i> PIHCSA · Gestion de Activos
+    </div>
+
+    <strong>
+        <i class="fas fa-boxes"></i> Inventario de Activos TI
+    </strong>
+    &copy; {{ date('Y') }} |
+    Desarrollado por <strong>Johan</strong>
+
+</footer>
 @endsection

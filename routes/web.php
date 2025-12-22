@@ -83,6 +83,9 @@ Route::middleware(['auth'])->group(function () {
 
     //Gestion de Ubicaciones 
     Route::get('/gestionUbicaciones', [GestionUbicacionesController::class, 'index'])->name('ubicaciones.index');
+    Route::get('/gestionUbicaciones/create', [GestionUbicacionesController::class, 'create'])->name('ubicaciones.create');
+    Route::post('/gestionUbicaciones', [GestionUbicacionesController::class, 'store'])->name('ubicaciones.store');
+    
     Route::get('/gestionUbicaciones/{ubicacion}/edit', [GestionUbicacionesController::class, 'edit'])->name('ubicaciones.edit');
     Route::delete('/gestionUbicaciones/{ubicacion}', [GestionUbicacionesController::class, 'destroy'])->name('ubicaciones.destroy');
     Route::put('/gestionUbicaciones/{ubicacion}', [GestionUbicacionesController::class, 'update'])->name('ubicaciones.update');

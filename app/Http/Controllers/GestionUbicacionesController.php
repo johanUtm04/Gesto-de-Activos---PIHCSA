@@ -15,6 +15,25 @@ class GestionUbicacionesController extends Controller
         return view('ubicaciones.index', compact('ubicaciones'));
     }
 
+    public function create()
+    {
+        $ubicaciones = Ubicacion::all();
+        return view('ubicaciones.create', compact('ubicaciones'));
+    }
+
+
+    public function store(Request $request, Ubicacion $ubicacion)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'codigo' => 'required|string|max:255',
+        ]);
+        $ubicacion->create($request->all());
+
+        return redirect()->route('ubicaciones.index')->with('succes', 'ubicacion agregada correctamente');
+    }
+
+
     public function edit(Ubicacion $ubicacion)
     {
         return view('ubicaciones.edit', compact('ubicacion'));
