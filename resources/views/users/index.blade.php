@@ -41,10 +41,11 @@
 
 
     <div class="btn-group">
-
-
-     -->
+        <a href="{{ route('users.create') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Nuevo
+        </a>
     </div>
+    
 </div>
 @stop
 

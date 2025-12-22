@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/equipos/Historial', [EquipoController::class, 'historial'])->name('equipos.historial');
     
 
-Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])->name('equipos.wizard.create');
+    Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])->name('equipos.wizard.create');
 
     Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
 
@@ -73,6 +73,9 @@ Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])-
 
     //Gestion de Usuarios
     Route::get('/gestionUsuarios', [GestionUsuariosController::class, 'index'])->name('users.index');
+    Route::get('/gestionUsuarios/create', [GestionUsuariosController::class, 'create'])->name('users.create');
+    Route::post('/gestionUsuarios', [GestionUsuariosController::class, 'store'])->name('users.store');
+
     Route::get('/gestionUsuarios/{user}/edit', [GestionUsuariosController::class, 'edit'])->name('users.edit');
     Route::delete('/gestionUsuarios/{user}', [GestionUsuariosController::class, 'destroy'])->name('users.destroy');
     Route::put('/gestionUsuarios/{user}', [GestionUsuariosController::class, 'update'])->name('users.update');
