@@ -134,7 +134,7 @@
 
                 <div class="row">
                     {{-- Marca --}}
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="marca">
                                 <i class="fas fa-tag"></i> Marca
@@ -143,14 +143,14 @@
                                    id="marca"
                                    name="marca"
                                    class="form-control"
-                                   value="{{ old('marca', session('wizard_equipo.procesador.marcaa')) }}"
+                                   value="{{ old('marca', session('wizard_equipo.procesador.marca')) }}"
                                    placeholder="Intel, AMD">
                             @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
                     </div>
 
                     {{-- Modelo --}}
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="descripcion_tipo">
                                 <i class="fas fa-list-alt"></i> Modelo / Descripción
@@ -164,6 +164,24 @@
                             @error('descripcion_tipo') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
                     </div>
+
+
+
+                    {{-- Frecuencia del Micro --}}
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="frecuenciaMicro">
+                                <i class="fas fa-list-alt"></i> Frecuencia del Micro
+                            </label>
+                            <input type="text"
+                                   id="frecuenciaMicro"
+                                   name="frecuenciaMicro"
+                                   class="form-control"
+                                   value="{{ old('frecuenciaMicro', session('wizard_equipo.procesador.frecuenciaMicro')) }}"
+                                   placeholder="Ej. 2.6 GHz">
+                            @error('frecuenciaMicro') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+                    </div>
                 </div>
 
             </fieldset>
@@ -174,10 +192,10 @@
                     <i class="fas fa-check-double"></i> Finalizar y ver activo
                 </button>
 
-                <a href="{{ route('equipos.index') }}"
+                <!-- <a href="{{ route('equipos.index') }}"
                    class="btn btn-outline-secondary btn-lg">
                     Ir al inventario
-                </a>
+                </a> -->
             </div>
 
         </form>

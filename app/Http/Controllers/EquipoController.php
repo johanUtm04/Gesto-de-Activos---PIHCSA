@@ -22,7 +22,6 @@ class EquipoController extends Controller
     public function index()
     {
         $equipos = Equipo::paginate(10);
-        
         return view('equipos.index', compact('equipos'));
     }
 
@@ -105,7 +104,6 @@ public function update(Request $request, Equipo $equipo)
         'vida_util_estimada',
     ]));
 
-
 if ($request->has('perifericos')) {
         foreach ($request->input('perifericos') as $peripheralData) {
             
@@ -142,11 +140,7 @@ if ($request->has('rams')) {
                 //Buscamos en el modelo la que coincida con ese ID ejemplo 10
                 //Lo trae de la DB 
                 $ram = Ram::find($peripheralData['id']);
-                
-            
                 if ($ram) {
-
-
                     //Si los espacios de la cajita ambos estan vacios 
                     //la mauqina interpreta que como estan vacios se borraron, los borramos
                     if (empty($peripheralData['capacidad_gb']) && empty($peripheralData['clock_mhz']) && empty($periphereData['tipo_chz'])) {
@@ -164,8 +158,6 @@ if ($request->has('rams')) {
             } 
         }
     }
-
-
 
 if ($request->has('procesadores')) {
         foreach ($request->input('procesadores') as $peripheralData) {

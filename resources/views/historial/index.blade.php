@@ -1,21 +1,28 @@
 @extends('adminlte::page')
 
-@section('title', 'Historial de Auditoría')
+@section('title', 'Historial')
 
 @section('content_header')
-    <h1>Historial de Auditoría</h1>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <div>
+        <h1 class="mb-0">
+            <i class="fas fa-clocks text-info"></i> Historial de Acciones de la aplicacion web
+        </h1>
+    </div>
+</div>
 @stop
 
 @section('content')
-<div class="card">
-    <div class="card-body table-responsive">
-        <table class="table table-bordered table-striped">
+    <div class="card">
+        <div class="card-body">
+             <div class="table-responsive">
+                <table class="table table-bordered table-hover table-assets">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Tipo de Registro</th>
-                    <th>Usuario</th>
-                    <th>Activo</th>
+                    <th><i class="fas fa-cogs"></i>Tipo de Registro</th>
+                    <th><i class="fas fa-user-tag"></i>Usuario</th>
+                    <th><i class="fas fa-tag"></i> Id del Activo</th>
                     <th>Detalles</th>
                     <th>Fecha</th>
                 </tr>
@@ -35,6 +42,7 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
-</div>
+        </div> {{-- /table-responsive --}}
+    </div> {{-- /card-body --}}
+</div> {{-- /card --}}
 @stop

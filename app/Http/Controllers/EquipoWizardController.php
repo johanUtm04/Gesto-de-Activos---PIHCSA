@@ -244,11 +244,13 @@ public function create()
         $request->validate([
             'marca' => 'nullable|string',
             'descripcion_tipo' => 'nullable|string',
+            'frecuenciaMicro' => 'nullable|string',
         ]);
         //2.-Guardamos esta parte en el Wizard
         session()->put('wizard_equipo.procesador', [
             'marca' => $request->marca,
             'descripcion_tipo' => $request->descripcion_tipo,
+            'frecuenciaMicro' => $request->frecuenciaMicro,
         ]);
         //3.-Jalamoe al papau wizard
         $wizard = session ('wizard_equipo');

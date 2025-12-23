@@ -154,7 +154,6 @@
                 </fieldset>
             </div>
 
-            {{-- ========================================================= --}}
             {{-- COLUMNA DERECHA --}}
             <div class="col-md-6">
                 <fieldset class="fieldset-group">
@@ -194,11 +193,24 @@
                                value="{{ old('fecha_adquisicion', $equipo['fecha_adquisicion'] ?? '') }}" required>
                     </div>
 
+                    <!-- Input con select asociado -->
                     <div class="form-group">
                         <label>Vida útil estimada *</label>
-                        <input type="text" name="vida_util_estimada" class="form-control"
-                               placeholder="5 años / 60 meses"
-                               value="{{ old('vida_util_estimada', $equipo['vida_util_estimada'] ?? '') }}" required>
+                            <div class="input-group">
+                            <select class="form-control" name="vida_util_unidad" required>
+                                <option value="" disabled selected>Seleccione unidad</option>
+                                <option value="años">Años</option>
+                                <option value="meses">Meses</option>
+                            </select>
+                        </div>
+                        <input 
+                        type="text"
+                        name="vida_util_estimada" 
+                        class="form-control"
+                        placeholder="Cantidad"
+                        value="{{ old('vida_util_estimada', $equipo['vida_util_estimada'] ?? '') }}" 
+                         disabled
+                        required>
                     </div>
                 </fieldset>
             </div>
@@ -221,3 +233,20 @@
 
 @stop
 
+
+@section('js')
+<script>
+    //Tomamos el nombre del select y del input para poder hacer operaciones con ellos 
+    const unidad = document.querySelector('[name="vida_util_unidad"]');
+    const valor = document.querySelector('[name="vida_util_estimada"]');
+
+    //Evento que se ejeucta cada que el usuario cambia la opcion de Select 
+    unidad.addEventListener('change', () => {
+        valor.disabled =false;
+        valor.placeholder = unidad.value === 'años'
+        ? 'Ej. 5' : 'Ej. 60';
+    });
+
+
+</script>
+@stop

@@ -64,10 +64,6 @@
             <i class="fas fa-plus"></i> Agregar Equipo
         </a>
         @endcan
-        <!-- 
-        <a href="{{ route('equipos.historial') }}" class="btn btn-outline-primary">
-            <i class="fas fa-history"></i> Historial
-        </a> -->
     </div>
 </div>
 @stop
@@ -201,7 +197,7 @@
                         <tr>
                             <th>ID</th>
                             <th><i class="fas fa-tag"></i> Activo / Serial</th>
-                            <th><i class="fas fa-user-tag"></i> Asignación</th>
+                            <th><i class="fas fa-user-tag"></i> Usuario</th>
                             <th><i class="fas fa-map-marker-alt"></i> Ubicación</th>
                             <th><i class="fas fa-dollar-sign"></i> Valor Inicial</th>
                             <th><i class="fas fa-puzzle-piece"></i>Componentes</th>

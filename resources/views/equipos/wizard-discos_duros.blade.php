@@ -2,8 +2,6 @@
 
 @section('title', 'Wizard | Asignar Disco Duro')
 
-{{-- ================================================================================= --}}
-{{-- ESTILOS --}}
 @section('css')
 <style>
     .wizard-steps {
@@ -178,13 +176,13 @@
             {{-- FOOTER --}}
             <div class="text-right mt-4">
                 <button type="submit" class="btn btn-info btn-lg">
-                    <i class="fas fa-arrow-right"></i> Guardar y continuar
+                    <i class="fas fa-arrow-right"></i> Continuar
                 </button>
-
+<!-- 
                 <a href="{{ route('equipos.wizard-ram', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
                     Omitir
-                </a>
+                </a> -->
             </div>
 
         </form>

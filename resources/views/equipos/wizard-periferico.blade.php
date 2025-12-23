@@ -195,13 +195,13 @@
             {{-- FOOTER --}}
             <div class="text-right mt-4">
                 <button type="submit" class="btn btn-warning btn-lg">
-            <i class="fas fa-arrow-right"></i> Guardar y continuar
+            <i class="fas fa-arrow-right"></i> Continuar
                 </button>
 
-                <a href="{{ route('equipos.wizard-procesador', $uuid) }}"
+                <!-- <a href="{{ route('equipos.wizard-procesador', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
                     Omitir este paso
-                </a>
+                </a> -->
 
             </div>
 
