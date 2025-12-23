@@ -59,35 +59,49 @@
     </div>
 </div>
 
-{{-- WIZARD --}}
+
+{{-- WIZARD SIMULACION --}}
 <div class="card mb-3">
     <div class="card-body p-3">
         <div class="d-flex justify-content-between text-center wizard-steps">
 
             <div class="wizard-step completed">
-                <i class="fas fa-desktop"></i>
-                <div>Activo</div>
+                <a href="{{ route('equipos.wizard.create') }}">
+                    <i class="fas fa-desktop"></i>
+                    <div>Activo</div>
+                </a>
             </div>
 
             <div class="wizard-step completed">
+            <a href="{{ route('equipos.wizard-ubicacion', $uuid) }}">
                 <i class="fas fa-map-marker-alt"></i>
-                <div>Ubicación</div>
-            </div>
-
-            <div class="wizard-step completed">
-                <i class="fas fa-tv"></i>
-                <div>Monitor</div>
-            </div>
-
-            <div class="wizard-step completed">
-                <i class="fas fa-hdd"></i>
-                <div>Disco</div>
+                <div>Ubicacion</div>
+            </a>
             </div>
 
             <div class="wizard-step active">
-                <i class="fas fa-memory"></i>
-                <div>RAM</div>
+            <a href="{{ route('equipos.wizard-monitores', $uuid) }}">
+                <i class="fas fa-tv"></i>
+                <div>Monitor</div>
+            </a>
             </div>
+
+
+
+            <div class="wizard-step active">
+            <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}">
+                <i class="fas fa-hdd"></i>
+                <div>Disco Duro</div>
+            </a>
+            </div>
+
+            <div class="wizard-step active">
+            <a href="{{ route('equipos.wizard-ram', $uuid) }}">
+               <i class="fas fa-memory"></i>
+                <div>Ram</div>
+            </a>
+            </div>
+
 
             <div class="wizard-step">
                 <i class="fas fa-flag-checkered"></i>

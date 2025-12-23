@@ -204,7 +204,7 @@
                             </select>
                         </div>
                         <input 
-                        type="text"
+                        type="number"
                         name="vida_util_estimada" 
                         class="form-control"
                         placeholder="Cantidad"
@@ -221,7 +221,7 @@
     {{-- FOOTER --}}
     <div class="card-footer text-right">
         <button type="submit" class="btn btn-success btn-lg">
-            <i class="fas fa-arrow-right"></i> Guardar y continuar
+            <i class="fas fa-arrow-right"></i> Continuar
         </button>
         
         <a href="{{ route('equipos.index') }}" class="btn btn-secondary btn-lg">

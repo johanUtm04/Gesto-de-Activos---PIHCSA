@@ -13,10 +13,10 @@ class EquipoWizardController extends Controller
 
 public function create()
 {
+    // session()->forget('wizard_equipo');
     $wizard = session('wizard_equipo');
     $usuarios = User::all();
     $equipo = data_get($wizard, 'equipo', []);
-
     return view('equipos.create', compact('equipo', 'usuarios'));
 }
 
@@ -33,7 +33,7 @@ public function create()
 
 
         if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Wiazard Invalido o no funcional');
+            abort(403, 'Incorrecto continua con el flujo habitual');
         }
 
         $equipo = data_get($wizard, 'equipo');
@@ -72,7 +72,7 @@ public function create()
 
         //Si esta vacio o no cosincide con el que se esta manejando en la session
         if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Wiazard Invalido o no funcional');
+            abort(403, 'Incorrecto continua con el flujo Habitual');
         }
 
         $equipo = data_get($wizard, 'equipo');
@@ -109,7 +109,7 @@ public function create()
         $wizard = session('wizard_equipo');
 
         if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Wiazard Invalido o no funcional');
+            abort(403, 'Incorrecto continua con el flujo Habitual');
         }
 
         $equipo = data_get($wizard, 'equipo');
@@ -147,7 +147,7 @@ public function create()
 
         //Validamos que el token sea detergemte
         if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Wiazard Invalido o no funcional');
+            abort(403, 'Incorrecto continua con el flujo Habitual');
         }
 
         //GUardamos el equipo pero esta mal alv
@@ -190,7 +190,7 @@ public function create()
     $wizard = session('wizard_equipo');
     //2.-Validar que el Token sobre el que vamos a estar trabajando Funcione
     if (!$wizard || $wizard['uuid'] !== $uuid) {
-        abort(403, 'Wiazard Invalido o no funcional');
+        abort(403, 'Incorrecto continua con el flujo Habitual');
     }
     //3.-Tomar el id y el equipo para pasarlo al formulario (esta mal pero Igual)
     $equipo = data_get($wizard, 'equipo');
@@ -230,7 +230,7 @@ public function create()
         $wizard = session('wizard_equipo');
 
         if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Wiazard Invalido o no funcional');
+            abort(403, 'Incorrecto continua con el flujo Habitual');
         }
 
         $equipo = data_get($wizard, 'equipo');

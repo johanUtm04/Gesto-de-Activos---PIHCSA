@@ -21,6 +21,7 @@ class EquipoController extends Controller
     //Function to explain the main table
     public function index()
     {
+        session()->forget('wizard_equipo');
         $equipos = Equipo::paginate(10);
         return view('equipos.index', compact('equipos'));
     }
@@ -34,6 +35,7 @@ class EquipoController extends Controller
     //function to create a new 'equipo'
     public function create()
     {
+        session()->forget('wizard_equipo');
         $usuarios = User::all();
         $ubicaciones = Ubicacion::all();
         return view('equipo.wizard.create', compact('usuarios', 'ubicaciones'));
