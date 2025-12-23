@@ -268,14 +268,15 @@ if ($request->has('discoDuros')) {
 
     return redirect()->route('equipos.index')
     ->with('warning', 'Equipo editado correctamente')
-    ->with('actualizado-id', $equipo->id);
+    ->with('actualizado->id', $equipo->id);
 }
 
 
     //function to delete some 'equipo'
     public function indexaddwork(Equipo $equipo)
     {
-        return view('equipos.addwork',compact('equipo'));
+        $usuarios = User::all();
+        return view('equipos.addwork',compact('equipo', 'usuarios'));
     }
 
 

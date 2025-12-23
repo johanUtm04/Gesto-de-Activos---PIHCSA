@@ -10,8 +10,7 @@ use App\Http\Controllers\PapeleraController;
 use App\Http\Controllers\GestionUsuariosController;
 use App\Http\Controllers\GestionUbicacionesController;
 use App\Http\Controllers\HistorialController;
-use App\Models\Historial_log;
-use App\Models\HistorialLog;
+
 
 
 //Main Route

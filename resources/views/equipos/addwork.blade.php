@@ -63,7 +63,7 @@
                             </legend>
 
                             <div class="form-group">
-                                <label>Tipo de evento *</label>
+                                <label>Tipo de evento </label>
                                 <select class="form-control" name="tipo_evento" required>
                                     <option value="">Seleccione una opción</option>
                                     <option>Mantenimiento preventivo</option>
@@ -72,13 +72,27 @@
                                 </select>
                             </div>
 
+                    <div class="form-group">
+                        <label>Usuario que realizo la Accion</label>
+                        <select name="usuario_id" class="form-control select2" required>
+                            <option value="">Seleccione un usuario</option>
+                            @foreach($usuarios as $usuario)
+                                <option value="{{ $usuario->id }}"
+                                    {{ old('usuario_id') == $usuario->id ? 'selected' : '' }}>
+                                    {{ $usuario->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+
                             <div class="form-group">
-                                <label>Fecha del evento *</label>
+                                <label>Fecha del evento </label>
                                 <input type="date" class="form-control" name="fecha_evento" required>
                             </div>
 
                             <div class="form-group">
-                                <label>Contexto del evento *</label>
+                                <label>Contexto del evento </label>
                                 <textarea class="form-control" rows="4" name="contexto"
                                     placeholder="Descripción del mantenimiento..." required></textarea>
                             </div>

@@ -69,8 +69,8 @@
                 <div>Activo</div>
             </div>
             <div class="wizard-step">
-                <i class="fas fa-user-check"></i>
-                <div>Asignación</div>
+                <i class="fas fa-map-marker-alt"></i>
+                <div>Ubicacion</div>
             </div>
             <div class="wizard-step">
                 <i class="fas fa-microchip"></i>
@@ -122,18 +122,163 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Marca</label>
-                        <input type="text" name="marca_equipo" class="form-control"
-                               placeholder="Dell, HP, Lenovo"
-                               value="{{ old('marca_equipo', $equipo['marca_equipo'] ?? '') }}">
+                    <label>Marca</label>
+                    <select name="marca_equipo" class="form-control">
+                        <option value="" selected>Seleccione la marca</option>
+                        <optgroup label="Cómputo y Servidores">
+                            <option>Dell</option>
+                            <option>HP</option>
+                            <option>Lenovo</option>
+                            <option>Apple</option>
+                            <option>ASUS</option>
+                            <option>Acer</option>
+                            <option>MSI</option>
+                            <option>Microsoft (Surface)</option>
+                            <option>Huawei</option>
+                            <option>Samsung</option>
+                        </optgroup>
+
+                        <optgroup label="Infraestructura">
+                            <option>IBM</option>
+                            <option>Supermicro</option>
+                            <option>HPE</option>
+                            <option>Oracle</option>
+                            <option>Fujitsu</option>
+                        </optgroup>
+
+                        <optgroup label="Redes y Telecomunicaciones">
+                            <option>Cisco</option>
+                            <option>Ubiquiti</option>
+                            <option>MikroTik</option>
+                            <option>TP-Link</option>
+                            <option>Aruba</option>
+                            <option>Juniper</option>
+                            <option>Fortinet</option>
+                            <option>Huawei</option>
+                        </optgroup>
+
+                        <optgroup label="Impresión">
+                            <option>HP</option>
+                            <option>Epson</option>
+                            <option>Canon</option>
+                            <option>Brother</option>
+                            <option>Xerox</option>
+                            <option>Ricoh</option>
+                            <option>Lexmark</option>
+                            <option>Kyocera</option>
+                        </optgroup>
+
+                        <optgroup label="Almacenamiento">
+                            <option>Seagate</option>
+                            <option>Western Digital</option>
+                            <option>Kingston</option>
+                            <option>Samsung</option>
+                            <option>Crucial</option>
+                            <option>SanDisk</option>
+                            <option>Synology</option>
+                            <option>QNAP</option>
+                        </optgroup>
+
+                        <optgroup label="Periféricos">
+                            <option>Logitech</option>
+                            <option>HP</option>
+                            <option>Dell</option>
+                            <option>Microsoft</option>
+                            <option>Razer</option>
+                            <option>HyperX</option>
+                            <option>SteelSeries</option>
+                            <option>Genius</option>
+                        </optgroup>
+
+                        <optgroup label="Energía y Protección">
+                            <option>APC</option>
+                            <option>Tripp Lite</option>
+                            <option>Eaton</option>
+                            <option>CyberPower</option>
+                            <option>Forza</option>
+                        </optgroup>
+
+                        <optgroup label="Seguridad">
+                            <option>Hikvision</option>
+                            <option>Dahua</option>
+                            <option>ZKTeco</option>
+                            <option>Bosch</option>
+                        </optgroup>
+
+                        <optgroup label="Otros">
+                            <option>Genérico</option>
+                            <option>Otro</option>
+                        </optgroup>
+                    </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Tipo de equipo </label>
-                        <input type="text" name="tipo_equipo" class="form-control"
-                               placeholder="Laptop, PC, Tablet"
-                               value="{{ old('tipo_equipo', $equipo['tipo_equipo'] ?? '') }}" required>
+                        <label>Tipo de activo </label>
+                        <select name="tipo_equipo" class="form-control" required>
+                            <option value="" disabled selected>Seleccione el tipo de activo</option>
+
+                            <optgroup label="Equipos de Cómputo">
+                                <option value="Laptop">Laptop</option>
+                                <option value="PC Escritorio">PC de Escritorio</option>
+                                <option value="All in One">All in One</option>
+                                <option value="Workstation">Workstation</option>
+                                <option value="Thin Client">Thin Client</option>
+                                <option value="Servidor">Servidor</option>
+                            </optgroup>
+
+                            <optgroup label="Dispositivos Móviles">
+                                <option value="Tablet">Tablet</option>
+                                <option value="Smartphone">Smartphone</option>
+                                <option value="PDA / Handheld">PDA / Handheld</option>
+                            </optgroup>
+
+                            <optgroup label="Impresión y Digitalización">
+                                <option value="Impresora">Impresora</option>
+                                <option value="Multifuncional">Multifuncional</option>
+                                <option value="Escáner">Escáner</option>
+                                <option value="Plotter">Plotter</option>
+                            </optgroup>
+
+                            <optgroup label="Redes y Comunicaciones">
+                                <option value="Router">Router</option>
+                                <option value="Switch">Switch</option>
+                                <option value="Access Point">Access Point</option>
+                                <option value="Firewall">Firewall</option>
+                                <option value="Modem">Módem</option>
+                            </optgroup>
+
+                            <optgroup label="Periféricos">
+                                <option value="Monitor">Monitor</option>
+                                <option value="Teclado">Teclado</option>
+                                <option value="Mouse">Mouse</option>
+                                <option value="Webcam">Webcam</option>
+                                <option value="Bocinas">Bocinas</option>
+                                <option value="Audífonos">Audífonos</option>
+                                <option value="Proyector">Proyector</option>
+                            </optgroup>
+
+                            <optgroup label="Almacenamiento">
+                                <option value="Disco Duro HDD">Disco Duro (HDD)</option>
+                                <option value="Disco Estado Solido SSD">Disco de Estado Sólido (SSD)</option>
+                                <option value="NAS">NAS</option>
+                                <option value="SAN">SAN</option>
+                                <option value="Unidad Externa">Unidad Externa</option>
+                            </optgroup>
+
+                            <optgroup label="Seguridad">
+                                <option value="Camara CCTV">Cámara CCTV</option>
+                                <option value="Control de Acceso">Control de Acceso</option>
+                                <option value="Biometrico">Biométrico</option>
+                            </optgroup>
+
+                            <optgroup label="Otros">
+                                <option value="Licencia de Software">Licencia de Software</option>
+                                <option value="UPS">UPS / No Break</option>
+                                <option value="Otro">Otro</option>
+                            </optgroup>
+                        </select>
                     </div>
+
 
                     <div class="form-group">
                         <label>Serial</label>
@@ -146,11 +291,61 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Sistema Operativo *</label>
-                        <input type="text" name="sistema_operativo" class="form-control"
-                               placeholder="Windows 10, macOS, Linux"
-                               value="{{ old('sistema_operativo', $equipo['sistema_operativo'] ?? '') }}" required>
+                        <label>Sistema Operativo</label>
+                        <select name="sistema_operativo" class="form-control" required>
+                            <option value="" disabled selected>Seleccione el sistema operativo</option>
+
+                            <optgroup label="Windows">
+                                <option>Windows 11</option>
+                                <option>Windows 10</option>
+                                <option>Windows 8.1</option>
+                                <option>Windows 7</option>
+                                <option>Windows Server 2022</option>
+                                <option>Windows Server 2019</option>
+                                <option>Windows Server 2016</option>
+                            </optgroup>
+
+                            <optgroup label="macOS">
+                                <option>macOS Sonoma</option>
+                                <option>macOS Ventura</option>
+                                <option>macOS Monterey</option>
+                                <option>macOS Big Sur</option>
+                                <option>macOS Catalina</option>
+                            </optgroup>
+
+                            <optgroup label="Linux">
+                                <option>Ubuntu</option>
+                                <option>Ubuntu LTS</option>
+                                <option>Debian</option>
+                                <option>CentOS</option>
+                                <option>Rocky Linux</option>
+                                <option>AlmaLinux</option>
+                                <option>Red Hat Enterprise Linux</option>
+                                <option>Fedora</option>
+                                <option>Arch Linux</option>
+                            </optgroup>
+
+                            <optgroup label="Sistemas Móviles">
+                                <option>Android</option>
+                                <option>iOS</option>
+                            </optgroup>
+
+                            <optgroup label="Virtualización / Hipervisores">
+                                <option>VMware ESXi</option>
+                                <option>Proxmox VE</option>
+                                <option>Hyper-V</option>
+                                <option>XenServer</option>
+                            </optgroup>
+
+                            <optgroup label="Otros">
+                                <option>Chrome OS</option>
+                                <option>FreeBSD</option>
+                                <option>Otro</option>
+                                <option>No aplica</option>
+                            </optgroup>
+                        </select>
                     </div>
+
                 </fieldset>
             </div>
 
@@ -166,7 +361,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Usuario responsable *</label>
+                        <label>Usuario responsable </label>
                         <select name="usuario_id" class="form-control select2" required>
                             <option value="">Seleccione un usuario</option>
                             @foreach($usuarios as $usuario)
@@ -181,21 +376,21 @@
                     <hr>
 
                     <div class="form-group">
-                        <label>Valor inicial *</label>
+                        <label>Valor inicial </label>
                         <input type="number" name="valor_inicial" class="form-control"
                                step="0.01" placeholder="15000.00"
                                value="{{ old('valor_inicial', $equipo['valor_inicial'] ?? '') }}">
                     </div>
 
                     <div class="form-group">
-                        <label>Fecha de adquisición *</label>
+                        <label>Fecha de adquisición </label>
                         <input type="date" name="fecha_adquisicion" class="form-control"
                                value="{{ old('fecha_adquisicion', $equipo['fecha_adquisicion'] ?? '') }}" required>
                     </div>
 
                     <!-- Input con select asociado -->
                     <div class="form-group">
-                        <label>Vida útil estimada *</label>
+                        <label>Vida útil estimada </label>
                             <div class="input-group">
                             <select class="form-control" name="vida_util_unidad" required>
                                 <option value="" disabled selected>Seleccione unidad</option>

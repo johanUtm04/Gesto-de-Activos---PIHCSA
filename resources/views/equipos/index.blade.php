@@ -198,9 +198,9 @@
                             <th>ID</th>
                             <th><i class="fas fa-tag"></i> Activo / Serial</th>
                             <th><i class="fas fa-user-tag"></i> Usuario</th>
-                            <th><i class="fas fa-map-marker-alt"></i> Ubicación</th>
-                            <th><i class="fas fa-dollar-sign"></i> Valor Inicial</th>
-                            <th><i class="fas fa-puzzle-piece"></i>Componentes</th>
+                            <!-- <th><i class="fas fa-map-marker-alt"></i> Ubicación</th> -->
+                            <!-- <th><i class="fas fa-dollar-sign"></i> Valor Inicial</th> -->
+                            <!-- <th><i class="fas fa-puzzle-piece"></i>Componentes</th> -->
                             <th class="text-center"><i class="fas fa-cogs"></i> Acciones</th>
                         </tr>
                     </thead>
@@ -217,7 +217,7 @@
                                     @if(session('actualizado-id') == $equipo->id)
                                         <span class="badge badge-warning ml-1">Editado</span>
                                     @endif
-                                    <strong>{{ $equipo->marca_equipo ?? '-' }}</strong> ({{ $equipo->tipo_equipo }})<br>
+                                    <strong>{{ $equipo->tipo_equipo }}-</strong>{{ $equipo->marca_equipo ?? '-' }}  <br>
                                     <span class="secondary-data"><i class="fas fa-barcode"></i> Serial: {{ $equipo->serial }}</span><br>
                                     <span class="secondary-data"><i class="fab fa-windows"></i> SO: {{ $equipo->sistema_operativo }}</span>
                                 </td>
@@ -230,21 +230,21 @@
                                 </td>
 
                                 {{-- UBICACIÓN --}}
-                                <td>
+                                <!-- <td>
                                     <strong>{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}</strong>
                                     <br>
                                     <span class="secondary-data"><i class="fas fa-map-pin"></i> Código: {{ $equipo->ubicacion->codigo ?? '-' }}</span>
-                                </td>
+                                </td> -->
 
                                 {{-- VALOR / FECHA --}}
-                                <td>
+                                <!-- <td>
                                     <strong class="text-success">${{ number_format($equipo->valor_inicial, 2) }}</strong><br>
                                     <span class="secondary-data">Adq: {{ $equipo->fecha_adquisicion }}</span><br>
                                     <span class="secondary-data">Vida Útil: {{ $equipo->vida_util_estimada }}</span>
-                                </td>
+                                </td> -->
                                 
                                 {{-- OTROS COMPONENTES (Resumen) --}}
-                                <td>
+                                <!-- <td>
                                     <span class="badge badge-light">
                                         <i class="fas fa-tv"></i> {{ $equipo->monitores->count() }}
                                     </span>
@@ -260,14 +260,14 @@
                                     <span class="badge badge-light ml-1">
                                         <i class="fas fa-keyboard"></i> {{ $equipo->perifericos->count() }}
                                     </span>
-                                </td>
+                                </td> -->
 
                                 {{-- Acciones --}}
                                 <td class="text-center">
-                                    <div class="btn-group btn-group-sm" role="group">
+                                    <div class="btn-group btn-group-lg" role="group">
 
                                         {{-- Botón Ver Detalles (Modal) --}}
-                                        <button class="btn btn-outline-info" title="Ver Detalles"
+                                        <button class="btn btn-outline-info" title="Ver detalles a profundidad"
                                             data-toggle="modal" 
                                             data-target="#modalDetalle"
                                             data-id="{{ $equipo->id }}"
@@ -305,11 +305,11 @@
                         
                                         {{-- Botón Eliminar --}}
                                         @can('eliminar-equipo')
-                                        <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline-block;">
+                                        <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" style="display:inline-block;"  class="d-inline-flex">
                                             @csrf
                                             @method('DELETE')
 
-                                            <button class="btn btn-outline-danger" title="Eliminar Activo"
+                                            <button class="btn btn-outline-danger btn-lg" title="Eliminar Activo"
                                                 onclick="return confirm('¿Confirma la eliminación del equipo: {{ $equipo->marca_equipo }}? Esto eliminará todos sus componentes asociados.')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
