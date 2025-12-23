@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ubicacion;
 use Illuminate\Http\Request;
+use App\Services\AuditService;
+
 
 class GestionUbicacionesController extends Controller
 {
@@ -18,7 +20,8 @@ class GestionUbicacionesController extends Controller
     public function create()
     {
         $ubicaciones = Ubicacion::all();
-        return view('ubicaciones.create', compact('ubicaciones'));
+            return view('ubicaciones.create', compact('ubicaciones'));
+
     }
 
 

@@ -87,10 +87,10 @@ public function create()
     public function saveMonitor(Request $request, $uuid)
     {
         $request->validate([
-            'marca' => 'required|string',
-            'serial' => 'required|string',
-            'escala_pulgadas' => 'required|string',
-            'interface' => 'required|string'
+            'marca' => 'nullable|string',
+            'serial' => 'nullable|string',
+            'escala_pulgadas' => 'nullable|string',
+            'interface' => 'nullable|string'
         ]);
         session()->put('wizard_equipo.monitor', [
             'marca' => $request->marca,
@@ -122,9 +122,9 @@ public function create()
     {
         //1.-Validar los datos 
         $request->validate([
-            'capacidad' => 'required|string',
-            'tipo_hdd_ssd' => 'required|string',
-            'interface' => 'required|string',
+            'capacidad' => 'nullable|string',
+            'tipo_hdd_ssd' => 'nullable|string',
+            'interface' => 'nullable|string',
         ]);
         //2.-Agregarlos al wizard
         session()->put('wizard_equipo.disco_duro', [
@@ -162,9 +162,9 @@ public function create()
     {
         //1.-VAlidamos lo del formulario alv
         $request->validate([
-            'capacidad_gb' => 'required|string',
-            'clock_mhz' => 'required|string',
-            'tipo_chz' => 'required|string'
+            'capacidad_gb' => 'nullable|string',
+            'clock_mhz' => 'nullable|string',
+            'tipo_chz' => 'nullable|string'
         ]);
 
         //2.-Los Agregamos al wizard 
@@ -202,10 +202,10 @@ public function create()
     {
         //1.-Validamos los datos
         $request->validate([
-            'tipo' => 'required|string',
-            'marca' => 'required|string',
-            'serial' => 'required|string',
-            'interface' => 'required|string',
+            'tipo' => 'nullable|string',
+            'marca' => 'nullable|string',
+            'serial' => 'nullable|string',
+            'interface' => 'nullable|string',
         ]);
         //2.-Creamos esta parte en el wizard
         session()->put('wizard_equipo.periferico', [
@@ -242,8 +242,8 @@ public function create()
     public function saveProcesador(Request $request, $uuid)
     {   //1.-Validamos los datos
         $request->validate([
-            'marca' => 'required|string',
-            'descripcion_tipo' => 'required|string',
+            'marca' => 'nullable|string',
+            'descripcion_tipo' => 'nullable|string',
         ]);
         //2.-Guardamos esta parte en el Wizard
         session()->put('wizard_equipo.procesador', [

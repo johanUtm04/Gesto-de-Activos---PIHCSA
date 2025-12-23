@@ -344,14 +344,11 @@ return [
 
         [
             'text' => 'historial',
-            'url' => '/equipos/Historial',
+            'url' => '/historial',
             'icon' => 'fas fa-history',
         ],
-        [
-            'text' => 'Papelera_Activos_Eliminados',
-            'url' => '/papelera',
-            'icon' => 'fas fa-trash',
-        ],
+
+        
     ],
 
     /*

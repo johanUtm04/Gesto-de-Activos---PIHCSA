@@ -93,23 +93,18 @@ class EquipoController extends Controller
 public function update(Request $request, Equipo $equipo)
 {
     //Reglas del Formulario
-    $request->validate([
-        'marca_equipo' => 'nullable|string|max:255',
-        'tipo_equipo' => 'required|string|max:255',
-        'serial' => 'nullable|string|max:255',
-        'sistema_operativo' => 'required|string|max:11', 
-        'usuario_id' => 'required|integer|exists:users,id',
-        'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
-        'valor_inicial' => 'required|numeric|min:0|max:999999.99',
-        'fecha_adquisicion' => 'required|date',
-        'vida_util_estimada' => 'required|string|max:255',
-        'perifericos' => 'nullable|array',        
-        'rams' => 'nullable|array',
-        'procesadores' => 'nullable|array',
-        'monitores' => 'nullable|array',
-        'discoDuros' => 'nullable|array',
+    $equipo->update($request->only([
+        'marca_equipo',
+        'tipo_equipo',
+        'serial',
+        'sistema_operativo',
+        'usuario_id',
+        'ubicacion_id',
+        'valor_inicial',
+        'fecha_adquisicion',
+        'vida_util_estimada',
+    ]));
 
-]);
 
 if ($request->has('perifericos')) {
         foreach ($request->input('perifericos') as $peripheralData) {
@@ -265,6 +260,17 @@ if ($request->has('discoDuros')) {
     }
 
     $equipo->update($request->all());
+
+
+    $detalles = [];
+    foreach($equipo->getChanges() as $campo => $valorNuevo){
+        $detalles[$campo] = [
+            'old' => $equipo->getOriginal($campo),
+            'new' => $valorNuevo
+        ];
+    }
+    \App\Services\AuditService::log('EDIT', $equipo->id, $detalles);
+
 
     return redirect()->route('equipos.index')
     ->with('warning', 'Equipo editado correctamente')

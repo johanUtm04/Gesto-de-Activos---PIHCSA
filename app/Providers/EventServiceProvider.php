@@ -35,4 +35,11 @@ class EventServiceProvider extends ServiceProvider
     {
         return false;
     }
+
+
+    //Observers
+    protected $observers = [
+        \App\Models\Equipo::class => \App\Observers\EquipoObserver::class,
+    ];
+
 }

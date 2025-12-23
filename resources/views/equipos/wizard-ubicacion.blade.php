@@ -140,10 +140,10 @@
                     <i class="fas fa-arrow-right"></i> Continuar
                 </button>
 
-                <a href="{{ route('equipos.wizard-monitores', $uuid) }}"
+                <!-- <a href="{{ route('equipos.wizard-monitores', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
                     Omitir este paso
-                </a>
+                </a> -->
             </div>
 
         </form>

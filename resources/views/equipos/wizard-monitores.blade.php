@@ -190,7 +190,7 @@
 
                 <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
-                    Omitir este paso
+                    Omitir TODO este paso
                 </a>
             </div>
 

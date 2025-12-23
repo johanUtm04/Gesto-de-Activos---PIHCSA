@@ -5,19 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
+
 class Historial_log extends Model
 {
     use HasFactory;
+    // CRÍTICO: Debe apuntar a la tabla correcta en la DB.
+    protected $table = 'historiales_log';
 
-//  CLAVE PARA JSON
+    protected $fillable = [
+        'activo_id',
+        'usuario_accion_id',
+        'tipo_registro',
+        'detalles_json',
+    ];
+
+    //CLAVE PARA JSON
     protected $casts = [
         'detalles_json' => 'array',
     ];
-
-    // CRÍTICO: Debe apuntar a la tabla correcta en la DB.
-    protected $table = 'historiales_log'; 
-    protected $guarded = ['id']; // Permite asignación masiva
-
     // === RECEPCIÓN DE RELACIONES (belongsTo) ===
 
     /**

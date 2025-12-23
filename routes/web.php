@@ -9,6 +9,11 @@ use App\Http\Controllers\DepreciacionController;
 use App\Http\Controllers\PapeleraController;
 use App\Http\Controllers\GestionUsuariosController;
 use App\Http\Controllers\GestionUbicacionesController;
+use App\Http\Controllers\HistorialController;
+use App\Models\Historial_log;
+use App\Models\HistorialLog;
+
+
 //Main Route
 Route::get('/', function () {
 return view('auth.login');});
@@ -92,6 +97,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/gestionUbicaciones/{ubicacion}', [GestionUbicacionesController::class, 'update'])->name('ubicaciones.update');
 
 
+    //Historial
+    Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
 });
 
 Route::get('/dashboard', function () {

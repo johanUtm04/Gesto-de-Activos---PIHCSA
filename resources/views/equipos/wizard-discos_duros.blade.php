@@ -183,7 +183,7 @@
 
                 <a href="{{ route('equipos.wizard-ram', $uuid) }}"
                    class="btn btn-outline-secondary btn-lg">
-                    Omitir este paso
+                    Omitir
                 </a>
             </div>
 

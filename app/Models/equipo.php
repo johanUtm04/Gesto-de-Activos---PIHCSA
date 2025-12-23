@@ -13,10 +13,11 @@ use App\Models\Disco_Duro;
 use App\Models\Ram;
 use App\Models\Periferico;
 use App\Models\Procesador;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Equipo extends Model
 {
+    use SoftDeletes;
     use HasFactory; 
 
     //Campos asignables, es decir, los campos que se pueden llamar de manera masiva
