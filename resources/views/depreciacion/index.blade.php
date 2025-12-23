@@ -70,8 +70,9 @@
             </div>
 
             <div class="modal-body">
+                <p><strong>Activo: </strong><span id="d-activo"></span></p>
                 <p><strong>Valor inicial:</strong> $<span id="d-valor"></span></p>
-                <p><strong>Años transcurridos:</strong> <span id="d-anios"></span></p>
+                <p><strong>Años transcurridos:</strong> <span id="d-añosTrasncurridos"></span></p>
                 <p><strong>Depreciación acumulada:</strong> 
                     <span class="text-danger">$<span id="d-depreciado"></span></span>
                 </p>
@@ -148,15 +149,17 @@
                             {{ $equipo->vida_util_estimada }}
                         </td>
 
-<td class="text-center">
-    <button class="btn btn-outline-secondary btn-sm btn-depreciar"
-        data-valor="{{ $equipo->valor_inicial }}"
-        data-fecha="{{ $equipo->fecha_adquisicion }}"
-        data-vida="{{ $equipo->vida_util_estimada }}"
-        title="Calcular depreciación en tiempo real">
-        <i class="fas fa-search-dollar"></i>
-    </button>
-</td>
+                        <!-- BOTON PARA CALCULAR LA DEPRECIACION -->
+                        <td class="text-center">
+                            <button class="btn btn-outline-secondary btn-sm btn-depreciar"
+                                data-marca="{{$equipo->marca_equipo}}"
+                                data-valor="{{ $equipo->valor_inicial }}"
+                                data-fecha="{{ $equipo->fecha_adquisicion }}"
+                                data-vida="{{ $equipo->vida_util_estimada }}"
+                                title="Calcular depreciación en tiempo real">
+                                <i class="fas fa-search-dollar"></i>
+                            </button>
+                        </td>
 
                     </tr>
                 @empty
@@ -181,25 +184,42 @@
 
 @section('js')
     <script>
+
+//Buscar el elemento que Actviva el JS
 document.querySelectorAll('.btn-depreciar').forEach(btn => {
     btn.addEventListener('click', function () {
 
-        const valor = parseFloat(this.dataset.valor);
-        const fecha = new Date(this.dataset.fecha);
-        const vida = parseInt(this.dataset.vida); // años
+        //Tomamos el usuario actual
+        const marca = this.dataset.marca;
 
+        //Definimos las constantes de valor, fecha y vida
+        const valor = parseFloat(this.dataset.valor);   //TOMAMOS EL VALOR INCIAL
+        const fecha = new Date(this.dataset.fecha);     //Tomamos la fecha Inicial
+        const vida = parseInt(this.dataset.vida); // AÑOS QUE INGRESO EL USUARIO
+
+        //Tomamos la fecha de hoy
         const hoy = new Date();
-        const anios = Math.floor((hoy - fecha) / (1000 * 60 * 60 * 24 * 365));
 
+        //CALULAMOS AÑOS TRANSCURRIDOS
+        const añosTrasncurridos = Math.floor((hoy - fecha) / (1000 * 60 * 60 * 24 * 365));
+
+        //Calulamos la depreciacion Anual
         const depreciacionAnual = valor / vida;
-        const depreciado = Math.min(depreciacionAnual * anios, valor);
+
+        //Tomamos el reciduoe de esa cosa
+        const depreciado = Math.min(depreciacionAnual * añosTrasncurridos, valor);
+
+        //Damos el actual
         const actual = valor - depreciado;
 
+        //Insertamos estos datos en el modal
+        document.getElementById('d-activo').innerText = marca;
         document.getElementById('d-valor').innerText = valor.toFixed(2);
-        document.getElementById('d-anios').innerText = anios;
+        document.getElementById('d-añosTrasncurridos').innerText = añosTrasncurridos;
         document.getElementById('d-depreciado').innerText = depreciado.toFixed(2);
         document.getElementById('d-actual').innerText = actual.toFixed(2);
 
+        //Abre el modal con las datos ya calculados
         $('#modalDepreciacion').modal('show');
     });
 });
