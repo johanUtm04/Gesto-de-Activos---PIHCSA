@@ -69,7 +69,6 @@
 @stop
 
 @section('content')
-    
     {{--(Alertas AdminLTE)--}}
     @php
         $alertTypes = ['success', 'danger', 'warning', 'info', 'primary'];
@@ -86,8 +85,6 @@
             </div>
         @endif
     @endforeach
-
-
 
     {{-- MODAL DE DETALLES MEJORADO --}}
     <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
@@ -198,9 +195,6 @@
                             <th>ID</th>
                             <th><i class="fas fa-tag"></i> Activo / Serial</th>
                             <th><i class="fas fa-user-tag"></i> Usuario</th>
-                            <!-- <th><i class="fas fa-map-marker-alt"></i> Ubicación</th> -->
-                            <!-- <th><i class="fas fa-dollar-sign"></i> Valor Inicial</th> -->
-                            <!-- <th><i class="fas fa-puzzle-piece"></i>Componentes</th> -->
                             <th class="text-center"><i class="fas fa-cogs"></i> Acciones</th>
                         </tr>
                     </thead>
@@ -230,39 +224,6 @@
                                     <br>
                                     <span class="secondary-data"><i class="fas fa-envelope"></i> {{ $equipo->usuario->email ?? '-' }}</span>
                                 </td>
-
-                                {{-- UBICACIÓN --}}
-                                <!-- <td>
-                                    <strong>{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}</strong>
-                                    <br>
-                                    <span class="secondary-data"><i class="fas fa-map-pin"></i> Código: {{ $equipo->ubicacion->codigo ?? '-' }}</span>
-                                </td> -->
-
-                                {{-- VALOR / FECHA --}}
-                                <!-- <td>
-                                    <strong class="text-success">${{ number_format($equipo->valor_inicial, 2) }}</strong><br>
-                                    <span class="secondary-data">Adq: {{ $equipo->fecha_adquisicion }}</span><br>
-                                    <span class="secondary-data">Vida Útil: {{ $equipo->vida_util_estimada }}</span>
-                                </td> -->
-                                
-                                {{-- OTROS COMPONENTES (Resumen) --}}
-                                <!-- <td>
-                                    <span class="badge badge-light">
-                                        <i class="fas fa-tv"></i> {{ $equipo->monitores->count() }}
-                                    </span>
-
-                                    <span class="badge badge-light ml-1">
-                                        <i class="fas fa-hdd"></i> {{ $equipo->discosDuros->count() }}
-                                    </span>
-
-                                    <span class="badge badge-light ml-1">
-                                        <i class="fas fa-memory"></i> {{ $equipo->rams->count() }}
-                                    </span>
-
-                                    <span class="badge badge-light ml-1">
-                                        <i class="fas fa-keyboard"></i> {{ $equipo->perifericos->count() }}
-                                    </span>
-                                </td> -->
 
                                 {{-- Acciones --}}
                                 <td class="text-center">
@@ -352,37 +313,36 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
-            $('#modalDetalle').on('show.bs.modal', function (event) {
-                const button = $(event.relatedTarget); 
-                const modal = $(this);
+    $(document).ready(function() {
+        $('#modalDetalle').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget); 
+            const modal = $(this);
 
-                const getAttr = (attr) => button.data(attr);
-                
-                modal.find('.modal-title').text('Detalles del Activo: ' + getAttr('marca'));
+            const getAttr = (attr) => button.data(attr);
+            
+            modal.find('.modal-title').text('Detalles del Activo: ' + getAttr('marca'));
 
-                modal.find('#modal_id').text(getAttr('id'));
-                modal.find('#modal_marca').text(getAttr('marca'));
-                modal.find('#modal_tipo').text(getAttr('tipo'));
-                modal.find('#modal_serial').text(getAttr('serial'));
-                modal.find('#modal_so').text(getAttr('so'));
+            modal.find('#modal_id').text(getAttr('id'));
+            modal.find('#modal_marca').text(getAttr('marca'));
+            modal.find('#modal_tipo').text(getAttr('tipo'));
+            modal.find('#modal_serial').text(getAttr('serial'));
+            modal.find('#modal_so').text(getAttr('so'));
 
-                modal.find('#modal_usuario').text(getAttr('usuario'));
-                modal.find('#modal_ubicacion').text(getAttr('ubicacion'));
-                modal.find('#modal_valo_inicial').text(getAttr('valo-inicial'));
-                modal.find('#modal_fecha_adquisicion').text(getAttr('fecha-adquisicion'));
-                modal.find('#modal_vida_util').text(getAttr('vida-util'));
+            modal.find('#modal_usuario').text(getAttr('usuario'));
+            modal.find('#modal_ubicacion').text(getAttr('ubicacion'));
+            modal.find('#modal_valo_inicial').text(getAttr('valo-inicial'));
+            modal.find('#modal_fecha_adquisicion').text(getAttr('fecha-adquisicion'));
+            modal.find('#modal_vida_util').text(getAttr('vida-util'));
 
-                modal.find('#modal_monitores').text(getAttr('monitores'));
-                modal.find('#modal_discos_duros').text(getAttr('discos-duros'));
-                modal.find('#modal_ram').text(getAttr('ram'));
-                modal.find('#modal_procesadores').text(getAttr('procesadores'));
-                
-                let perifericos = getAttr('perifericos');
-                modal.find('#modal_perifericos').text(perifericos || 'Ninguno');
-
-            });
+            modal.find('#modal_monitores').text(getAttr('monitores'));
+            modal.find('#modal_discos_duros').text(getAttr('discos-duros'));
+            modal.find('#modal_ram').text(getAttr('ram'));
+            modal.find('#modal_procesadores').text(getAttr('procesadores'));
+            
+            let perifericos = getAttr('perifericos');
+            modal.find('#modal_perifericos').text(perifericos || 'Ninguno');
         });
+    });
 
         //MESAJES PARA EL USUARIO
     document.addEventListener('DOMContentLoaded', function () {

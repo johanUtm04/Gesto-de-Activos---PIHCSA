@@ -301,12 +301,8 @@ if (empty(array_filter($monitor))) {
         ];
 
 if (empty(array_filter($procesador))) {
-    # code...
     session()->forget('wizard_equipo.procesador');
-
-
 }
-
 
         //3.-Jalamoe al papau wizard
         $wizard = session ('wizard_equipo');
@@ -346,19 +342,14 @@ if (empty(array_filter($procesador))) {
         //Limpiar sesion
         session()->forget('wizard_equipo');
 
+        //saber cuantos registros mostramos por pagina 
+        $perPage = 8;
 
+        //Posiciones antes del que estamos creando
+        $position = Equipo::where('id', '<=', $equipo->id)->count();
 
-            //saber cuantos registros mostramos por pagina 
-            $perPage = 8;
-
-            //Posiciones antes del que estamos creando
-            $position = Equipo::where('id', '<=', $equipo->id)->count();
-
-            // dd($position);
-
-            //Pagina que le toca
-            $page = ceil($position/$perPage);
-
+        //Pagina que le toca
+        $page = ceil($position/$perPage);
 
         return redirect()->route('equipos.index', ['page' => $page])
         ->with('success', 'Equipo registrado correctamente')

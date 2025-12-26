@@ -335,17 +335,17 @@
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary mt-2"
                                         onclick="agregarRam()">
-                                        <i class="fas fa-plus"></i> Agregar periférico0
+                                        <i class="fas fa-plus"></i> Agregar Ram
                                     </button>
                                     
                                     <hr class="my-2">
                                     <div id="rams-container"
-                                    data-rams-count="{{ $equipo->rams->count() }}">
+                                     data-rams-count="{{ $equipo->rams->count() }}">
+                    
                                         @foreach($equipo->rams as $index => $ram)
+                                        <div class="ram-item">
                                         <div class="p-2 mb-2 border rounded bg-white">
                                             <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> RAM #{{ $index + 1 }} </h6>
-                                           
-                                           
                                             <input type="hidden" name="rams[{{ $index }}][id]" value="{{ $ram->id }}">
         
                                             <div class="row">
@@ -364,11 +364,14 @@
                                                     <input type="text" name="rams[{{$index}}][tipo_chz]" class="form-control form-control-sm"
                                                         value="{{ old('rams.' . $index . '.tipo_chz', $ram->tipo_chz ?? '') }}" placeholder="Ej: DDR4">
                                                     </div> 
+                            
+
                                                     <button type="button"
                                                         class="btn btn-sm btn-outline-danger mt-2"
-                                                        onclick="eliminarPeriferico(this)">
-                                                        <i class="fas fa-plus"></i> Eliminar Ram
+                                                        onclick="eliminarRam(this)">
+                                                        <i class="fas fa-trash"></i> Eliminar Ram
                                                     </button>
+
                                             </div>
                                         </div>
                                         @endforeach
@@ -512,13 +515,12 @@
 const container = document.getElementById('perifericos-container');
 let perifericoIndex = parseInt(container.dataset.perifericosCount);
 function agregarPeriferico(){
-let index = 0;
-index++; // Ahora index vale 1
+
     //Tomamos el container de los perifericos
     const container = document.getElementById('perifericos-container')
 
     // Agregamos la seccion HTML
-        const html = `
+    const html = `
     <div class="periferico-item">
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
@@ -579,8 +581,85 @@ function eliminarPeriferico(btn) {
 
 
 //RAMS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
-const conatainer = document.getElementById('rams-conatiner')//1.-seccion a modificar
-let ramsIndex = parseInt(container.dataset.perifericosCount)
+
+const containerRam = document.getElementById('rams-container');
+let ramIndex = parseInt(containerRam.dataset.ramsCount);
+
+
+function agregarRam() {
+
+const containerRam = document.getElementById('rams-container')
+    const html = `
+    <div class="ram-item">
+        <div class="p-2 mb-2 border rounded bg-white">
+            <h6 class="text-secondary">
+                <i class="fas fa-dot-circle"></i> RAM #${ramIndex + 1}
+            </h6>
+
+            <!-- input oculto para control de eliminación -->
+   
+
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Capacidad (GB)</label>
+                    <input type="text"
+                        name="rams[${ramIndex}][capacidad_gb]"
+                        class="form-control form-control-sm"
+                        placeholder="Ej: 8">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Clock (MHz)</label>
+                    <input type="text"
+                        name="rams[${ramIndex}][clock_mhz]"
+                        class="form-control form-control-sm"
+                        placeholder="Ej: 3200">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Tipo (DDR)</label>
+                    <input type="text"
+                        name="rams[${ramIndex}][tipo_chz]"
+                        class="form-control form-control-sm"
+                        placeholder="Ej: DDR4">
+                </div>
+            </div>
+
+            <button type="button"
+                class="btn btn-sm btn-outline-danger mt-2"
+                onclick="eliminarRam(this)">
+                <i class="fas fa-trash"></i> Eliminar RAM
+            </button>
+        </div>
+    </div>
+    `;
+
+    containerRam.insertAdjacentHTML('beforeend', html);
+    ramIndex++;
+}
+
+// Eliminar RAM (soft delete)
+function eliminarRam(btn) {
+    if (!confirm('¿Deseas eliminar esta RAM?')) {
+        return;
+    }
+
+    const item = btn.closest('.ram-item');
+
+    // 1. marcar eliminación
+    const deleteInput = item.querySelector('[name$="[_delete]"]');
+    if (deleteInput) {
+        deleteInput.value = 1;
+    }
+
+    // 2. vaciar inputs visibles
+    item.querySelectorAll('input:not([type="hidden"])')
+        .forEach(input => input.value = '');
+
+    // 3. ocultar visualmente
+    item.style.display = 'none';
+}
+
 
 
     </script>

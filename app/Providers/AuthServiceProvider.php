@@ -38,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
 
     // Eliminar equipo (solo admin)
     Gate::define('eliminar-equipo', function ($user) {
-        return $user->rol === 'admin';
+       return in_array(strtolower($user->rol), ['admin', 'sistemas']);
     });
 
     // Agregar mantenimiento a un equipo (solo admin)

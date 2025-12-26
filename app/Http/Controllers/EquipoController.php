@@ -122,7 +122,10 @@ if ($request->has('perifericos')) {
             //Si tiene ID
             if (isset($peripheralData['id'])) {
 
-                $periferico = Periferico::find($peripheralData['id']);
+                $periferico = $equipo->perifericos()
+                ->where('id', $peripheralData['id'])
+                ->first();
+
 
                 if ($periferico) {
 
@@ -144,15 +147,6 @@ if ($request->has('perifericos')) {
                         ]);
                     }
                 }
-
-                // else {
-                //     $equipo->perifericos()->create([
-                //         'tipo' => $peripheralData['tipo'],
-                //         'serial' => $peripheralData['seriala']
-
-                //     ]);
-
-                // }
             } 
 
         else {
@@ -170,17 +164,32 @@ if ($request->has('rams')) {
     //Recorremos cada ram enviado por el formulario $peripheralData es como una cajita 
         foreach ($request->input('rams') as $peripheralData) {
             
+    //Ignorar rams completamente Vacios
+    if (empty(array_filter($peripheralData))) {
+        # code...
+        continue;
+    }
+
             // Si la ram tiene un ID, es un registro existente, entramos aqui 
             if (isset($peripheralData['id'])) {
 
                 //La guardamos en una variable
                 //Buscamos en el modelo la que coincida con ese ID ejemplo 10
                 //Lo trae de la DB 
-                $ram = Ram::find($peripheralData['id']);
+                $ram = $equipo->rams()
+                ->where('id', $peripheralData['id'])
+                ->first();
+
                 if ($ram) {
+
+                if (!empty($peripheralData['_delete'])) {
+                    $ram->delete();
+                    continue;
+                }
+
                     //Si los espacios de la cajita ambos estan vacios 
                     //la mauqina interpreta que como estan vacios se borraron, los borramos
-                    if (empty($peripheralData['capacidad_gb']) && empty($peripheralData['clock_mhz']) && empty($periphereData['tipo_chz'])) {
+                    if (empty($peripheralData['capacidad_gb']) && empty($peripheralData['clock_mhz']) && empty($peripheralData['tipo_chz'])) {
                         $ram->delete(); 
                     } else {
 
@@ -193,6 +202,15 @@ if ($request->has('rams')) {
                     }
                 }
             } 
+
+        else {
+            $equipo->rams()->create([
+            'capacidad_gb' => $peripheralData['capacidad_gb'],
+            'clock_mhz' => $peripheralData['clock_mhz'],
+            'tipo_chz' => $peripheralData['tipo_chz'],
+            ]);
+        }
+
         }
     }
 
