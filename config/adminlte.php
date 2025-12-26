@@ -348,7 +348,6 @@ return [
             'icon' => 'fas fa-history',
         ],
 
-        
     ],
 
     /*

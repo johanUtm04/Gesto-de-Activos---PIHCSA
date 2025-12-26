@@ -70,7 +70,7 @@ class GestionUsuariosController extends Controller
             'estatus'=> 'nullable|string|max:255',
         ]);
 
-    $user->update($request->all());
+        $user->update($request->all());
 
 
         //1.-Cuantos usuarios mostramos por pagina ??
@@ -95,7 +95,6 @@ class GestionUsuariosController extends Controller
         $user->delete();
         //Cuantos registros cargamos por pagina
         $perPage = 10;
-
 
         //cuantos hay detras ??
         $position = User::where('id', '<=', $user->id)->count();

@@ -91,11 +91,17 @@
 
                 <tbody>
                 @forelse($ubicaciones as $ubicacion)
-                    <tr>
+                    <tr id="ubicacion-{{ $ubicacion->id }}">
                         <td>{{ $ubicacion->id }}</td>
 
                         {{-- UBICACIÓN --}}
                         <td>
+                        @if(session('actualizado->id') == $ubicacion->id)
+                        <span class="badge badge-warning ml-1">Editado</span>
+                        @endif
+                        @if(session('new_id') == $ubicacion->id)
+                        <span class="badge badge-success ml-1">Nuevo Usuario</span>
+                        @endif
                             <strong>{{ $ubicacion->nombre }}</strong>
                             <span class="secondary-data">
                                 <i class="fas fa-door-open"></i> Ubicación física
