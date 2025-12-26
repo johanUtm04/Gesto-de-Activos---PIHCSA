@@ -278,31 +278,52 @@
                                 {{-- Periféricos --}}
                                 <div class="component-group">
                                     <h6 class="text-info"><i class="fas fa-keyboard"></i> Periféricos (Editables)</h6>
+
+                                <button type="button"
+                                    class="btn btn-sm btn-outline-primary mt-2"
+                                    onclick="agregarPeriferico()">
+                                    <i class="fas fa-plus"></i> Agregar periférico0
+                                </button>
+
                                     <hr class="my-2">
                                     <div id="perifericos-container">
                                         @foreach($equipo->perifericos as $index => $periferico)
+                                        <div class="periferico-item">
                                         <div class="p-2 mb-2 border rounded bg-white">
                                             <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
                                             <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
         
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label>Tipo / Marca</label>
-                                                    <input type="text" name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm"
+                                                <div class="row">
+                                                    <div class="form-group col-md-6">
+                                                        <label>Tipo / Marca</label>
+                                                        <input type="text" name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm"
                                                         placeholder="Ej: Teclado, Monitor, Mouse"
                                                         value="{{ old('perifericos.' . $index . '.tipo', $periferico->tipo ?? '') }}">
+                                                    </div>
                                                 </div>
-        
+
+                                        
                                                 <div class="form-group col-md-6">
                                                     <label>Serial</label>
                                                     <input type="text" name="perifericos[{{ $index }}][serial]" class="form-control form-control-sm"
                                                         placeholder="Serial del periférico"
                                                         value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
                                                 </div>
-                                            </div>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-danger mt-2"
+                                                        onclick="eliminarPeriferico(this)">
+                                                        <i class="fas fa-plus"></i> Eliminar periférico
+                                                    </button>
+
+                                                </div>
+
+
                                         </div>
                                         @endforeach
                                     </div>
+
+
+
                                 </div>
 
                                 {{-- Rams --}}
@@ -450,6 +471,7 @@
             </div> {{-- /col-md-7 --}}
         </div> {{-- row --}}
     </div> {{-- container --}}
+
 @stop
 
 {{-- -------------------------------------------------------------------------------- --}}
@@ -462,5 +484,82 @@
                 theme: 'bootstrap4',
             });
         });
+
+
+//LOGICA PARA AGREGAR PERIFERICOS
+//Variable que toma el numero de perifericos, o bien de relaciones
+let perifericoIndex = {{ $equipo->perifericos->count() }};
+function agregarPeriferico(){
+let index = 0;
+index++; // Ahora index vale 1
+    //Tomamos el container de los perifericos
+    const container = document.getElementById('perifericos-container')
+
+    // Agregamos la seccion HTML
+        const html = `
+    <div class="periferico-item">
+        <div class="p-2 mb-2 border rounded bg-white">
+            <h6 class="text-secondary">
+                <h6 class="text-secondary">
+                <i class="fas fa-dot-circle"></i> Periférico #${perifericoIndex + 1}
+                </h6>
+            </h6>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Tipo / Marca</label>
+                    <input type="text"
+                           name="perifericos[${perifericoIndex}][tipo]"
+                           class="form-control form-control-sm"
+                           placeholder="Ej: Teclado, Mouse, Monitor">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Serial</label>
+                    <input type="text"
+                           name="perifericos[${perifericoIndex}][serial]"
+                           class="form-control form-control-sm"
+                           placeholder="Serial del periférico">
+                </div>
+            </div>
+            <button type="button"
+                class="btn btn-sm btn-outline-danger mt-2"
+                onclick="eliminarPeriferico(this)">
+                <i class="fas fa-plus"></i> Eliminar periférico
+            </button>
+        </div>
+
+        </div>
+        `;
+
+    container.insertAdjacentHTML('beforeend', html);
+    perifericoIndex++;
+};
+
+//Eliminar Periferico
+function eliminarPeriferico(btn) {
+
+    if (!confirm('¿Deseas eliminar este periférico?')) {
+        return;
+    }
+
+    const item = btn.closest('.periferico-item');
+
+    // 1. marcar eliminación
+    const deleteInput = item.querySelector('[name$="[_delete]"]');
+    if (deleteInput) {
+        deleteInput.value = 1;
+    }
+
+    // 2. vaciar los campos reales
+    item.querySelectorAll('input:not([type="hidden"])')
+        .forEach(input => input.value = '');
+
+    // 3. ocultar visualmente
+    item.style.display = 'none';
+}
+
+
+
     </script>
 @stop

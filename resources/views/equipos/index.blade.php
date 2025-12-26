@@ -207,15 +207,16 @@
                     <tbody>
                         @foreach($equipos as $equipo)
                             <tr id="equipo-{{ $equipo->id }}">
-                                <td>{{ $equipo->id }}</td>
+                                <td>{{ $equipo->id }} 
+                                </td>
                                 
                                 {{-- ACTIVO / SERIAL (Agrupado) --}}
                                 <td>
-                                    @if(session('new_id') == $equipo->id)
-                                        <span class="badge badge-success ml-1">Nuevo</span>
-                                    @endif
-                                    @if(session('actualizado-id') == $equipo->id)
+                                    @if(session('actualizado->id') == $equipo->id)
                                         <span class="badge badge-warning ml-1">Editado</span>
+                                    @endif
+                                    @if(session('new_id') == $equipo->id)
+                                        <span class="badge badge-success ml-1">Nuevo Activo</span>
                                     @endif
                                     <strong>{{ $equipo->tipo_equipo }}-</strong>{{ $equipo->marca_equipo ?? '-' }}  <br>
                                     <span class="secondary-data"><i class="fas fa-barcode"></i> Serial: {{ $equipo->serial }}</span><br>
@@ -383,7 +384,7 @@
         });
 
     document.addEventListener('DOMContentLoaded', function () {
-        const id = "{{ session('new_id') ?? session('actualizado-id') }}";
+        const id = "{{ session('new_id') ?? session('actualizado->id') }}";
 
         if (id) {
             const row = document.getElementById('equipo-' + id);

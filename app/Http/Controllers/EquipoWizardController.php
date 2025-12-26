@@ -92,12 +92,26 @@ public function create()
             'escala_pulgadas' => 'nullable|string',
             'interface' => 'nullable|string'
         ]);
-        session()->put('wizard_equipo.monitor', [
+
+        $monitor =  [
             'marca' => $request->marca,
             'serial' => $request->serial,
             'escala_pulgadas' => $request->escala_pulgadas,
             'interface' => $request->interface,
-        ]);
+        ];
+
+if (empty(array_filter($monitor))) {
+    # code...
+    session()->forget('wizard_equipo.moinitor');
+    $wizard = session ('wizard_equipo');
+    $uuid = $wizard['uuid'];
+    return redirect()->route('equipos.wizard-discos_duros', $uuid);
+
+
+
+}
+
+
     $wizard = session ('wizard_equipo');
     $uuid = $wizard['uuid'];
         return redirect()->route('equipos.wizard-discos_duros', $uuid);
@@ -127,11 +141,20 @@ public function create()
             'interface' => 'nullable|string',
         ]);
         //2.-Agregarlos al wizard
-        session()->put('wizard_equipo.disco_duro', [
+        $disco_duro = [
             'capacidad' => $request->capacidad,
             'tipo_hdd_ssd' => $request->tipo_hdd_ssd,
             'interface' => $request->interface,
-        ]);
+        ];
+
+        if (empty(array_filter($disco_duro))) {
+            # code...
+            session()->forget('wizard_equipo.disco_duro');
+                $wizard = session ('wizard_equipo');
+    $uuid = $wizard['uuid'];
+            return redirect()->route('equipos.wizard-ram', $uuid);    
+        }
+
         $wizard = session ('wizard_equipo');
         $uuid = $wizard['uuid'];
         //6.-Pasamos esa vaina
@@ -167,14 +190,25 @@ public function create()
             'tipo_chz' => 'nullable|string'
         ]);
 
-        //2.-Los Agregamos al wizard 
-        session()->put('wizard_equipo.ram', [
-            'capacidad_gb' => $request->capacidad_gb,
-            'clock_mhz' => $request->clock_mhz,
-            'tipo_chz' => $request->tipo_chz,
-        ]);
+        //Guardamos los datos en una variable
+        $ram = [
+        'capacidad_gb' => $request->capacidad_gb,
+        'clock_mhz' => $request->clock_mhz,
+        'tipo_chz' => $request->tipo_chz,
+        ];
 
-        //3.-Jalamoe al papau wizard
+
+        //Validamos que almenos haya Uno
+        if (empty(array_filter($ram))) {
+            # code...
+            session()->forget('wizard_equipo.ram');
+
+                $wizard = session ('wizard_equipo');
+    $uuid = $wizard['uuid'];
+            return redirect()->route('equipos.wizard-periferico', $uuid);
+        }
+
+        //TOMAR EL WIZARD
         $wizard = session ('wizard_equipo');
         //4.-El token detergente lo tomamos de la session
         $uuid = $wizard['uuid'];
@@ -197,28 +231,41 @@ public function create()
     return view('equipos.wizard-periferico', compact('equipo', 'uuid'));
     }
     
-    //Guardar el periferico en la session
+    //PerifericoSave
     public function savePeriferico(Request $request, $uuid)
     {
-        //1.-Validamos los datos
+        //VALIDAMOS
         $request->validate([
             'tipo' => 'nullable|string',
             'marca' => 'nullable|string',
             'serial' => 'nullable|string',
             'interface' => 'nullable|string',
         ]);
-        //2.-Creamos esta parte en el wizard
-        session()->put('wizard_equipo.periferico', [
-            'tipo' => $request->tipo,
-            'marca' => $request->marca,
-            'serial' => $request->serial,
-            'interface' => $request->interface,
-        ]);
-        //3.-Jalamoe al papau wizard
+
+        //GUARDAMOS EN UNA VARIABLE
+            $periferico = [
+                'tipo' => $request->tipo,
+                'marca' => $request->marca,
+                'serial' => $request->serial,
+                'interface' => $request->interface,
+            ];
+
+    //SI TODOS ESTAN VACIOS, SE PASA DE LARGO
+    if (empty(array_filter($periferico))) {
+        session()->forget('wizard_equipo.periferico');
+
+            $wizard = session ('wizard_equipo');
+    $uuid = $wizard['uuid'];
+        return redirect()->route('equipos.wizard-procesador', $uuid);
+    }
+
+    //GUARDAR CON QUE ALLA UN DATO
+    session()->put('wizard_equipo.periferico', $periferico);
+
+        //TOMAR EL WIZARD COMPLETO
         $wizard = session ('wizard_equipo');
-        //4.-El token detergente lo tomamos de la session
+        //TOMAR EL DETERGENTE
         $uuid = $wizard['uuid'];
-        
 
         return redirect()->route('equipos.wizard-procesador', $uuid);
     }
@@ -247,11 +294,20 @@ public function create()
             'frecuenciaMicro' => 'nullable|string',
         ]);
         //2.-Guardamos esta parte en el Wizard
-        session()->put('wizard_equipo.procesador', [
+        $procesador= [
             'marca' => $request->marca,
             'descripcion_tipo' => $request->descripcion_tipo,
             'frecuenciaMicro' => $request->frecuenciaMicro,
-        ]);
+        ];
+
+if (empty(array_filter($procesador))) {
+    # code...
+    session()->forget('wizard_equipo.procesador');
+
+
+}
+
+
         //3.-Jalamoe al papau wizard
         $wizard = session ('wizard_equipo');
 
@@ -292,8 +348,7 @@ public function create()
 
         return redirect()->route('equipos.index', $uuid)
         ->with('success', 'Equipo registrado correctamente')
-        ->with('highlight_id', $equipo->id);
-        ;
+        ->with('new_id', $equipo->id);
     }
 
 }

@@ -41,9 +41,10 @@ class EquipoController extends Controller
         return view('equipo.wizard.create', compact('usuarios', 'ubicaciones'));
     }
 
-    //function to send the data from index's form
-    public function store(Request $request)
-    {
+//Funcion para Actualizar registros en la base de datos
+public function store(Request $request)
+{
+    //Validamos cada Uno de ellos de la respuesta que nos de el Usuario
         $request->validate([
             'marca_equipo' => 'nullable|string|max:255',
             'tipo_equipo' => 'required|string|max:255',
@@ -56,6 +57,7 @@ class EquipoController extends Controller
             'vida_util_estimada' => 'required|string|max:255',
         ]);
 
+        //Lo guardamos en la variable $data
         $data = $request->all();
 
         //Condicionales en caso de que el usuario no mande esos campos
@@ -90,10 +92,10 @@ class EquipoController extends Controller
         return view('equipos.edit', compact('equipo', 'usuarios', 'ubicaciones'));
     }
 
-//function to send the changes data from edit's form ------------------------------------------------------------------------------------
+//Funcion para actualizar en caso de que el Usuario lo necesecite
 public function update(Request $request, Equipo $equipo)
 {
-    //Reglas del Formulario
+    //1-Valores que si o si debemos de leer/obtener
     $equipo->update($request->only([
         'marca_equipo',
         'tipo_equipo',
@@ -106,14 +108,30 @@ public function update(Request $request, Equipo $equipo)
         'vida_util_estimada',
     ]));
 
+//2.-Valores Adicionales(En caso de tener)
 if ($request->has('perifericos')) {
-        foreach ($request->input('perifericos') as $peripheralData) {
-            
+
+    //Por cada periferico 
+    foreach ($request->input('perifericos') as $peripheralData) {
+         
+    //Ignorar perifericos completamente Vacios
+    if (empty(array_filter($peripheralData))) {
+        # code...
+        continue;
+    }
+            //Si tiene ID
             if (isset($peripheralData['id'])) {
 
                 $periferico = Periferico::find($peripheralData['id']);
+
                 if ($periferico) {
 
+                if (!empty($peripheralData['_delete'])) {
+                    $periferico->delete();
+                    continue;
+                }
+
+                    //Si no esta vacio y que se llenen Los 2 campos
                     if (empty($peripheralData['tipo']) && empty($peripheralData['serial'])) {
                         $periferico->delete(); 
                     } else {    //Si no estan vacion lo aignamos o bien solo lo actualizamod
@@ -126,7 +144,24 @@ if ($request->has('perifericos')) {
                         ]);
                     }
                 }
+
+                // else {
+                //     $equipo->perifericos()->create([
+                //         'tipo' => $peripheralData['tipo'],
+                //         'serial' => $peripheralData['seriala']
+
+                //     ]);
+
+                // }
             } 
+
+        else {
+            $equipo->perifericos()->create([
+                'tipo' => $peripheralData['tipo'],
+                'serial' => $peripheralData['serial'],
+            ]);
+        }
+
         } 
     }
 
