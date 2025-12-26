@@ -279,14 +279,15 @@
                                 <div class="component-group">
                                     <h6 class="text-info"><i class="fas fa-keyboard"></i> Periféricos (Editables)</h6>
 
-                                <button type="button"
-                                    class="btn btn-sm btn-outline-primary mt-2"
-                                    onclick="agregarPeriferico()">
-                                    <i class="fas fa-plus"></i> Agregar periférico0
-                                </button>
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="agregarPeriferico()">
+                                        <i class="fas fa-plus"></i> Agregar periférico0
+                                    </button>
 
                                     <hr class="my-2">
-                                    <div id="perifericos-container">
+                                    <div id="perifericos-container"
+                                     data-perifericos-count="{{ $equipo->perifericos->count() }}">
                                         @foreach($equipo->perifericos as $index => $periferico)
                                         <div class="periferico-item">
                                         <div class="p-2 mb-2 border rounded bg-white">
@@ -328,12 +329,23 @@
 
                                 {{-- Rams --}}
                                 <div class="component-group">
+
                                     <h6 class="text-info"><i class="fas fa-memory"></i> Módulos RAM (Editables)</h6>
+                                    
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="agregarRam()">
+                                        <i class="fas fa-plus"></i> Agregar periférico0
+                                    </button>
+                                    
                                     <hr class="my-2">
-                                    <div id="rams-container">
+                                    <div id="rams-container"
+                                    data-rams-count="{{ $equipo->rams->count() }}">
                                         @foreach($equipo->rams as $index => $ram)
                                         <div class="p-2 mb-2 border rounded bg-white">
                                             <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> RAM #{{ $index + 1 }} </h6>
+                                           
+                                           
                                             <input type="hidden" name="rams[{{ $index }}][id]" value="{{ $ram->id }}">
         
                                             <div class="row">
@@ -351,7 +363,12 @@
                                                     <label>Tipo (DDR)</label>
                                                     <input type="text" name="rams[{{$index}}][tipo_chz]" class="form-control form-control-sm"
                                                         value="{{ old('rams.' . $index . '.tipo_chz', $ram->tipo_chz ?? '') }}" placeholder="Ej: DDR4">
-                                                </div> 
+                                                    </div> 
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-danger mt-2"
+                                                        onclick="eliminarPeriferico(this)">
+                                                        <i class="fas fa-plus"></i> Eliminar Ram
+                                                    </button>
                                             </div>
                                         </div>
                                         @endforeach
@@ -488,7 +505,12 @@
 
 //LOGICA PARA AGREGAR PERIFERICOS
 //Variable que toma el numero de perifericos, o bien de relaciones
-let perifericoIndex = {{ $equipo->perifericos->count() }};
+
+//Condicion 
+
+//PERIFERICOS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+const container = document.getElementById('perifericos-container');
+let perifericoIndex = parseInt(container.dataset.perifericosCount);
 function agregarPeriferico(){
 let index = 0;
 index++; // Ahora index vale 1
@@ -538,27 +560,27 @@ index++; // Ahora index vale 1
 
 //Eliminar Periferico
 function eliminarPeriferico(btn) {
-
     if (!confirm('¿Deseas eliminar este periférico?')) {
         return;
     }
-
     const item = btn.closest('.periferico-item');
-
     // 1. marcar eliminación
     const deleteInput = item.querySelector('[name$="[_delete]"]');
     if (deleteInput) {
         deleteInput.value = 1;
     }
-
     // 2. vaciar los campos reales
     item.querySelectorAll('input:not([type="hidden"])')
         .forEach(input => input.value = '');
-
     // 3. ocultar visualmente
     item.style.display = 'none';
 }
+//PERIFERICOS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
 
+
+//RAMS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+const conatainer = document.getElementById('rams-conatiner')//1.-seccion a modificar
+let ramsIndex = parseInt(container.dataset.perifericosCount)
 
 
     </script>

@@ -22,7 +22,7 @@ class EquipoController extends Controller
     public function index()
     {
         session()->forget('wizard_equipo');
-        $equipos = Equipo::paginate(10);
+        $equipos = Equipo::paginate(8);
         return view('equipos.index', compact('equipos'));
     }
 
@@ -42,7 +42,7 @@ class EquipoController extends Controller
     }
 
 //Funcion para Actualizar registros en la base de datos
-public function store(Request $request)
+public function store(Request $request, Equipo $equipo)
 {
     //Validamos cada Uno de ellos de la respuesta que nos de el Usuario
         $request->validate([
@@ -300,8 +300,18 @@ if ($request->has('discoDuros')) {
     }
     \App\Services\AuditService::log('EDIT', $equipo->id, $detalles);
 
+    //1.-Cuantos activos vemos por pagina
+    $perPage =8;
 
-    return redirect()->route('equipos.index')
+    //2.-Calculamos su posicion, contamos todos los equipos antes del que estamos editando
+    //ejemplo si hay 12 antes position es 13 pq tmbn cuenta =<
+    $position = Equipo::where('id', '<=', $equipo->id)->count();
+
+    //hacemos la division de 13 / 8 ceil redondea hacia Arriba
+    $page = ceil($position / $perPage); //1.65 === 2 
+
+    //Es HTTP puro, manda a la url el ?page=2
+    return redirect()->route('equipos.index', ['page' => $page])
     ->with('warning', 'Equipo editado correctamente')
     ->with('actualizado->id', $equipo->id);
 }
@@ -348,7 +358,17 @@ if ($request->has('discoDuros')) {
     //function to delete some 'equipo'
     public function destroy(Equipo $equipo)
     {
+        //1.-Cuantos activos mostramos por pagina ??
+        $perPage = 8;
+
+
+        //2.-Cuants hay por detras?
+        $position = Equipo::where('id', '<=', $equipo->id)->count();
+
+        //3.-Descubrir en que pagina va?
+        $page = ceil($position/$perPage);
+        
         $equipo->delete();
-        return redirect()->route('equipos.index')->with('danger', 'Equipo Eliminado correctamente');
+        return redirect()->route('equipos.index', ['page' => $page])->with('danger', 'Equipo Eliminado correctamente');
     }
 }

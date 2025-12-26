@@ -232,7 +232,7 @@ if (empty(array_filter($monitor))) {
     }
     
     //PerifericoSave
-    public function savePeriferico(Request $request, $uuid)
+    public function savePeriferico(Request $request, $uuid, Equipo $equipo)
     {
         //VALIDAMOS
         $request->validate([
@@ -346,7 +346,20 @@ if (empty(array_filter($procesador))) {
         //Limpiar sesion
         session()->forget('wizard_equipo');
 
-        return redirect()->route('equipos.index', $uuid)
+
+
+            //saber cuantos registros mostramos por pagina 
+            $perPage = 8;
+
+            //Posiciones antes del que estamos creando
+            $position = Equipo::where('id', '<=', $equipo->id)->count();
+
+
+            //Pagina que le toca
+            $page = ceil($position/$perPage);
+
+
+        return redirect()->route('equipos.index', ['page' => $page])
         ->with('success', 'Equipo registrado correctamente')
         ->with('new_id', $equipo->id);
     }
