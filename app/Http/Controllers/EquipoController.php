@@ -369,6 +369,7 @@ if ($request->has('discoDuros')) {
         $page = ceil($position/$perPage);
         
         $equipo->delete();
-        return redirect()->route('equipos.index', ['page' => $page])->with('danger', 'Equipo Eliminado correctamente');
+        return redirect()->route('equipos.index', ['page' => $page])
+        ->with('danger', 'Equipo Eliminado correctamente');
     }
 }

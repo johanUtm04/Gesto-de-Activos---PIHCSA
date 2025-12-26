@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\Equipo;
 
 class GestionUsuariosController extends Controller
 {
 
 
-    public function index(Request $request)
+    public function index(Request $request, Equipo $equipo)
     {
             $users = User::paginate(10);
             return view('users.index',compact('users'));
@@ -23,7 +24,7 @@ class GestionUsuariosController extends Controller
     }
 
 
-    public function store(Request $request, User $user)
+    public function store(Request $request,)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -33,9 +34,22 @@ class GestionUsuariosController extends Controller
             'departamento' => 'required|string|max:35',
             'estatus' => 'required|string|max:35',
         ]);
-        $user->create($request->all());
 
-        return redirect()->route('users.index')->with('succes', 'Usuario agregado correctamente');
+       $user = User::create($request->all());
+
+        //1.-Cuantos usuarios mostramos por pagina ??
+        $perPage = 10;
+
+
+        //2.-Cuants hay por detras?
+        $position = User::where('id', '<=', $user->id)->count();
+
+        //3.-Descubrir en que pagina va?
+        $page = ceil($position/$perPage);
+
+        return redirect()->route('users.index', ['page' => $page])
+        ->with('new_id', $user->id)
+        ->with('success', 'Usuario agregado correctamente');
     }
 
 
@@ -58,7 +72,20 @@ class GestionUsuariosController extends Controller
 
     $user->update($request->all());
 
-        return redirect()->route('users.index')->with('warning', 'Usuario editado correctamente');
+
+        //1.-Cuantos usuarios mostramos por pagina ??
+        $perPage = 10;
+
+
+        //2.-Cuants hay por detras?
+        $position = User::where('id', '<=', $user->id)->count();
+
+        //3.-Descubrir en que pagina va?
+        $page = ceil($position/$perPage);
+
+        return redirect()->route('users.index', ['page' => $page])
+        ->with('actualizado->id', $user->id)
+        ->with('warning', 'Usuario editado correctamente');
     }
 
 
@@ -66,7 +93,18 @@ class GestionUsuariosController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('danger', 'Equipo Eliminado correctamente');
+        //Cuantos registros cargamos por pagina
+        $perPage = 10;
+
+
+        //cuantos hay detras ??
+        $position = User::where('id', '<=', $user->id)->count();
+
+        $page = ceil($position/$perPage);
+
+
+        return redirect()->route('users.index', ['page' => $page])
+        ->with('danger', 'Equipo Eliminado correctamente');
     }
 
 

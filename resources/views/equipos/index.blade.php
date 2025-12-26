@@ -212,6 +212,7 @@
                                 
                                 {{-- ACTIVO / SERIAL (Agrupado) --}}
                                 <td>
+                                    <!-- Casilla donde se mostraran las etiquetas de una u otra cosa -->
                                     @if(session('actualizado->id') == $equipo->id)
                                         <span class="badge badge-warning ml-1">Editado</span>
                                     @endif
@@ -383,6 +384,7 @@
             });
         });
 
+        //MESAJES PARA EL USUARIO
     document.addEventListener('DOMContentLoaded', function () {
         const id = "{{ session('new_id') ?? session('actualizado->id') }}";
 

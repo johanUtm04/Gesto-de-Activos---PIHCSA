@@ -354,6 +354,7 @@ if (empty(array_filter($procesador))) {
             //Posiciones antes del que estamos creando
             $position = Equipo::where('id', '<=', $equipo->id)->count();
 
+            dd($position);
 
             //Pagina que le toca
             $page = ceil($position/$perPage);

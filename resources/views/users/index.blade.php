@@ -88,11 +88,17 @@
 
                 <tbody>
                 @foreach($users as $user)
-                    <tr>
+                    <tr id="user-{{ $user->id }}">
                         <td>{{ $user->id }}</td>
 
                         {{-- USUARIO --}}
                         <td>
+                        @if(session('actualizado->id') == $user->id)
+                        <span class="badge badge-warning ml-1">Editado</span>
+                        @endif
+                        @if(session('new_id') == $user->id)
+                        <span class="badge badge-success ml-1">Nuevo Usuario</span>
+                        @endif
                             <strong>{{ $user->name }}</strong>
                             <span class="secondary-data">
                                 <i class="fas fa-envelope"></i> {{ $user->email }}
@@ -176,3 +182,22 @@
 
 </footer>
 @endsection
+
+
+@section('js')
+<script>
+//Mostrar Badges de acuerdo lo que me mande el controlador
+document.addEventListener('DOMContentLoaded', function() {
+    const id = "{{ session('new_id') ?? session('actualizado->id') }}";
+
+    if (id) {
+        //Fila que luego se desavanecera despues de un rato
+        const row = document.getElementById('user-' + id)
+        if (row) {
+            row.scrollIntoView({behavior: 'smooth', block: 'center'})
+        }
+    }
+});
+
+</script>
+@stop
