@@ -1,6 +1,6 @@
-# Inventario de Activos TI
+# ¿De que se trata?
 
-Sistema web desarrollado en **Laravel + AdminLTE** para el control, registro y administración de activos de TI (equipos, componentes y periféricos) mediante un **wizard paso a paso**, con enfoque en buena UX, claridad visual y mantenibilidad.
+Desarrolle una solución en **Laravel + AdminLTE** para el control, registro y administración de activos de TI (equipos, componentes y periféricos) mediante un **wizard paso a paso**, con enfoque en buena UX, claridad visual y mantenibilidad.
 
 <div style="display: flex; justify-content: center; align-items: center; gap: 25px;">
 <table align="center" border="0">
@@ -35,7 +35,7 @@ Sistema web desarrollado en **Laravel + AdminLTE** para el control, registro y a
 
 ## Funcionalidad principal
 
-### ✔ Registro de Activos TI
+### Registro de Activos TI
 
 El registro de un activo se realiza mediante un **Wizard guiado**, dividido en pasos claros:
 
@@ -57,101 +57,12 @@ Cada paso:
 
 ## UX / UI destacadas
 
-### 🔹 Resaltado visual al crear / editar
+### Resaltado visual al crear / editar
 
 Cuando se crea un nuevo equipo:
 
 * Se redirige automáticamente a la **página correcta de la paginación**
-* La fila del equipo recién creado se **resalta visualmente**
-
-#### Blade (fila resaltada)
-
-```blade
-<tr class="{{ session('highlight_id') == $equipo->id ? 'highlight-row' : '' }}">
-```
-
-#### CSS
-
-```css
-.highlight-row {
-    animation: highlightFade 2.5s ease-out;
-    background-color: #d4edda !important;
-}
-
-@keyframes highlightFade {
-    0% { background-color: #c3e6cb; }
-    100% { background-color: transparent; }
-}
-```
-
----
-
-## Listado de inventario
-
-* Tabla paginada
-* Resumen visual de componentes (badges)
-* Acciones por fila:
-
-  * Ver detalles (modal)
-  * Editar
-  * Registrar mantenimiento
-  * Eliminar
-
-### Modal de detalles
-
-Muestra información completa del activo:
-
-* Datos base
-* Asignación y valor
-* Componentes asociados
-
-Se alimenta vía **data-attributes** del botón.
-
----
-
-## Paginación inteligente
-
-Para asegurar que el highlight funcione incluso con paginación:
-
-### Cálculo de página al crear equipo
-
-```php
-$perPage = 12;
-$position = Equipo::where('id', '<=', $equipo->id)->count();
-$page = ceil($position / $perPage);
-
-return redirect()
-    ->route('equipos.index', ['page' => $page])
-    ->with('success', 'Equipo creado correctamente')
-    ->with('highlight_id', $equipo->id);
-```
-
----
-
-## Validación de formularios
-
-### Ejemplo: Validación de datos base + arreglo de periféricos
-
-```php
-$request->validate([
-    'marca_equipo' => 'nullable|string|max:255',
-    'tipo_equipo' => 'required|string|max:255',
-    'serial' => 'nullable|string|max:255',
-    'sistema_operativo' => 'required|string|max:50',
-    'usuario_id' => 'required|integer|exists:users,id',
-    'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
-    'valor_inicial' => 'required|numeric|min:0|max:999999.99',
-    'fecha_adquisicion' => 'required|date',
-    'vida_util_estimada' => 'required|string|max:255',
-
-    // Periféricos (arreglo)
-    'perifericos' => 'nullable|array',
-    'perifericos.*.tipo' => 'required|string|max:255',
-    'perifericos.*.marca' => 'nullable|string|max:255',
-    'perifericos.*.serial' => 'nullable|string|max:255',
-    'perifericos.*.interface' => 'nullable|string|max:255',
-]);
-```
+* Con ayuda de un 'Badge' el activo recien editado **resalta visualmente**
 
 ---
 
@@ -168,7 +79,6 @@ $request->validate([
 ## Buenas prácticas aplicadas
 
 * Separación de responsabilidades
-* Validaciones centralizadas
 * UX clara (feedback visual)
 * Componentes opcionales (no forzados)
 
@@ -176,7 +86,7 @@ $request->validate([
 
 
 
-## ✨ Autor
+## Autor
 Johan Jael Lòpez Reyes (Universidad Tecnologica de Morelia)
 Proyecto desarrollado como sistema de gestión de activos TI con enfoque académico y profesional.
 

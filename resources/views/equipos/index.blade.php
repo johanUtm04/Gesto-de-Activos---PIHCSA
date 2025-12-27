@@ -67,7 +67,7 @@
     </div>
 </div>
 @stop
-
+//1.1
 @section('content')
     {{--(Alertas AdminLTE)--}}
     @php
