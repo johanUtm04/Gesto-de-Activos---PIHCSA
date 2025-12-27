@@ -1,7 +1,8 @@
 <?php
 
-//Controllers
 use Illuminate\Support\Facades\Route;
+
+// Controllers
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\EquipoWizardController;
 use App\Http\Controllers\ProfileController;
@@ -11,110 +12,169 @@ use App\Http\Controllers\GestionUsuariosController;
 use App\Http\Controllers\GestionUbicacionesController;
 use App\Http\Controllers\HistorialController;
 
-
-
-//Main Route
+/*
+|--------------------------------------------------------------------------
+| Ruta principal (Login)
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
-return view('auth.login');});
+    return view('auth.login');
+});
 
-//Full crud to 'equipos'
+/*
+|--------------------------------------------------------------------------
+| Rutas protegidas (Usuario autenticado)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
-    Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
-    Route::get('/equipos/Historial', [EquipoController::class, 'historial'])->name('equipos.historial');
-    
 
-    Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])->name('equipos.wizard.create');
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware('verified')->name('dashboard');
 
-    Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
-
-    //Editar un equipo
-    // Route::middleware('role:Admin')->group(function () {
-
-    Route::get('/equipos/{equipo}/edit', [EquipoController::class, 'edit'])->name('equipos.edit');
-    Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
-    Route::delete('/equipos/{equipo}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
-    // });
-    Route::get('/equipos/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork.index');
-    Route::post('/equipos/{equipo}/addwork', [EquipoController::class, 'addwork'])->name('equipos.addwork.store');
-
-
-
+    /*
+    |--------------------------------------------------------------------------
+    | Perfil de usuario
+    |--------------------------------------------------------------------------
+    */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Módulo: Gestión de Equipos (Core)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('equipos')->group(function () {
 
-    // Route::put('/equipos/{equipo}', [EquipoController::class, 'updatework'])->name('equipos.updatework');
-    //Wizard, este menu tal vez se use al querer agregar algo extra
-    Route::get('/equipos/{equipo}/wizard', [EquipoWizardController::class, 'show'])->name('equipos.wizard');
+        // Inventario y auditoría
+        Route::get('/', [EquipoController::class, 'index'])->name('equipos.index');
+        Route::get('/historial', [EquipoController::class, 'historial'])->name('equipos.historial');
 
-    Route::get('/equipos/{uuid}/ubicacion', [EquipoWizardController::class, 'ubicacionForm'])->name('equipos.wizard-ubicacion');
-    //store
-    Route::post('/equipos/{uuid}/ubicacion', [EquipoWizardController::class, 'saveUbicacion'])->name('equipos.wizard.saveUbicacion');
+        // Creación (Wizard)
+        Route::get('/wizard/create', [EquipoWizardController::class, 'create'])->name('equipos.wizard.create');
 
-    Route::get('/equipos/{uuid}/monitores', [EquipoWizardController::class, 'monitoresForm'])->name('equipos.wizard-monitores');
-    Route::post('/equipos/{uuid}/monitores', [EquipoWizardController::class, 'saveMonitor'])->name('equipos.wizard.saveMonitor');
+        // CRUD
+        Route::post('/', [EquipoController::class, 'store'])->name('equipos.store');
+        Route::get('/{equipo}/edit', [EquipoController::class, 'edit'])->name('equipos.edit');
+        Route::put('/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
+        Route::delete('/{equipo}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
 
-    Route::get('/equipos/{uuid}/discoduro', [EquipoWizardController::class, 'discoduroForm'])->name('equipos.wizard-discos_duros');
-    Route::post('/equipos/{uuid}/discoduro', [EquipoWizardController::class, 'saveDiscoduro'])->name('equipos.wizard.saveDiscoduro');
+        // Mantenimiento
+        Route::get('/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork.index');
+        Route::post('/{equipo}/addwork', [EquipoController::class, 'addwork'])->name('equipos.addwork.store');
 
-    Route::get('/equipos/{uuid}/ram', [EquipoWizardController::class, 'ramForm'])->name('equipos.wizard-ram');
-    Route::post('/equipos/{uuid}/ram', [EquipoWizardController::class, 'saveRam'])->name('equipos.wizard.saveRam');
+        /*
+        |--------------------------------------------------------------------------
+        | Wizard por componentes
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('{uuid}')->group(function () {
 
+            Route::get('/wizard', [EquipoWizardController::class, 'show'])->name('equipos.wizard');
 
-    Route::get('/equipos/{uuid}/periferico', [EquipoWizardController::class, 'perifericoForm'])->name('equipos.wizard-periferico');
-    Route::post('/equipos/{uuid}/periferico', [EquipoWizardController::class, 'savePeriferico'])->name('equipos.wizard.savePeriferico');
+            // Ubicación
+            Route::get('/ubicacion', [EquipoWizardController::class, 'ubicacionForm'])->name('equipos.wizard.ubicacion');
+            Route::post('/ubicacion', [EquipoWizardController::class, 'saveUbicacion'])->name('equipos.wizard.saveUbicacion');
 
-    Route::get('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard-procesador');
-    Route::post('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
-    //Depreciacon de una Activo
-    Route::get('/depreciacion', [DepreciacionController::class, 'index'])->name('depreciacion.index');
-    Route::get('/depreciacion/reporte/pdf', [DepreciacionController::class, 'exportPdf'])->name('depreciacion.pdf');
-    Route::get('/depreciacion/{equipo}', [DepreciacionController::class, 'show'])->name('depreciacion.show');
+            // Monitores
+            Route::get('/monitores', [EquipoWizardController::class, 'monitoresForm'])->name('equipos.wizard.monitores');
+            Route::post('/monitores', [EquipoWizardController::class, 'saveMonitor'])->name('equipos.wizard.saveMonitor');
 
+            // Discos duros
+            Route::get('/discoduro', [EquipoWizardController::class, 'discoduroForm'])->name('equipos.wizard.discoduro');
+            Route::post('/discoduro', [EquipoWizardController::class, 'saveDiscoduro'])->name('equipos.wizard.saveDiscoduro');
 
-    //Papelera
+            // RAM
+            Route::get('/ram', [EquipoWizardController::class, 'ramForm'])->name('equipos.wizard.ram');
+            Route::post('/ram', [EquipoWizardController::class, 'saveRam'])->name('equipos.wizard.saveRam');
+
+            // Periféricos
+            Route::get('/periferico', [EquipoWizardController::class, 'perifericoForm'])->name('equipos.wizard.periferico');
+            Route::post('/periferico', [EquipoWizardController::class, 'savePeriferico'])->name('equipos.wizard.savePeriferico');
+
+            // Procesador
+            Route::get('/procesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard.procesador');
+            Route::post('/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Módulo: Depreciación
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('depreciacion')->group(function () {
+        Route::get('/', [DepreciacionController::class, 'index'])->name('depreciacion.index');
+        Route::get('/reporte/pdf', [DepreciacionController::class, 'exportPdf'])->name('depreciacion.pdf');
+        Route::get('/{equipo}', [DepreciacionController::class, 'show'])->name('depreciacion.show');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Papelera
+    |--------------------------------------------------------------------------
+    */
     Route::get('/papelera', [PapeleraController::class, 'index'])->name('papelera.index');
 
-    //Gestion de Usuarios
-    Route::get('/gestionUsuarios', [GestionUsuariosController::class, 'index'])->name('users.index');
-    Route::get('/gestionUsuarios/create', [GestionUsuariosController::class, 'create'])->name('users.create');
-    Route::post('/gestionUsuarios', [GestionUsuariosController::class, 'store'])->name('users.store');
+    /*
+    |--------------------------------------------------------------------------
+    | Gestión de Usuarios
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('gestionUsuarios')->group(function () {
+        Route::get('/', [GestionUsuariosController::class, 'index'])->name('users.index');
+        Route::get('/create', [GestionUsuariosController::class, 'create'])->name('users.create');
+        Route::post('/', [GestionUsuariosController::class, 'store'])->name('users.store');
+        Route::get('/{user}/edit', [GestionUsuariosController::class, 'edit'])->name('users.edit');
+        Route::put('/{user}', [GestionUsuariosController::class, 'update'])->name('users.update');
+        Route::delete('/{user}', [GestionUsuariosController::class, 'destroy'])->name('users.destroy');
+    });
 
-    Route::get('/gestionUsuarios/{user}/edit', [GestionUsuariosController::class, 'edit'])->name('users.edit');
-    Route::delete('/gestionUsuarios/{user}', [GestionUsuariosController::class, 'destroy'])->name('users.destroy');
-    Route::put('/gestionUsuarios/{user}', [GestionUsuariosController::class, 'update'])->name('users.update');
+    /*
+    |--------------------------------------------------------------------------
+    | Gestión de Ubicaciones
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('gestionUbicaciones')->group(function () {
+        Route::get('/', [GestionUbicacionesController::class, 'index'])->name('ubicaciones.index');
+        Route::get('/create', [GestionUbicacionesController::class, 'create'])->name('ubicaciones.create');
+        Route::post('/', [GestionUbicacionesController::class, 'store'])->name('ubicaciones.store');
+        Route::get('/{ubicacion}/edit', [GestionUbicacionesController::class, 'edit'])->name('ubicaciones.edit');
+        Route::put('/{ubicacion}', [GestionUbicacionesController::class, 'update'])->name('ubicaciones.update');
+        Route::delete('/{ubicacion}', [GestionUbicacionesController::class, 'destroy'])->name('ubicaciones.destroy');
+    });
 
-
-    //Gestion de Ubicaciones 
-    Route::get('/gestionUbicaciones', [GestionUbicacionesController::class, 'index'])->name('ubicaciones.index');
-    Route::get('/gestionUbicaciones/create', [GestionUbicacionesController::class, 'create'])->name('ubicaciones.create');
-    Route::post('/gestionUbicaciones', [GestionUbicacionesController::class, 'store'])->name('ubicaciones.store');
-    
-    Route::get('/gestionUbicaciones/{ubicacion}/edit', [GestionUbicacionesController::class, 'edit'])->name('ubicaciones.edit');
-    Route::delete('/gestionUbicaciones/{ubicacion}', [GestionUbicacionesController::class, 'destroy'])->name('ubicaciones.destroy');
-    Route::put('/gestionUbicaciones/{ubicacion}', [GestionUbicacionesController::class, 'update'])->name('ubicaciones.update');
-
-
-    //Historial
+    /*
+    |--------------------------------------------------------------------------
+    | Historial global
+    |--------------------------------------------------------------------------
+    */
     Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+/*
+|--------------------------------------------------------------------------
+| Rutas de autenticación
+|--------------------------------------------------------------------------
+*/
+require __DIR__ . '/auth.php';
 
-require __DIR__.'/auth.php';
-
-
-
-//Vista de pueba para middleware
-
+/*
+|--------------------------------------------------------------------------
+| Rutas de prueba (middlewares)
+|--------------------------------------------------------------------------
+*/
 Route::get('/mayorDeEdad', function () {
-return "Unico correo autorizado Correcto";
+    return "Unico correo autorizado Correcto";
 })->middleware('age');
 
-Route::get('no-autorizado', function () {
-return "Mentira ese correo ni esta";
+Route::get('/no-autorizado', function () {
+    return "Mentira ese correo ni esta";
 });
-
