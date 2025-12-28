@@ -336,10 +336,7 @@ public function update(Request $request, Equipo $equipo)
         }
     }
 
-
-    $equipo->update($request->all());
-
-
+    //Detalles de Auditoria.. en proceso...
     $detalles = [];
     foreach($equipo->getChanges() as $campo => $valorNuevo){
         $detalles[$campo] = [
@@ -347,26 +344,32 @@ public function update(Request $request, Equipo $equipo)
             'new' => $valorNuevo
         ];
     }
-    \App\Services\AuditService::log('EDIT', $equipo->id, $detalles);
 
-    //1.-Cuantos activos vemos por pagina
+    \App\Services\AuditService::log('EDIT', $equipo->id, $detalles);
+    //Detalles de Auditoria.. en proceso...
+
+/**
+ * Paginacion, logica para dependiendo la accion que hagas en el activo qeu lo hagas te devuelva a esa 
+ * pagina
+ */
+
+    //1.-Tomar en cuenta cuantos registros hay por pagina
     $perPage =8;
 
-    //2.-Calculamos su posicion, contamos todos los equipos antes del que estamos editando
-    //ejemplo si hay 12 antes position es 13 pq tmbn cuenta =<
+    //2.-Calculamos cuantos registros hay por detras
     $position = Equipo::where('id', '<=', $equipo->id)->count();
 
-    //hacemos la division de 13 / 8 ceil redondea hacia Arriba
-    $page = ceil($position / $perPage); //1.65 === 2 
+    //3.-Calculamos el numero y lo redondeamos de manera ascendente
+    $page = ceil($position / $perPage);
 
-    //Es HTTP puro, manda a la url el ?page=2
+    //4.-Mandar parametro para que la URL se vea afectada y aparezca en la pagina que quiero
     return redirect()->route('equipos.index', ['page' => $page])
     ->with('warning', 'Equipo editado correctamente')
     ->with('actualizado->id', $equipo->id);
 }
 
 
-    //function to delete some 'equipo'
+    //Funcion para devolver la vista de mantenimientos 🟦
     public function indexaddwork(Equipo $equipo)
     {
         $usuarios = User::all();
@@ -374,7 +377,7 @@ public function update(Request $request, Equipo $equipo)
     }
 
 
-    //function to delete some 'equipo'
+    //Funcion para mandar mantenimiento 🟦
     public function addwork(Equipo $equipo, Request $request)
     {
 
@@ -404,17 +407,13 @@ public function update(Request $request, Equipo $equipo)
 
 
 
-    //function to delete some 'equipo'
+    //funcion para elminar activos 🟦
     public function destroy(Equipo $equipo)
     {
-        //1.-Cuantos activos mostramos por pagina ??
         $perPage = 8;
 
-
-        //2.-Cuants hay por detras?
         $position = Equipo::where('id', '<=', $equipo->id)->count();
 
-        //3.-Descubrir en que pagina va?
         $page = ceil($position/$perPage);
         
         $equipo->delete();
