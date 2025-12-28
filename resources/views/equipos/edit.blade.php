@@ -293,7 +293,8 @@
                                         <div class="p-2 mb-2 border rounded bg-white">
                                             <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
                                             <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
-        
+                                            <input type="hidden" name="perifericos[{{ $index }}][_delete]" value="">
+
                                                 <div class="row">
                                                     <div class="form-group col-md-6">
                                                         <label>Tipo / Marca</label>
@@ -347,7 +348,7 @@
                                         <div class="p-2 mb-2 border rounded bg-white">
                                             <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> RAM #{{ $index + 1 }} </h6>
                                             <input type="hidden" name="rams[{{ $index }}][id]" value="{{ $ram->id }}">
-        
+                                            <input type="hidden" name="rams[{{ $index }}][_delete]" value="">
                                             <div class="row">
                                                 <div class="form-group col-md-4">
                                                     <label>Capacidad (GB)</label>
@@ -363,15 +364,13 @@
                                                     <label>Tipo (DDR)</label>
                                                     <input type="text" name="rams[{{$index}}][tipo_chz]" class="form-control form-control-sm"
                                                         value="{{ old('rams.' . $index . '.tipo_chz', $ram->tipo_chz ?? '') }}" placeholder="Ej: DDR4">
-                                                    </div> 
-                            
+                                                </div> 
 
                                                     <button type="button"
                                                         class="btn btn-sm btn-outline-danger mt-2"
                                                         onclick="eliminarRam(this)">
                                                         <i class="fas fa-trash"></i> Eliminar Ram
                                                     </button>
-
                                             </div>
                                         </div>
                                         @endforeach
@@ -381,12 +380,19 @@
                                 {{-- Procesadores --}}
                                 <div class="component-group">
                                     <h6 class="text-info"><i class="fas fa-microchip"></i> Procesadores (Editables)</h6>
+                                        <button type="button"
+                                        class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="agregarProcesador()">
+                                        <i class="fas fa-plus"></i> Agregar Procesador
+                                    </button>
                                     <hr class="my-2">
-                                    <div id="procesadores-container">
+                                    <div id="procesadores-container"data-procesadores-count="{{ $equipo->procesadores->count() }}">
                                         @foreach($equipo->procesadores as $index => $procesador)
                                         <div class="p-2 mb-2 border rounded bg-white">
+                        
                                             <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Procesador #{{ $index + 1 }} </h6>
                                             <input type="hidden" name="procesadores[{{ $index }}][id]" value="{{ $procesador->id }}">
+                                            <input type="hidden" name="procesadores[{{ $index }}][_delete]" value="">
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label>Marca</label>
@@ -398,93 +404,153 @@
                                                     <input type="text" name="procesadores[{{$index}}][descripcion_tipo]" class="form-control form-control-sm"
                                                         value="{{ old('procesadores.' . $index . '.descripcion_tipo', $procesador->descripcion_tipo ?? '') }}" placeholder="Ej: Core i5-10400F">
                                                 </div> 
+
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger mt-2"
+                                                    onclick="eliminarProcesador(this)">
+                                                    <i class="fas fa-trash"></i> Eliminar Procesador
+                                                </button>
                                             </div>
                                         </div>
                                         @endforeach
+
                                     </div>
                                 </div>
 
                                 {{-- Monitores --}}
                                 <div class="component-group">
                                     <h6 class="text-info"><i class="fas fa-tv"></i> Monitores (Editables)</h6>
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="agregarMonitor()">
+                                        <i class="fas fa-plus"></i> Agregar Procesador
+                                    </button>
                                     <hr class="my-2">
-                                    <div id="monitores-container">
-                                        @foreach($equipo->monitores as $index => $monitor)
+                                   <div id="monitores-container"
+                                    data-monitores-count="{{ $equipo->monitores->count() }}">
+                                    @foreach($equipo->monitores as $index => $monitor)
+                                    <div class="monitor-item">
                                         <div class="p-2 mb-2 border rounded bg-white">
-                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Monitor #{{ $index + 1 }} </h6>
+                                            <h6 class="text-secondary">
+                                                <i class="fas fa-dot-circle"></i> Monitor #{{ $index + 1 }}
+                                            </h6>
+
                                             <input type="hidden" name="monitores[{{ $index }}][id]" value="{{ $monitor->id }}">
+                                            <input type="hidden" name="monitores[{{ $index }}][_delete]" value="">
+
                                             <div class="row">
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-3">
                                                     <label>Marca</label>
-                                                    <input type="text" name="monitores[{{$index}}][marca]" class="form-control form-control-sm"
-                                                        value="{{ old('monitores.' . $index . '.marca', $monitor->marca ?? '') }}" placeholder="Marca">
+                                                    <input type="text"
+                                                        name="monitores[{{ $index }}][marca]"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $monitor->marca }}">
                                                 </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>No. Serial</label>
-                                                    <input type="text" name="monitores[{{$index}}][serial]" class="form-control form-control-sm"
-                                                        value="{{ old('monitores.' . $index . '.serial', $monitor->serial ?? '') }}" placeholder="Serial">
-                                                </div> 
-                                            </div>
 
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-3">
+                                                    <label>Serial</label>
+                                                    <input type="text"
+                                                        name="monitores[{{ $index }}][serial]"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $monitor->serial }}">
+                                                </div>
+
+                                                <div class="form-group col-md-3">
                                                     <label>Pulgadas</label>
-                                                    <input type="text" name="monitores[{{$index}}][escala_pulgadas]" class="form-control form-control-sm"
-                                                        value="{{ old('monitores.' . $index . '.escala_pulgadas', $monitor->escala_pulgadas ?? '') }}" placeholder="Ej: 24">
-                                                </div> 
+                                                    <input type="text"
+                                                        name="monitores[{{ $index }}][escala_pulgadas]"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $monitor->escala_pulgadas }}">
+                                                </div>
 
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-3">
                                                     <label>Interfaz</label>
-                                                    <input type="text" name="monitores[{{$index}}][interface]" class="form-control form-control-sm"
-                                                        value="{{ old('monitores.' . $index . '.interface', $monitor->interface ?? '') }}" placeholder="Ej: HDMI, DP">
-                                                </div> 
+                                                    <input type="text"
+                                                        name="monitores[{{ $index }}][interface]"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $monitor->interface }}">
+                                                </div>
                                             </div>
+
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger mt-2"
+                                                    onclick="eliminarMonitor(this)">
+                                                <i class="fas fa-trash"></i> Eliminar Monitor
+                                            </button>
                                         </div>
-                                        @endforeach 
+                                    </div>
+                                    @endforeach
                                     </div>
                                 </div>
 
                                 {{-- Discos Duros --}}
                                 <div class="component-group">
                                     <h6 class="text-info"><i class="fas fa-hdd"></i> Discos Duros (Editables)</h6>
+
+                                    <button type="button"
+                                        class="btn btn-sm btn-outline-primary mt-2"
+                                        onclick="agregarDiscoDuro()">
+                                        <i class="fas fa-plus"></i> Agregar Disco Duro
+                                    </button>
+
                                     <hr class="my-2">
-                                    <div id="discosDuros-container">
+
+                                    {{-- SOLO discos aquí --}}
+                                    <div id="discosDuros-container" 
+                                    data-discos-count="{{ $equipo->discosDuros->count() }}">
                                         @foreach($equipo->discosDuros as $index => $discoDuro)
-                                        <div class="p-2 mb-2 border rounded bg-white">
-                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Disco Duro #{{ $index + 1 }} </h6>
-                                            <input type="hidden" name="discoDuros[{{ $index }}][id]" value="{{ $discoDuro->id }}">
+                                            <div class="disco-item p-2 mb-2 border rounded bg-white">
+                                                <h6 class="text-secondary">
+                                                    <i class="fas fa-dot-circle"></i> Disco Duro #{{ $index + 1 }}
+                                                </h6>
 
-                                            <div class="row">
-                                                <div class="form-group col-md-4">
-                                                    <label>Capacidad (GB/TB)</label>
-                                                    <input type="text" name="discoDuros[{{$index}}][capacidad]" class="form-control form-control-sm"
-                                                        value="{{ old('discoDuros.' . $index . '.capacidad', $discoDuro->capacidad ?? '') }}" placeholder="Ej: 500GB">
+                                                <input type="hidden" name="discoDuros[{{ $index }}][id]" value="{{ $discoDuro->id }}">
+                                                <input type="hidden" name="discoDuros[{{ $index }}][_delete]" value="">
+
+                                                <div class="row">
+                                                    <div class="form-group col-md-4">
+                                                        <label>Capacidad (GB/TB)</label>
+                                                        <input type="text" name="discoDuros[{{$index}}][capacidad]" class="form-control form-control-sm"
+                                                        value="{{ $discoDuro->capacidad }}"
+                                                        >
+                                                    </div>
+
+                                                    <div class="form-group col-md-4">
+                                                        <label>Tipo (HDD/SSD)</label>
+                                                        <input type="text" name="discoDuros[{{$index}}][tipo_hdd_ssd]" class="form-control form-control-sm"
+                                                        value="{{ $discoDuro->tipo_hdd_ssd }}"
+                                                        >
+                                                    </div>
+
+                                                    <div class="form-group col-md-4">
+                                                        <label>Interface</label>
+                                                        <input type="text" name="discoDuros[{{$index}}][interface]" class="form-control form-control-sm"
+                                                        value="{{ $discoDuro->interface }}"
+                                                        >
+                                                    </div>
                                                 </div>
 
-                                                <div class="form-group col-md-4">
-                                                    <label>Tipo (HDD/SSD) </label>
-                                                    <input type="text" name="discoDuros[{{$index}}][tipo_hdd_ssd]" class="form-control form-control-sm"
-                                                        value="{{ old('discoDuros.' . $index . '.tipo_hdd_ssd', $discoDuro->tipo_hdd_ssd ?? '') }}" placeholder="Ej: SSD">
-                                                </div> 
-                                                
-                                                <div class="form-group col-md-4">
-                                                    <label>Interface </label>
-                                                    <input type="text" name="discoDuros[{{$index}}][interface]" class="form-control form-control-sm"
-                                                        value="{{ old('discoDuros.' . $index . '.interface', $discoDuro->interface ?? '') }}" placeholder="Ej: SATA, NVMe">
-                                                </div>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger mt-2"
+                                                    onclick="eliminarDiscoDuro(this)">
+                                                    <i class="fas fa-trash"></i> Eliminar Disco
+                                                </button>
                                             </div>
-                                        </div>
                                         @endforeach
                                     </div>
                                 </div>
-                            </div>
-                            
-                            {{-- BOTÓN FINAL --}}
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-success btn-lg btn-block">
-                                    <i class="fas fa-database"></i> **Aplicar Cambios y Registrar Historial**
-                                </button>
-                            </div>
+
+                                {{-- BOTÓN FINAL (FUERA DE TODO COMPONENT-GROUP) --}}
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block">
+                                        <i class="fas fa-database"></i> Aplicar Cambios y Registrar Historial
+                                    </button>
+                                </div>
+
+
+
+
+
                         </form>
                     </div> {{-- /card-body --}}
                 </div> {{-- /card --}}
@@ -522,6 +588,9 @@ function agregarPeriferico(){
     // Agregamos la seccion HTML
     const html = `
     <div class="periferico-item">
+        <input type="hidden"
+        name="perifericos[${perifericoIndex}][_delete]"
+        value="">
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
                 <h6 class="text-secondary">
@@ -581,16 +650,15 @@ function eliminarPeriferico(btn) {
 
 
 //RAMS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
-
 const containerRam = document.getElementById('rams-container');
 let ramIndex = parseInt(containerRam.dataset.ramsCount);
-
-
 function agregarRam() {
-
 const containerRam = document.getElementById('rams-container')
     const html = `
     <div class="ram-item">
+        <input type="hidden"
+        name="rams[${ramIndex}][_delete]"
+        value="">
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
                 <i class="fas fa-dot-circle"></i> RAM #${ramIndex + 1}
@@ -660,6 +728,234 @@ function eliminarRam(btn) {
     item.style.display = 'none';
 }
 
+
+//PROCESADOR.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+const containerProcesador = document.getElementById('procesadores-container');
+let procesadorIndex = parseInt(containerProcesador.dataset.procesadoresCount);
+function agregarProcesador() {
+
+    const container = document.getElementById('procesadores-container');
+
+    const html = `
+    <div class="procesador-item">
+        <input type="hidden"
+               name="procesadores[${procesadorIndex}][_delete]"
+               value="">
+
+        <div class="p-2 mb-2 border rounded bg-white">
+            <h6 class="text-secondary">
+                <i class="fas fa-dot-circle"></i> Procesador #${procesadorIndex + 1}
+            </h6>
+
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Marca</label>
+                    <input type="text"
+                           name="procesadores[${procesadorIndex}][marca]"
+                           class="form-control form-control-sm"
+                           placeholder="Ej: Intel, AMD">
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Descripción / Modelo</label>
+                    <input type="text"
+                           name="procesadores[${procesadorIndex}][descripcion_tipo]"
+                           class="form-control form-control-sm"
+                           placeholder="Ej: Core i5-10400F">
+                </div>
+            </div>
+
+            <button type="button"
+                    class="btn btn-sm btn-outline-danger mt-2"
+                    onclick="eliminarProcesador(this)">
+                <i class="fas fa-trash"></i> Eliminar Procesador
+            </button>
+        </div>
+    </div>
+    `;
+    container.insertAdjacentHTML('beforeend', html);
+    procesadorIndex++;
+}
+
+
+
+function eliminarProcesador(btn) {
+    if (!confirm('¿Deseas eliminar este procesador?')) {
+        return;
+    }
+
+    const item = btn.closest('.procesador-item');
+
+    // 1. marcar eliminación
+    const deleteInput = item.querySelector('[name$="[_delete]"]');
+    if (deleteInput) {
+        deleteInput.value = 1;
+    }
+
+    // 2. vaciar inputs visibles
+    item.querySelectorAll('input:not([type="hidden"])')
+        .forEach(input => input.value = '');
+
+    // 3. ocultar visualmente
+    item.style.display = 'none';
+}
+
+
+
+//MONITOR.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+const containerMonitor = document.getElementById('monitores-container');
+let monitorIndex = parseInt(containerMonitor.dataset.monitoresCount);
+
+function agregarMonitor() {
+const container = document.getElementById('monitores-container');
+    const html = `
+    <div class="monitor-item">
+        <input type="hidden"
+               name="monitores[${monitorIndex}][_delete]"
+               value="">
+
+        <div class="p-2 mb-2 border rounded bg-white">
+            <h6 class="text-secondary">
+                <i class="fas fa-dot-circle"></i> Monitor #${monitorIndex + 1}
+            </h6>
+
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label>Marca</label>
+                    <input type="text"
+                           name="monitores[${monitorIndex}][marca]"
+                           class="form-control form-control-sm">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Serial</label>
+                    <input type="text"
+                           name="monitores[${monitorIndex}][serial]"
+                           class="form-control form-control-sm">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Pulgadas</label>
+                    <input type="text"
+                           name="monitores[${monitorIndex}][escala_pulgadas]"
+                           class="form-control form-control-sm">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Interfaz</label>
+                    <input type="text"
+                           name="monitores[${monitorIndex}][interface]"
+                           class="form-control form-control-sm">
+                </div>
+            </div>
+
+            <button type="button"
+                    class="btn btn-sm btn-outline-danger mt-2"
+                    onclick="eliminarMonitor(this)">
+                <i class="fas fa-trash"></i> Eliminar Monitor
+            </button>
+        </div>
+    </div>
+    `;
+
+    containerMonitor.insertAdjacentHTML('beforeend', html);
+    monitorIndex++;
+}
+
+function eliminarMonitor(btn) {
+    if (!confirm('¿Deseas eliminar este monitor?')) {
+        return;
+    }
+
+    const item = btn.closest('.monitor-item');
+
+    const deleteInput = item.querySelector('[name$="[_delete]"]');
+    if (deleteInput) {
+        deleteInput.value = 1;
+    }
+
+    item.querySelectorAll('input:not([type="hidden"])')
+        .forEach(input => input.value = '');
+
+    item.style.display = 'none';
+}
+
+//DISCOS DUROS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+const containerDiscoDuro = document.getElementById('discosDuros-container');
+let discoDuroIndex = parseInt(containerDiscoDuro.dataset.discosCount);
+
+function agregarDiscoDuro() {
+const container = document.getElementById('discosDuros-container');
+    const html = `
+    <div class="disco-item">
+        <input type="hidden"
+               name="discoDuros[${discoDuroIndex}][_delete]"
+               value="">
+
+        <div class="p-2 mb-2 border rounded bg-white">
+            <h6 class="text-secondary">
+                <i class="fas fa-dot-circle"></i> Disco Duro #${discoDuroIndex + 1}
+            </h6>
+
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Capacidad (GB/TB)</label>
+                    <input type="text"
+                           name="discoDuros[${discoDuroIndex}][capacidad]"
+                           class="form-control form-control-sm"
+                           placeholder="Ej: 500GB">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Tipo (HDD/SSD)</label>
+                    <input type="text"
+                           name="discoDuros[${discoDuroIndex}][tipo_hdd_ssd]"
+                           class="form-control form-control-sm"
+                           placeholder="Ej: SSD">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Interface</label>
+                    <input type="text"
+                           name="discoDuros[${discoDuroIndex}][interface]"
+                           class="form-control form-control-sm"
+                           placeholder="Ej: SATA, NVMe">
+                </div>
+            </div>
+
+            <button type="button"
+                    class="btn btn-sm btn-outline-danger mt-2"
+                    onclick="eliminarDiscoDuro(this)">
+                <i class="fas fa-trash"></i> Eliminar Disco
+            </button>
+        </div>
+    </div>
+    `;
+
+    containerDiscoDuro.insertAdjacentHTML('beforeend', html);
+    discoDuroIndex++;
+}
+
+function eliminarDiscoDuro(btn) {
+    if (!confirm('¿Deseas eliminar este disco duro?')) {
+        return;
+    }
+
+    const item = btn.closest('.disco-item');
+
+    // 1. marcar eliminación
+    const deleteInput = item.querySelector('[name$="[_delete]"]');
+    if (deleteInput) {
+        deleteInput.value = 1;
+    }
+
+    // 2. vaciar inputs visibles
+    item.querySelectorAll('input:not([type="hidden"])')
+        .forEach(input => input.value = '');
+
+    // 3. ocultar visualmente
+    item.style.display = 'none';
+}
 
 
     </script>

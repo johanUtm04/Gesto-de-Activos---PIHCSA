@@ -1,15 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
+//Importacion de Modelos
 use App\Models\DiscoDuro;
 use App\Models\Equipo;
 use App\Models\Monitor;
 use App\Models\Ubicacion;
-use App\Models\discos_duros;
 use App\Models\Historial_log;
-use App\Models\Periferico;
 use App\Models\Procesador;
-use App\Models\Ram;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\FlareClient\View;
@@ -18,7 +16,7 @@ use Illuminate\Support\Str;
 
 class EquipoController extends Controller
 {
-    //Function to explain the main table
+    //Funcion para mostrar vista principal 🟦
     public function index()
     {
         session()->forget('wizard_equipo');
@@ -26,13 +24,7 @@ class EquipoController extends Controller
         return view('equipos.index', compact('equipos'));
     }
 
-    //Function to explain the main table
-    public function historial()
-    {
-        return view('equipos.historial');
-    }
-
-    //function to create a new 'equipo'
+    //Funcion para mostrar fomrulario basico 🟦
     public function create()
     {
         session()->forget('wizard_equipo');
@@ -41,10 +33,9 @@ class EquipoController extends Controller
         return view('equipo.wizard.create', compact('usuarios', 'ubicaciones'));
     }
 
-//Funcion para Actualizar registros en la base de datos
-public function store(Request $request, Equipo $equipo)
-{
-    //Validamos cada Uno de ellos de la respuesta que nos de el Usuario
+    //Funcion para mandar datos del formulario del equipo 🟦
+    public function store(Request $request, Equipo $equipo)
+    {
         $request->validate([
             'marca_equipo' => 'nullable|string|max:255',
             'tipo_equipo' => 'required|string|max:255',
@@ -57,10 +48,8 @@ public function store(Request $request, Equipo $equipo)
             'vida_util_estimada' => 'required|string|max:255',
         ]);
 
-        //Lo guardamos en la variable $data
         $data = $request->all();
 
-        //Condicionales en caso de que el usuario no mande esos campos
         if (empty($request->serial)) {
             $data['serial'] = 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
         }
@@ -73,18 +62,18 @@ public function store(Request $request, Equipo $equipo)
             $data['valor_inicial'] = 0;
         }
 
+        //$uuid es un numero unico generado en cada envio y se guarda en la sesion
         $uuid = Str::uuid()->toString();
 
         session()->put('wizard_equipo.uuid', $uuid);
 
-        //Data ya baja solito xd
         session()->put('wizard_equipo.equipo', $data);
 
         return redirect()->route('equipos.wizard-ubicacion', $uuid );
     }
 
 
-    //function to edit a 'equipo'
+    //Funcion para ver la vista de edicion (pantalla dividida) 🟦
     public function edit(Equipo $equipo)
     {
         $usuarios = User::all();
@@ -92,10 +81,10 @@ public function store(Request $request, Equipo $equipo)
         return view('equipos.edit', compact('equipo', 'usuarios', 'ubicaciones'));
     }
 
-//Funcion para actualizar en caso de que el Usuario lo necesecite
+//Funcion para mandar datos del equipos.edit 🟦
 public function update(Request $request, Equipo $equipo)
 {
-    //1-Valores que si o si debemos de leer/obtener
+
     $equipo->update($request->only([
         'marca_equipo',
         'tipo_equipo',
@@ -108,203 +97,245 @@ public function update(Request $request, Equipo $equipo)
         'vida_util_estimada',
     ]));
 
-//2.-Valores Adicionales(En caso de tener)
-if ($request->has('perifericos')) {
 
-    //Por cada periferico 
-    foreach ($request->input('perifericos') as $peripheralData) {
-         
-    //Ignorar perifericos completamente Vacios
-    if (empty(array_filter($peripheralData))) {
-        # code...
-        continue;
-    }
-            //Si tiene ID
-            if (isset($peripheralData['id'])) {
+    /*
+    En caso de que en la edicion se vea afectada una de las tablas
+    extras, entrara en cualquiera de estas condiciones, 
+    ese es el proposito de esta seccion
+    */
+    if ($request->has('perifericos')) {
 
-                $periferico = $equipo->perifericos()
-                ->where('id', $peripheralData['id'])
-                ->first();
+        //1.-Por cada input 'perifericos' recibido lo metemos en una cajita llamada $peripheralData
+        foreach ($request->input('perifericos') as $peripheralData) {
 
+        //2.- Ignorar en caso de que este completamente vacio, es decir, no se edito en lo absoluto
+        if (empty(array_filter($peripheralData))) {
+            continue;
+        }
 
-                if ($periferico) {
+        //3.-Si tiene ID Valido entrasmos aqui
+        if (isset($peripheralData['id'])) {
 
+            //4.-Guardamos la relacion cuando coincida con ese Id
+            $periferico = $equipo->perifericos()->where('id', $peripheralData['id'])->first();
+
+            //5.-Si no esta vacio entramos aqui
+            if ($periferico) {
+
+                //6.-En caso de que el usuario presione el boton de Eliminar entra aqui
                 if (!empty($peripheralData['_delete'])) {
                     $periferico->delete();
                     continue;
                 }
 
-                    //Si no esta vacio y que se llenen Los 2 campos
-                    if (empty($peripheralData['tipo']) && empty($peripheralData['serial'])) {
-                        $periferico->delete(); 
-                    } else {    //Si no estan vacion lo aignamos o bien solo lo actualizamod
-
-                        //Caso contrario solo actualizamos el registro existente
-                        $periferico->update([
-                            'tipo' => $peripheralData['tipo'],
-                            'serial' => $peripheralData['serial'],
-
-                        ]);
-                    }
+                //7.-2da confirmacion, si ambos estan vacios, quiere decir que el usuario lo quiere Eliminar
+                if (empty($peripheralData['tipo']) && empty($peripheralData['serial'])) {
+                    $periferico->delete(); 
+                } else {    
+                    //8.-Si alguno de los 2 tiene datos actualizamos
+                    $periferico->update([
+                    'tipo' => $peripheralData['tipo'],
+                    'serial' => $peripheralData['serial'],
+                    ]);
                 }
-            } 
+            }
+        } 
 
         else {
-            $equipo->perifericos()->create([
-                'tipo' => $peripheralData['tipo'],
-                'serial' => $peripheralData['serial'],
-            ]);
+        $equipo->perifericos()->create([
+        'tipo' => $peripheralData['tipo'],
+        'serial' => $peripheralData['serial'],
+        ]);
         }
 
         } 
     }
 
-//El formualario envio el arreglo de rams
-if ($request->has('rams')) {
-    //Recorremos cada ram enviado por el formulario $peripheralData es como una cajita 
-        foreach ($request->input('rams') as $peripheralData) {
-            
-    //Ignorar rams completamente Vacios
-    if (empty(array_filter($peripheralData))) {
-        # code...
-        continue;
-    }
+    if ($request->has('rams')) {
 
-            // Si la ram tiene un ID, es un registro existente, entramos aqui 
+        foreach ($request->input('rams') as $peripheralData) {
+
+            if (empty(array_filter($peripheralData))) {
+                continue;
+            }
+
             if (isset($peripheralData['id'])) {
 
-                //La guardamos en una variable
-                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
-                //Lo trae de la DB 
                 $ram = $equipo->rams()
-                ->where('id', $peripheralData['id'])
-                ->first();
+                    ->where('id', $peripheralData['id'])
+                    ->first();
 
                 if ($ram) {
 
-                if (!empty($peripheralData['_delete'])) {
-                    $ram->delete();
-                    continue;
-                }
+                    if (!empty($peripheralData['_delete'])) {
+                        $ram->delete();
+                        continue;
+                    }
 
-                    //Si los espacios de la cajita ambos estan vacios 
-                    //la mauqina interpreta que como estan vacios se borraron, los borramos
-                    if (empty($peripheralData['capacidad_gb']) && empty($peripheralData['clock_mhz']) && empty($peripheralData['tipo_chz'])) {
-                        $ram->delete(); 
+                    if (
+                        empty($peripheralData['capacidad_gb']) &&
+                        empty($peripheralData['clock_mhz']) &&
+                        empty($peripheralData['tipo_chz'])
+                    ) {
+                        $ram->delete();
                     } else {
-
-                        //Caso contrario solo actualizamos el registro existente
                         $ram->update([
                             'capacidad_gb' => $peripheralData['capacidad_gb'],
-                            'clock_mhz' => $peripheralData['clock_mhz'],
-                            'tipo_chz' => $peripheralData['tipo_chz'],
+                            'clock_mhz'    => $peripheralData['clock_mhz'],
+                            'tipo_chz'     => $peripheralData['tipo_chz'],
                         ]);
                     }
                 }
-            } 
-
-        else {
-            $equipo->rams()->create([
-            'capacidad_gb' => $peripheralData['capacidad_gb'],
-            'clock_mhz' => $peripheralData['clock_mhz'],
-            'tipo_chz' => $peripheralData['tipo_chz'],
-            ]);
-        }
-
+            } else {
+                $equipo->rams()->create([
+                    'capacidad_gb' => $peripheralData['capacidad_gb'],
+                    'clock_mhz'    => $peripheralData['clock_mhz'],
+                    'tipo_chz'     => $peripheralData['tipo_chz'],
+                ]);
+            }
         }
     }
 
-if ($request->has('procesadores')) {
+
+
+    if ($request->has('procesadores')) {
+
         foreach ($request->input('procesadores') as $peripheralData) {
-            
+
+            if (empty(array_filter($peripheralData))) {
+                continue;
+            }
+
             if (isset($peripheralData['id'])) {
 
-                $procesador = Procesador::find($peripheralData['id']);
-                
-            
+                $procesador = $equipo->procesadores()
+                    ->where('id', $peripheralData['id'])
+                    ->first();
+
                 if ($procesador) {
-                    
-                    if (empty($peripheralData['marca']) && empty($peripheralData['descripcion_tipo'])) {
-                        $procesador->delete(); 
-                    } else {
 
-                        //Caso contrario solo actualizamos el registro existente
+                    if (!empty($peripheralData['_delete'])) {
+                        $procesador->delete();
+                        continue;
+                    }
+
+                    if (
+                        empty($peripheralData['marca']) &&
+                        empty($peripheralData['descripcion_tipo'])
+                    ) {
+                        $procesador->delete();
+                    } else {
                         $procesador->update([
-                            'descripcion_tipo' => $peripheralData['descripcion_tipo'],
-                            'marca' => $peripheralData['marca'],
+                            'marca'             => $peripheralData['marca'],
+                            'descripcion_tipo'  => $peripheralData['descripcion_tipo'],
                         ]);
                     }
                 }
-            } 
+            } else {
+                $equipo->procesadores()->create([
+                    'marca'            => $peripheralData['marca'],
+                    'descripcion_tipo' => $peripheralData['descripcion_tipo'],
+                ]);
+            }
         }
     }
 
 
-//Si se envia el arreglo de monitores
-if ($request->has('monitores')) {
-    //recorremos ese arreglo
+    if ($request->has('monitores')) {
+
         foreach ($request->input('monitores') as $peripheralData) {
-            
-            // Si la ram tiene un ID, es un registro existente, entramos aqui 
-            if (isset($peripheralData['id'])) {
-                //La guardamos en una variable
-                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
-                //Lo trae de la DB 
-                $monitor = Monitor::find($peripheralData['id']);
-                
-            
-                if ($monitor) {
-                    //Si los espacios de la cajita ambos estan vacios 
-                    //la mauqina interpreta que como estan vacios se borraron, los borramos
-                    if (empty($peripheralData['marca']) && empty($peripheralData['serial']) && empty($peripheralData['escala_pulgadas']) && empty($peripheralData['interface'])) {
-                        $monitor->delete(); 
-                    } else {
 
-                        //Caso contrario solo actualizamos el registro existente
+            if (empty(array_filter($peripheralData))) {
+                continue;
+            }
+
+            if (isset($peripheralData['id'])) {
+
+                $monitor = $equipo->monitores()
+                    ->where('id', $peripheralData['id'])
+                    ->first();
+
+                if ($monitor) {
+
+                    if (!empty($peripheralData['_delete'])) {
+                        $monitor->delete();
+                        continue;
+                    }
+
+                    if (
+                        empty($peripheralData['marca']) &&
+                        empty($peripheralData['serial']) &&
+                        empty($peripheralData['escala_pulgadas']) &&
+                        empty($peripheralData['interface'])
+                    ) {
+                        $monitor->delete();
+                    } else {
                         $monitor->update([
-                            'marca' => $peripheralData['marca'],
-                            'serial' => $peripheralData['serial'],
-                            'escala_pulgadas' => $peripheralData['escala_pulgadas'],
-                            'interface' => $peripheralData['interface'],
+                            'marca'            => $peripheralData['marca'],
+                            'serial'           => $peripheralData['serial'],
+                            'escala_pulgadas'  => $peripheralData['escala_pulgadas'],
+                            'interface'        => $peripheralData['interface'],
                         ]);
                     }
                 }
-            } 
+            } else {
+                $equipo->monitores()->create([
+                    'marca'           => $peripheralData['marca'],
+                    'serial'          => $peripheralData['serial'],
+                    'escala_pulgadas' => $peripheralData['escala_pulgadas'],
+                    'interface'       => $peripheralData['interface'],
+                ]);
+            }
         }
     }
+
 
     
-//Si se envia el arreglo de monitores
-if ($request->has('discoDuros')) {
-    //recorremos ese arreglo
-        foreach ($request->input('discoDuros') as $peripheralData) {
-            
-            // Si la ram tiene un ID, es un registro existente, entramos aqui 
-            if (isset($peripheralData['id'])) {
-                //La guardamos en una variable
-                //Buscamos en el modelo la que coincida con ese ID ejemplo 10
-                //Lo trae de la DB 
-                $discoDuro = DiscoDuro::find($peripheralData['id']);
-                
-            
-                if ($discoDuro) {
-                    //Si los espacios de la cajita ambos estan vacios 
-                    //la mauqina interpreta que como estan vacios se borraron, los borramos
-                    if (empty($peripheralData['capacidad']) && empty($peripheralData['tipo_hdd_ssd']) && empty($peripheralData['interface'])) {
-                        $discoDuro->delete(); 
-                    } else {
+    if ($request->has('discoDuros')) {
 
-                        //Caso contrario solo actualizamos el registro existente
+        foreach ($request->input('discoDuros') as $peripheralData) {
+
+            if (empty(array_filter($peripheralData))) {
+                continue;
+            }
+
+            if (isset($peripheralData['id'])) {
+
+                $discoDuro = $equipo->discosDuros()
+                    ->where('id', $peripheralData['id'])
+                    ->first();
+
+                if ($discoDuro) {
+
+                    if (!empty($peripheralData['_delete'])) {
+                        $discoDuro->delete();
+                        continue;
+                    }
+
+                    if (
+                        empty($peripheralData['capacidad']) &&
+                        empty($peripheralData['tipo_hdd_ssd']) &&
+                        empty($peripheralData['interface'])
+                    ) {
+                        $discoDuro->delete();
+                    } else {
                         $discoDuro->update([
-                            'capacidad' => $peripheralData['capacidad'],
-                            'tipo_hdd_ssd' => $peripheralData['tipo_hdd_ssd'],
-                            'interface' => $peripheralData['interface'],
+                            'capacidad'     => $peripheralData['capacidad'],
+                            'tipo_hdd_ssd'  => $peripheralData['tipo_hdd_ssd'],
+                            'interface'     => $peripheralData['interface'],
                         ]);
                     }
                 }
-            } 
+            } else {
+                $equipo->discosDuros()->create([
+                    'capacidad'    => $peripheralData['capacidad'],
+                    'tipo_hdd_ssd' => $peripheralData['tipo_hdd_ssd'],
+                    'interface'    => $peripheralData['interface'],
+                ]);
+            }
         }
     }
+
 
     $equipo->update($request->all());
 
