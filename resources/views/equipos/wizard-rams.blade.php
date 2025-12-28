@@ -2,7 +2,6 @@
 
 @section('title', 'Wizard | Asignar RAM')
 
-
 @section('css')
 <style>
     .wizard-steps {
@@ -38,6 +37,9 @@
     .fieldset-group i.fa-3x {
         opacity: 0.25;
     }
+
+    /* Estilo para los campos de "Otro" que inician ocultos */
+    .custom-input { display: none; margin-top: 10px; }
 </style>
 @stop
 
@@ -59,8 +61,7 @@
     </div>
 </div>
 
-
-{{-- WIZARD SIMULACION --}}
+{{-- WIZARD SIMULACION (TUS MIGAJAS) --}}
 <div class="card mb-3">
     <div class="card-body p-3">
         <div class="d-flex justify-content-between text-center wizard-steps">
@@ -79,16 +80,14 @@
             </a>
             </div>
 
-            <div class="wizard-step active">
+            <div class="wizard-step completed">
             <a href="{{ route('equipos.wizard-monitores', $uuid) }}">
                 <i class="fas fa-tv"></i>
                 <div>Monitor</div>
             </a>
             </div>
 
-
-
-            <div class="wizard-step active">
+            <div class="wizard-step completed">
             <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}">
                 <i class="fas fa-hdd"></i>
                 <div>Disco Duro</div>
@@ -102,7 +101,6 @@
             </a>
             </div>
 
-
             <div class="wizard-step">
                 <i class="fas fa-flag-checkered"></i>
                 <div>Final</div>
@@ -113,14 +111,12 @@
 </div>
 @stop
 
-
 @section('content')
 
 <div class="card card-outline card-warning">
     <div class="card-body">
 
-        <form action="{{ route('equipos.wizard.saveRam', $uuid) }}" method="POST">
-           
+        <form action="{{ route('equipos.wizard.saveRam', $uuid) }}" method="POST" id="ramForm">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -137,9 +133,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Tipo de Activo:</strong> {{ $equipo['tipo_equipo'] ?? '—' }} <br>
                     <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
-                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong> {{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -147,28 +143,52 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="capacidad_gb">
-                                <i class="fas fa-tachometer-alt"></i> Capacidad (GB)
-                            </label>
-                            <input type="text"
-                                   id="capacidad_gb"
-                                   name="capacidad_gb"
-                                   class="form-control"
-                                   value="{{ old('capacidad_gb', session('wizard_equipo.ram.capacidad_gb')) }}"
-                                   placeholder="Ej. 8, 16, 32">
+                            <label for="capacidad_select"><i class="fas fa-tachometer-alt"></i> Capacidad (GB)</label>
+                            <select id="capacidad_select" class="form-control">
+                                <option value="" selected>Seleccione capacidad</option>
+                                <option value="4">4 GB</option>
+                                <option value="8">8 GB</option>
+                                <option value="12">12 GB</option>
+                                <option value="16">16 GB</option>
+                                <option value="32">32 GB</option>
+                                <option value="64">64 GB</option>
+                                <option value="128">128 GB</option>
+                                <option value="OTRO_VALOR">-- Otra capacidad (Escribir) --</option>
+                            </select>
+                            
+                            <input type="text" name="capacidad_gb" id="capacidad_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. 2, 24, etc."
+                                   value="{{ old('capacidad_gb', session('wizard_equipo.ram.capacidad_gb')) }}">
                             @error('capacidad_gb') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="clock_mhz">
-                                <i class="fas fa-clock"></i> Velocidad (MHz)
-                            </label>
-                            <input type="text"
-                                   id="clock_mhz"
-                                   name="clock_mhz"
-                                   class="form-control"
-                                   value="{{ old('clock_mhz', session('wizard_equipo.ram.clock_mhz')) }}"
-                                   placeholder="Ej. 2666, 3200">
+                            <label for="clock_select"><i class="fas fa-clock"></i> Velocidad (MHz)</label>
+                            <select id="clock_select" class="form-control">
+                                <option value="">Seleccione velocidad</option>
+                                <optgroup label="DDR3">
+                                    <option value="1333">1333 MHz</option>
+                                    <option value="1600">1600 MHz</option>
+                                </optgroup>
+                                <optgroup label="DDR4">
+                                    <option value="2133">2133 MHz</option>
+                                    <option value="2400">2400 MHz</option>
+                                    <option value="2666">2666 MHz</option>
+                                    <option value="3200">3200 MHz</option>
+                                </optgroup>
+                                <optgroup label="DDR5">
+                                    <option value="4800">4800 MHz</option>
+                                    <option value="5200">5200 MHz</option>
+                                    <option value="6000">6000 MHz</option>
+                                </optgroup>
+                                <option value="OTRO_VALOR">-- Otra velocidad (Escribir) --</option>
+                            </select>
+
+                            <input type="text" name="clock_mhz" id="clock_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. 1066, 3600"
+                                   value="{{ old('clock_mhz', session('wizard_equipo.ram.clock_mhz')) }}">
                             @error('clock_mhz') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -178,15 +198,21 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="tipo_chz">
-                                <i class="fas fa-sitemap"></i> Tipo / Generación
-                            </label>
-                            <input type="text"
-                                   id="tipo_chz"
-                                   name="tipo_chz"
-                                   class="form-control"
-                                   value="{{ old('tipo_chz', session('wizard_equipo.ram.tipo_chz')) }}"
-                                   placeholder="Ej. DDR4, DDR5">
+                            <label for="tipo_select"><i class="fas fa-sitemap"></i> Tipo / Generación</label>
+                            <select id="tipo_select" class="form-control">
+                                <option value="">Seleccione tipo</option>
+                                <option value="DDR3">DDR3</option>
+                                <option value="DDR3L">DDR3L (Low Voltage)</option>
+                                <option value="DDR4">DDR4</option>
+                                <option value="DDR5">DDR5</option>
+                                <option value="LPDDR4">LPDDR4 (Integrada)</option>
+                                <option value="OTRO_VALOR">-- Otro tipo (Escribir) --</option>
+                            </select>
+
+                            <input type="text" name="tipo_chz" id="tipo_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. SDRAM, DDR2"
+                                   value="{{ old('tipo_chz', session('wizard_equipo.ram.tipo_chz')) }}">
                             @error('tipo_chz') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -196,15 +222,14 @@
             </fieldset>
 
             {{-- FOOTER --}}
-            <div class="text-right mt-4">
-                <button type="submit" class="btn btn-warning btn-lg">
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ route('equipos.wizard-periferico', $uuid) }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-fast-forward"></i> Omitir RAM
+                </a>
+
+                <button type="submit" class="btn btn-warning btn-lg px-5">
                     <i class="fas fa-arrow-right"></i> Continuar
                 </button>
-
-                <!-- <a href="{{ route('equipos.wizard-periferico', $uuid) }}"
-                   class="btn btn-outline-secondary btn-lg">
-                    Omitir este paso
-                </a> -->
             </div>
 
         </form>
@@ -214,4 +239,37 @@
 
 @stop
 
+@section('js')
+<script>
+$(document).ready(function() {
+    /**
+     * Sincronización de Selects e Inputs manuales
+     */
+    function setupSelectOtro(selectId, inputId) {
+        const $select = $(`#${selectId}`);
+        const $input = $(`#${inputId}`);
 
+        $select.on('change', function() {
+            if ($(this).val() === 'OTRO_VALOR') {
+                $input.fadeIn().focus();
+            } else {
+                $input.hide().val($(this).val()); 
+            }
+        });
+
+        // Sincronización al cargar página (Old values / Session)
+        let initialVal = $input.val();
+        if(initialVal && !$select.find(`option[value='${initialVal}']`).length && initialVal !== '') {
+            $select.val('OTRO_VALOR');
+            $input.show();
+        } else if (initialVal !== '') {
+            $select.val(initialVal);
+        }
+    }
+
+    setupSelectOtro('capacidad_select', 'capacidad_input');
+    setupSelectOtro('clock_select', 'clock_input');
+    setupSelectOtro('tipo_select', 'tipo_input');
+});
+</script>
+@stop

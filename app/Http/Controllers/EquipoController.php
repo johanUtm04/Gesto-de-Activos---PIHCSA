@@ -420,4 +420,14 @@ public function update(Request $request, Equipo $equipo)
         return redirect()->route('equipos.index', ['page' => $page])
         ->with('danger', 'Equipo Eliminado correctamente');
     }
+
+public function show($id) // Cambiamos el nombre de la variable de uuid a id para que sea claro
+{
+
+    $equipo = Equipo::with(['usuario', 'ubicacion', 'monitores', 'discosDuros', 'rams', 'perifericos', 'procesadores'])
+                    ->findOrFail($id); 
+
+    return view('equipos.detalles', compact('equipo'));
+}
+
 }

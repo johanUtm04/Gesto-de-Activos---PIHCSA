@@ -278,54 +278,61 @@
                                 {{-- Periféricos --}}
                                 <div class="component-group">
                                     <h6 class="text-info"><i class="fas fa-keyboard"></i> Periféricos (Editables)</h6>
-
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary mt-2"
                                         onclick="agregarPeriferico()">
                                         <i class="fas fa-plus"></i> Agregar periférico0
                                     </button>
-
                                     <hr class="my-2">
                                     <div id="perifericos-container"
                                      data-perifericos-count="{{ $equipo->perifericos->count() }}">
-                                        @foreach($equipo->perifericos as $index => $periferico)
-                                        <div class="periferico-item">
-                                        <div class="p-2 mb-2 border rounded bg-white">
-                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
-                                            <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
-                                            <input type="hidden" name="perifericos[{{ $index }}][_delete]" value="">
+@foreach($equipo->perifericos as $index => $periferico)
+<div class="periferico-item p-2 mb-2 border rounded bg-white">
+    <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
+    <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
+    <input type="hidden" name="perifericos[{{ $index }}][_delete]" value="">
 
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label>Tipo / Marca</label>
-                                                        <input type="text" name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm"
-                                                        placeholder="Ej: Teclado, Monitor, Mouse"
-                                                        value="{{ old('perifericos.' . $index . '.tipo', $periferico->tipo ?? '') }}">
-                                                    </div>
-                                                </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Tipo / Categoría</label>
+            <select name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm">
+                <option value="">Seleccione tipo...</option>
+                <option value="Teclado" {{ $periferico->tipo == 'Teclado' ? 'selected' : '' }}>Teclado</option>
+                <option value="Mouse" {{ $periferico->tipo == 'Mouse' ? 'selected' : '' }}>Mouse</option>
+                <option value="Monitor" {{ $periferico->tipo == 'Monitor' ? 'selected' : '' }}>Monitor</option>
+                <option value="Diadema" {{ $periferico->tipo == 'Diadema' ? 'selected' : '' }}>Diadema</option>
+                <option value="Cámara" {{ $periferico->tipo == 'Cámara' ? 'selected' : '' }}>Cámara</option>
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Marca</label>
+            <select name="perifericos[{{ $index }}][marca]" class="form-control form-control-sm">
+                <option value="">Seleccione marca...</option>
+                <option value="Logitech" {{ $periferico->marca == 'Logitech' ? 'selected' : '' }}>Logitech</option>
+                <option value="HP" {{ $periferico->marca == 'HP' ? 'selected' : '' }}>HP</option>
+                <option value="Dell" {{ $periferico->marca == 'Dell' ? 'selected' : '' }}>Dell</option>
+                <option value="Genius" {{ $periferico->marca == 'Genius' ? 'selected' : '' }}>Genius</option>
+                <option value="Otro" {{ $periferico->marca == 'Otro' ? 'selected' : '' }}>Otro</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row mt-2">
+        <div class="form-group col-md-12">
+            <label>Serial</label>
+            <input type="text" name="perifericos[{{ $index }}][serial]" 
+                   class="form-control form-control-sm" 
+                   placeholder="Serial del periférico"
+                   value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
+        </div>
+    </div>
 
-                                        
-                                                <div class="form-group col-md-6">
-                                                    <label>Serial</label>
-                                                    <input type="text" name="perifericos[{{ $index }}][serial]" class="form-control form-control-sm"
-                                                        placeholder="Serial del periférico"
-                                                        value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
-                                                </div>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-danger mt-2"
-                                                        onclick="eliminarPeriferico(this)">
-                                                        <i class="fas fa-plus"></i> Eliminar periférico
-                                                    </button>
-
-                                                </div>
-
-
-                                        </div>
-                                        @endforeach
+    <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarPeriferico(this)">
+        <i class="fas fa-trash"></i> Eliminar periférico
+    </button>
+</div>
+@endforeach
                                     </div>
-
-
-
                                 </div>
 
                                 {{-- Rams --}}
@@ -342,38 +349,49 @@
                                     <hr class="my-2">
                                     <div id="rams-container"
                                      data-rams-count="{{ $equipo->rams->count() }}">
-                    
-                                        @foreach($equipo->rams as $index => $ram)
-                                        <div class="ram-item">
-                                        <div class="p-2 mb-2 border rounded bg-white">
-                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> RAM #{{ $index + 1 }} </h6>
-                                            <input type="hidden" name="rams[{{ $index }}][id]" value="{{ $ram->id }}">
-                                            <input type="hidden" name="rams[{{ $index }}][_delete]" value="">
-                                            <div class="row">
-                                                <div class="form-group col-md-4">
-                                                    <label>Capacidad (GB)</label>
-                                                    <input type="text" name="rams[{{$index}}][capacidad_gb]" class="form-control form-control-sm"
-                                                        value="{{ old('rams.' . $index . '.capacidad_gb', $ram->capacidad_gb ?? '') }}" placeholder="Ej: 8">
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label>Clock (MHz)</label>
-                                                    <input type="text" name="rams[{{$index}}][clock_mhz]" class="form-control form-control-sm"
-                                                        value="{{ old('rams.' . $index . '.clock_mhz', $ram->clock_mhz ?? '') }}" placeholder="Ej: 3200">
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label>Tipo (DDR)</label>
-                                                    <input type="text" name="rams[{{$index}}][tipo_chz]" class="form-control form-control-sm"
-                                                        value="{{ old('rams.' . $index . '.tipo_chz', $ram->tipo_chz ?? '') }}" placeholder="Ej: DDR4">
-                                                </div> 
+                                    @foreach($equipo->rams as $index => $ram)
+                                    <div class="ram-item p-2 mb-2 border rounded bg-white">
+                                        <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> RAM #{{ $index + 1 }} </h6>
+                                        <input type="hidden" name="rams[{{ $index }}][id]" value="{{ $ram->id }}">
+                                        <input type="hidden" name="rams[{{ $index }}][_delete]" value="">
+                                        
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label>Capacidad (GB)</label>
+                                                <select name="rams[{{ $index }}][capacidad_gb]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach([2, 4, 8, 16, 32, 64] as $cap)
+                                                        <option value="{{ $cap }}" {{ (old('rams.'.$index.'.capacidad_gb', $ram->capacidad_gb) == $cap) ? 'selected' : '' }}>{{ $cap }} GB</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group col-md-4">
+                                                <label>Clock (MHz)</label>
+                                                <select name="rams[{{ $index }}][clock_mhz]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach([1600, 2133, 2400, 2666, 3000, 3200, 3600, 4800, 5200, 5600, 6000] as $freq)
+                                                        <option value="{{ $freq }}" {{ (old('rams.'.$index.'.clock_mhz', $ram->clock_mhz) == $freq) ? 'selected' : '' }}>{{ $freq }} MHz</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-danger mt-2"
-                                                        onclick="eliminarRam(this)">
-                                                        <i class="fas fa-trash"></i> Eliminar Ram
-                                                    </button>
+                                            <div class="form-group col-md-4">
+                                                <label>Tipo (DDR)</label>
+                                                <select name="rams[{{ $index }}][tipo_chz]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach(['DDR3', 'DDR3L', 'DDR4', 'DDR5', 'LPDDR4', 'LPDDR5'] as $tipo)
+                                                        <option value="{{ $tipo }}" {{ (old('rams.'.$index.'.tipo_chz', $ram->tipo_chz) == $tipo) ? 'selected' : '' }}>{{ $tipo }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
-                                        @endforeach
+
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarRam(this)">
+                                            <i class="fas fa-trash"></i> Eliminar Ram
+                                        </button>
+                                    </div>
+                                    @endforeach
                                     </div>
                                 </div>
 
@@ -387,33 +405,38 @@
                                     </button>
                                     <hr class="my-2">
                                     <div id="procesadores-container"data-procesadores-count="{{ $equipo->procesadores->count() }}">
-                                        @foreach($equipo->procesadores as $index => $procesador)
-                                        <div class="p-2 mb-2 border rounded bg-white">
-                        
-                                            <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Procesador #{{ $index + 1 }} </h6>
-                                            <input type="hidden" name="procesadores[{{ $index }}][id]" value="{{ $procesador->id }}">
-                                            <input type="hidden" name="procesadores[{{ $index }}][_delete]" value="">
-                                            <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label>Marca</label>
-                                                    <input type="text" name="procesadores[{{$index}}][marca]" class="form-control form-control-sm"
-                                                        value="{{ old('procesadores.' . $index . '.marca', $procesador->marca ?? '') }}" placeholder="Ej: Intel, AMD">
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>Descripción / Modelo</label>
-                                                    <input type="text" name="procesadores[{{$index}}][descripcion_tipo]" class="form-control form-control-sm"
-                                                        value="{{ old('procesadores.' . $index . '.descripcion_tipo', $procesador->descripcion_tipo ?? '') }}" placeholder="Ej: Core i5-10400F">
-                                                </div> 
-
-                                                <button type="button"
-                                                    class="btn btn-sm btn-outline-danger mt-2"
-                                                    onclick="eliminarProcesador(this)">
-                                                    <i class="fas fa-trash"></i> Eliminar Procesador
-                                                </button>
+                                    @foreach($equipo->procesadores as $index => $procesador)
+                                    <div class="procesador-item p-2 mb-2 border rounded bg-white">
+                                        <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Procesador #{{ $index + 1 }} </h6>
+                                        <input type="hidden" name="procesadores[{{ $index }}][id]" value="{{ $procesador->id }}">
+                                        <input type="hidden" name="procesadores[{{ $index }}][_delete]" value="">
+                                        
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label>Marca</label>
+                                                <select name="procesadores[{{ $index }}][marca]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="Intel" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'Intel') ? 'selected' : '' }}>Intel</option>
+                                                    <option value="AMD" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'AMD') ? 'selected' : '' }}>AMD</option>
+                                                    <option value="Apple" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'Apple') ? 'selected' : '' }}>Apple (M1/M2/M3)</option>
+                                                    <option value="Otro" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'Otro') ? 'selected' : '' }}>Otro</option>
+                                                </select>
                                             </div>
+                                            
+                                            <div class="form-group col-md-8">
+                                                <label>Descripción / Modelo</label>
+                                                <input type="text" name="procesadores[{{$index}}][descripcion_tipo]" 
+                                                    class="form-control form-control-sm"
+                                                    value="{{ old('procesadores.' . $index . '.descripcion_tipo', $procesador->descripcion_tipo ?? '') }}" 
+                                                    placeholder="Ej: Core i5-10400F / Ryzen 5 5600G">
+                                            </div> 
                                         </div>
-                                        @endforeach
 
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarProcesador(this)">
+                                            <i class="fas fa-trash"></i> Eliminar Procesador
+                                        </button>
+                                    </div>
+                                    @endforeach
                                     </div>
                                 </div>
 
@@ -429,55 +452,53 @@
                                    <div id="monitores-container"
                                     data-monitores-count="{{ $equipo->monitores->count() }}">
                                     @foreach($equipo->monitores as $index => $monitor)
-                                    <div class="monitor-item">
-                                        <div class="p-2 mb-2 border rounded bg-white">
-                                            <h6 class="text-secondary">
-                                                <i class="fas fa-dot-circle"></i> Monitor #{{ $index + 1 }}
-                                            </h6>
+                                    <div class="monitor-item p-2 mb-2 border rounded bg-white">
+                                        <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Monitor #{{ $index + 1 }}</h6>
 
-                                            <input type="hidden" name="monitores[{{ $index }}][id]" value="{{ $monitor->id }}">
-                                            <input type="hidden" name="monitores[{{ $index }}][_delete]" value="">
+                                        <input type="hidden" name="monitores[{{ $index }}][id]" value="{{ $monitor->id }}">
+                                        <input type="hidden" name="monitores[{{ $index }}][_delete]" value="">
 
-                                            <div class="row">
-                                                <div class="form-group col-md-3">
-                                                    <label>Marca</label>
-                                                    <input type="text"
-                                                        name="monitores[{{ $index }}][marca]"
-                                                        class="form-control form-control-sm"
-                                                        value="{{ $monitor->marca }}">
-                                                </div>
-
-                                                <div class="form-group col-md-3">
-                                                    <label>Serial</label>
-                                                    <input type="text"
-                                                        name="monitores[{{ $index }}][serial]"
-                                                        class="form-control form-control-sm"
-                                                        value="{{ $monitor->serial }}">
-                                                </div>
-
-                                                <div class="form-group col-md-3">
-                                                    <label>Pulgadas</label>
-                                                    <input type="text"
-                                                        name="monitores[{{ $index }}][escala_pulgadas]"
-                                                        class="form-control form-control-sm"
-                                                        value="{{ $monitor->escala_pulgadas }}">
-                                                </div>
-
-                                                <div class="form-group col-md-3">
-                                                    <label>Interfaz</label>
-                                                    <input type="text"
-                                                        name="monitores[{{ $index }}][interface]"
-                                                        class="form-control form-control-sm"
-                                                        value="{{ $monitor->interface }}">
-                                                </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <label>Marca</label>
+                                                <select name="monitores[{{ $index }}][marca]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach(['HP', 'Dell', 'Lenovo', 'LG', 'Samsung', 'Acer', 'Asus', 'ViewSonic', 'BenQ'] as $marca)
+                                                        <option value="{{ $marca }}" {{ $monitor->marca == $marca ? 'selected' : '' }}>{{ $marca }}</option>
+                                                    @endforeach
+                                                    <option value="Otra" {{ !in_array($monitor->marca, ['HP', 'Dell', 'Lenovo', 'LG', 'Samsung', 'Acer', 'Asus', 'ViewSonic', 'BenQ']) ? 'selected' : '' }}>Otra</option>
+                                                </select>
                                             </div>
 
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger mt-2"
-                                                    onclick="eliminarMonitor(this)">
-                                                <i class="fas fa-trash"></i> Eliminar Monitor
-                                            </button>
+                                            <div class="form-group col-md-3">
+                                                <label>Serial</label>
+                                                <input type="text" name="monitores[{{ $index }}][serial]" class="form-control form-control-sm" value="{{ $monitor->serial }}" placeholder="Serial único">
+                                            </div>
+
+                                            <div class="form-group col-md-3">
+                                                <label>Pulgadas</label>
+                                                <select name="monitores[{{ $index }}][escala_pulgadas]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach(['17', '19', '20', '21', '22', '24', '27', '32'] as $pulg)
+                                                        <option value="{{ $pulg }}" {{ $monitor->escala_pulgadas == $pulg ? 'selected' : '' }}>{{ $pulg }}"</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-md-3">
+                                                <label>Interfaz</label>
+                                                <select name="monitores[{{ $index }}][interface]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach(['HDMI', 'DisplayPort (DP)', 'VGA', 'DVI', 'USB-C'] as $inter)
+                                                        <option value="{{ $inter }}" {{ $monitor->interface == $inter ? 'selected' : '' }}>{{ $inter }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
+
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarMonitor(this)">
+                                            <i class="fas fa-trash"></i> Eliminar Monitor
+                                        </button>
                                     </div>
                                     @endforeach
                                     </div>
@@ -498,45 +519,52 @@
                                     {{-- SOLO discos aquí --}}
                                     <div id="discosDuros-container" 
                                     data-discos-count="{{ $equipo->discosDuros->count() }}">
-                                        @foreach($equipo->discosDuros as $index => $discoDuro)
-                                            <div class="disco-item p-2 mb-2 border rounded bg-white">
-                                                <h6 class="text-secondary">
-                                                    <i class="fas fa-dot-circle"></i> Disco Duro #{{ $index + 1 }}
-                                                </h6>
+                                    @foreach($equipo->discosDuros as $index => $discoDuro)
+                                    <div class="disco-item p-2 mb-2 border rounded bg-white">
+                                        <h6 class="text-secondary">
+                                            <i class="fas fa-dot-circle"></i> Disco Duro #{{ $index + 1 }}
+                                        </h6>
 
-                                                <input type="hidden" name="discoDuros[{{ $index }}][id]" value="{{ $discoDuro->id }}">
-                                                <input type="hidden" name="discoDuros[{{ $index }}][_delete]" value="">
+                                        <input type="hidden" name="discoDuros[{{ $index }}][id]" value="{{ $discoDuro->id }}">
+                                        <input type="hidden" name="discoDuros[{{ $index }}][_delete]" value="">
 
-                                                <div class="row">
-                                                    <div class="form-group col-md-4">
-                                                        <label>Capacidad (GB/TB)</label>
-                                                        <input type="text" name="discoDuros[{{$index}}][capacidad]" class="form-control form-control-sm"
-                                                        value="{{ $discoDuro->capacidad }}"
-                                                        >
-                                                    </div>
-
-                                                    <div class="form-group col-md-4">
-                                                        <label>Tipo (HDD/SSD)</label>
-                                                        <input type="text" name="discoDuros[{{$index}}][tipo_hdd_ssd]" class="form-control form-control-sm"
-                                                        value="{{ $discoDuro->tipo_hdd_ssd }}"
-                                                        >
-                                                    </div>
-
-                                                    <div class="form-group col-md-4">
-                                                        <label>Interface</label>
-                                                        <input type="text" name="discoDuros[{{$index}}][interface]" class="form-control form-control-sm"
-                                                        value="{{ $discoDuro->interface }}"
-                                                        >
-                                                    </div>
-                                                </div>
-
-                                                <button type="button"
-                                                    class="btn btn-sm btn-outline-danger mt-2"
-                                                    onclick="eliminarDiscoDuro(this)">
-                                                    <i class="fas fa-trash"></i> Eliminar Disco
-                                                </button>
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <label>Capacidad</label>
+                                                <select name="discoDuros[{{$index}}][capacidad]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach(['120GB', '240GB', '480GB', '500GB', '1TB', '2TB', '4TB'] as $cap)
+                                                        <option value="{{ $cap }}" {{ $discoDuro->capacidad == $cap ? 'selected' : '' }}>{{ $cap }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                        @endforeach
+
+                                            <div class="form-group col-md-4">
+                                                <label>Tipo</label>
+                                                <select name="discoDuros[{{$index}}][tipo_hdd_ssd]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="SSD" {{ $discoDuro->tipo_hdd_ssd == 'SSD' ? 'selected' : '' }}>SSD (Sólido)</option>
+                                                    <option value="HDD" {{ $discoDuro->tipo_hdd_ssd == 'HDD' ? 'selected' : '' }}>HDD (Mecánico)</option>
+                                                    <option value="M.2 NVMe" {{ $discoDuro->tipo_hdd_ssd == 'M.2 NVMe' ? 'selected' : '' }}>M.2 NVMe</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label>Interface</label>
+                                                <select name="discoDuros[{{$index}}][interface]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    <option value="SATA" {{ $discoDuro->interface == 'SATA' ? 'selected' : '' }}>SATA</option>
+                                                    <option value="PCIe" {{ $discoDuro->interface == 'PCIe' ? 'selected' : '' }}>PCIe</option>
+                                                    <option value="USB" {{ $discoDuro->interface == 'USB' ? 'selected' : '' }}>USB (Externo)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarDiscoDuro(this)">
+                                            <i class="fas fa-trash"></i> Eliminar Disco
+                                        </button>
+                                    </div>
+                                    @endforeach
                                     </div>
                                 </div>
 
@@ -577,37 +605,51 @@
 
 //Condicion 
 
-//PERIFERICOS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+// PERIFERICOS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
 const container = document.getElementById('perifericos-container');
 let perifericoIndex = parseInt(container.dataset.perifericosCount);
-function agregarPeriferico(){
 
-    //Tomamos el container de los perifericos
-    const container = document.getElementById('perifericos-container')
+function agregarPeriferico() {
+    // Tomamos el container de los perifericos
+    const container = document.getElementById('perifericos-container');
 
-    // Agregamos la seccion HTML
+    // Agregamos la seccion HTML con los SELECTS en lugar de INPUTS
     const html = `
     <div class="periferico-item">
-        <input type="hidden"
-        name="perifericos[${perifericoIndex}][_delete]"
-        value="">
+        <input type="hidden" name="perifericos[${perifericoIndex}][_delete]" value="">
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
-                <h6 class="text-secondary">
                 <i class="fas fa-dot-circle"></i> Periférico #${perifericoIndex + 1}
-                </h6>
             </h6>
 
             <div class="row">
-                <div class="form-group col-md-6">
-                    <label>Tipo / Marca</label>
-                    <input type="text"
-                           name="perifericos[${perifericoIndex}][tipo]"
-                           class="form-control form-control-sm"
-                           placeholder="Ej: Teclado, Mouse, Monitor">
+                <div class="form-group col-md-4">
+                    <label>Tipo</label>
+                    <select name="perifericos[${perifericoIndex}][tipo]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="Teclado">Teclado</option>
+                        <option value="Mouse">Mouse</option>
+                        <option value="Monitor">Monitor</option>
+                        <option value="Diadema">Diadema</option>
+                        <option value="Cámara">Cámara</option>
+                        <option value="Otro">Otro</option>
+                    </select>
                 </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
+                    <label>Marca</label>
+                    <select name="perifericos[${perifericoIndex}][marca]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="Logitech">Logitech</option>
+                        <option value="HP">HP</option>
+                        <option value="Dell">Dell</option>
+                        <option value="Genius">Genius</option>
+                        <option value="Lenovo">Lenovo</option>
+                        <option value="Generico">Genérico</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
                     <label>Serial</label>
                     <input type="text"
                            name="perifericos[${perifericoIndex}][serial]"
@@ -615,19 +657,19 @@ function agregarPeriferico(){
                            placeholder="Serial del periférico">
                 </div>
             </div>
+
             <button type="button"
                 class="btn btn-sm btn-outline-danger mt-2"
                 onclick="eliminarPeriferico(this)">
-                <i class="fas fa-plus"></i> Eliminar periférico
+                <i class="fas fa-trash-alt"></i> Eliminar periférico
             </button>
         </div>
-
-        </div>
-        `;
+    </div>
+    `;
 
     container.insertAdjacentHTML('beforeend', html);
     perifericoIndex++;
-};
+}
 
 //Eliminar Periferico
 function eliminarPeriferico(btn) {
@@ -649,47 +691,51 @@ function eliminarPeriferico(btn) {
 //PERIFERICOS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
 
 
-//RAMS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
+// RAMS.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
 const containerRam = document.getElementById('rams-container');
 let ramIndex = parseInt(containerRam.dataset.ramsCount);
+
 function agregarRam() {
-const containerRam = document.getElementById('rams-container')
+    const containerRam = document.getElementById('rams-container');
     const html = `
     <div class="ram-item">
-        <input type="hidden"
-        name="rams[${ramIndex}][_delete]"
-        value="">
+        <input type="hidden" name="rams[${ramIndex}][_delete]" value="">
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
                 <i class="fas fa-dot-circle"></i> RAM #${ramIndex + 1}
             </h6>
 
-            <!-- input oculto para control de eliminación -->
-   
-
             <div class="row">
                 <div class="form-group col-md-4">
                     <label>Capacidad (GB)</label>
-                    <input type="text"
-                        name="rams[${ramIndex}][capacidad_gb]"
-                        class="form-control form-control-sm"
-                        placeholder="Ej: 8">
+                    <select name="rams[${ramIndex}][capacidad_gb]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="4">4 GB</option>
+                        <option value="8">8 GB</option>
+                        <option value="16">16 GB</option>
+                        <option value="32">32 GB</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-4">
                     <label>Clock (MHz)</label>
-                    <input type="text"
-                        name="rams[${ramIndex}][clock_mhz]"
-                        class="form-control form-control-sm"
-                        placeholder="Ej: 3200">
+                    <select name="rams[${ramIndex}][clock_mhz]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="2400">2400 MHz</option>
+                        <option value="2666">2666 MHz</option>
+                        <option value="3200">3200 MHz</option>
+                        <option value="4800">4800 MHz</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-4">
                     <label>Tipo (DDR)</label>
-                    <input type="text"
-                        name="rams[${ramIndex}][tipo_chz]"
-                        class="form-control form-control-sm"
-                        placeholder="Ej: DDR4">
+                    <select name="rams[${ramIndex}][tipo_chz]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="DDR3">DDR3</option>
+                        <option value="DDR4">DDR4</option>
+                        <option value="DDR5">DDR5</option>
+                    </select>
                 </div>
             </div>
 
@@ -732,15 +778,13 @@ function eliminarRam(btn) {
 //PROCESADOR.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-
 const containerProcesador = document.getElementById('procesadores-container');
 let procesadorIndex = parseInt(containerProcesador.dataset.procesadoresCount);
-function agregarProcesador() {
 
+function agregarProcesador() {
     const container = document.getElementById('procesadores-container');
 
     const html = `
     <div class="procesador-item">
-        <input type="hidden"
-               name="procesadores[${procesadorIndex}][_delete]"
-               value="">
+        <input type="hidden" name="procesadores[${procesadorIndex}][_delete]" value="">
 
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
@@ -748,20 +792,23 @@ function agregarProcesador() {
             </h6>
 
             <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label>Marca</label>
-                    <input type="text"
-                           name="procesadores[${procesadorIndex}][marca]"
-                           class="form-control form-control-sm"
-                           placeholder="Ej: Intel, AMD">
+                    <select name="procesadores[${procesadorIndex}][marca]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="Intel">Intel</option>
+                        <option value="AMD">AMD</option>
+                        <option value="Apple">Apple</option>
+                        <option value="Otro">Otro</option>
+                    </select>
                 </div>
 
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-8">
                     <label>Descripción / Modelo</label>
                     <input type="text"
                            name="procesadores[${procesadorIndex}][descripcion_tipo]"
                            class="form-control form-control-sm"
-                           placeholder="Ej: Core i5-10400F">
+                           placeholder="Ej: Core i7-12700K">
                 </div>
             </div>
 
@@ -807,12 +854,10 @@ const containerMonitor = document.getElementById('monitores-container');
 let monitorIndex = parseInt(containerMonitor.dataset.monitoresCount);
 
 function agregarMonitor() {
-const container = document.getElementById('monitores-container');
+    const container = document.getElementById('monitores-container');
     const html = `
     <div class="monitor-item">
-        <input type="hidden"
-               name="monitores[${monitorIndex}][_delete]"
-               value="">
+        <input type="hidden" name="monitores[${monitorIndex}][_delete]" value="">
 
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
@@ -822,43 +867,53 @@ const container = document.getElementById('monitores-container');
             <div class="row">
                 <div class="form-group col-md-3">
                     <label>Marca</label>
-                    <input type="text"
-                           name="monitores[${monitorIndex}][marca]"
-                           class="form-control form-control-sm">
+                    <select name="monitores[${monitorIndex}][marca]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="HP">HP</option>
+                        <option value="Dell">Dell</option>
+                        <option value="Lenovo">Lenovo</option>
+                        <option value="LG">LG</option>
+                        <option value="Samsung">Samsung</option>
+                        <option value="Acer">Acer</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-3">
                     <label>Serial</label>
-                    <input type="text"
-                           name="monitores[${monitorIndex}][serial]"
-                           class="form-control form-control-sm">
+                    <input type="text" name="monitores[${monitorIndex}][serial]" class="form-control form-control-sm" placeholder="Serial">
                 </div>
 
                 <div class="form-group col-md-3">
                     <label>Pulgadas</label>
-                    <input type="text"
-                           name="monitores[${monitorIndex}][escala_pulgadas]"
-                           class="form-control form-control-sm">
+                    <select name="monitores[${monitorIndex}][escala_pulgadas]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="19">19"</option>
+                        <option value="21">21"</option>
+                        <option value="22">22"</option>
+                        <option value="24">24"</option>
+                        <option value="27">27"</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-3">
                     <label>Interfaz</label>
-                    <input type="text"
-                           name="monitores[${monitorIndex}][interface]"
-                           class="form-control form-control-sm">
+                    <select name="monitores[${monitorIndex}][interface]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="HDMI">HDMI</option>
+                        <option value="DisplayPort (DP)">DisplayPort (DP)</option>
+                        <option value="VGA">VGA</option>
+                    </select>
                 </div>
             </div>
 
-            <button type="button"
-                    class="btn btn-sm btn-outline-danger mt-2"
-                    onclick="eliminarMonitor(this)">
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarMonitor(this)">
                 <i class="fas fa-trash"></i> Eliminar Monitor
             </button>
         </div>
     </div>
     `;
 
-    containerMonitor.insertAdjacentHTML('beforeend', html);
+    container.insertAdjacentHTML('beforeend', html);
     monitorIndex++;
 }
 
@@ -885,12 +940,10 @@ const containerDiscoDuro = document.getElementById('discosDuros-container');
 let discoDuroIndex = parseInt(containerDiscoDuro.dataset.discosCount);
 
 function agregarDiscoDuro() {
-const container = document.getElementById('discosDuros-container');
+    const container = document.getElementById('discosDuros-container');
     const html = `
     <div class="disco-item">
-        <input type="hidden"
-               name="discoDuros[${discoDuroIndex}][_delete]"
-               value="">
+        <input type="hidden" name="discoDuros[${discoDuroIndex}][_delete]" value="">
 
         <div class="p-2 mb-2 border rounded bg-white">
             <h6 class="text-secondary">
@@ -899,33 +952,37 @@ const container = document.getElementById('discosDuros-container');
 
             <div class="row">
                 <div class="form-group col-md-4">
-                    <label>Capacidad (GB/TB)</label>
-                    <input type="text"
-                           name="discoDuros[${discoDuroIndex}][capacidad]"
-                           class="form-control form-control-sm"
-                           placeholder="Ej: 500GB">
+                    <label>Capacidad</label>
+                    <select name="discoDuros[${discoDuroIndex}][capacidad]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="240GB">240GB</option>
+                        <option value="480GB">480GB</option>
+                        <option value="1TB">1TB</option>
+                        <option value="2TB">2TB</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label>Tipo (HDD/SSD)</label>
-                    <input type="text"
-                           name="discoDuros[${discoDuroIndex}][tipo_hdd_ssd]"
-                           class="form-control form-control-sm"
-                           placeholder="Ej: SSD">
+                    <label>Tipo</label>
+                    <select name="discoDuros[${discoDuroIndex}][tipo_hdd_ssd]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="SSD">SSD</option>
+                        <option value="HDD">HDD</option>
+                        <option value="M.2 NVMe">M.2 NVMe</option>
+                    </select>
                 </div>
 
                 <div class="form-group col-md-4">
                     <label>Interface</label>
-                    <input type="text"
-                           name="discoDuros[${discoDuroIndex}][interface]"
-                           class="form-control form-control-sm"
-                           placeholder="Ej: SATA, NVMe">
+                    <select name="discoDuros[${discoDuroIndex}][interface]" class="form-control form-control-sm">
+                        <option value="">Seleccione...</option>
+                        <option value="SATA">SATA</option>
+                        <option value="PCIe">PCIe</option>
+                    </select>
                 </div>
             </div>
 
-            <button type="button"
-                    class="btn btn-sm btn-outline-danger mt-2"
-                    onclick="eliminarDiscoDuro(this)">
+            <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarDiscoDuro(this)">
                 <i class="fas fa-trash"></i> Eliminar Disco
             </button>
         </div>

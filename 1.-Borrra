@@ -131,3 +131,75 @@ Pausa para retroalimentación
 Revisión del avance con el ingeniero.
 
 Ajustes según comentarios.
+
+
+
+USE gestion_activos_pihcsa;
+
+-- ===============================
+-- ESTRUCTURA DE TABLAS (DDL)
+-- ===============================
+-- Muestra columnas, índices y llaves foráneas reales
+
+SHOW CREATE TABLE discos_duros\G
+SHOW CREATE TABLE equipos\G
+SHOW CREATE TABLE historiales_log\G
+SHOW CREATE TABLE migrations\G
+SHOW CREATE TABLE monitores\G
+SHOW CREATE TABLE perifericos\G
+SHOW CREATE TABLE personal_access_tokens\G
+SHOW CREATE TABLE procesadores\G
+SHOW CREATE TABLE products\G
+SHOW CREATE TABLE rams\G
+SHOW CREATE TABLE ubicaciones\G
+SHOW CREATE TABLE users\G
+
+
+-- ===============================
+-- DESCRIPCIÓN RÁPIDA DE COLUMNAS
+-- ===============================
+-- Más legible para humanos
+
+DESCRIBE discos_duros;
+DESCRIBE equipos;
+DESCRIBE historiales_log;
+DESCRIBE migrations;
+DESCRIBE monitores;
+DESCRIBE perifericos;
+DESCRIBE personal_access_tokens;
+DESCRIBE procesadores;
+DESCRIBE products;
+DESCRIBE rams;
+DESCRIBE ubicaciones;
+DESCRIBE users;
+
+
+-- ===============================
+-- LLAVES FORÁNEAS (FK)
+-- ===============================
+-- Vista clara de relaciones entre tablas
+
+SELECT 
+    TABLE_NAME,
+    COLUMN_NAME,
+    CONSTRAINT_NAME,
+    REFERENCED_TABLE_NAME,
+    REFERENCED_COLUMN_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'gestion_activos_pihcsa'
+  AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY TABLE_NAME;
+
+
+-- ===============================
+-- ÍNDICES
+-- ===============================
+SHOW INDEX FROM discos_duros;
+SHOW INDEX FROM equipos;
+SHOW INDEX FROM historiales_log;
+SHOW INDEX FROM monitores;
+SHOW INDEX FROM perifericos;
+SHOW INDEX FROM procesadores;
+SHOW INDEX FROM rams;
+SHOW INDEX FROM ubicaciones;
+SHOW INDEX FROM users;

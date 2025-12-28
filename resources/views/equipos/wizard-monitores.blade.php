@@ -1,4 +1,3 @@
-
 @extends('adminlte::page')
 
 @section('title', 'Wizard | Asignar Monitor')
@@ -38,6 +37,9 @@
     .fieldset-group i.fa-3x {
         opacity: 0.25;
     }
+
+    /* Estilo para los campos de "Otro" que inician ocultos */
+    .custom-input { display: none; margin-top: 10px; }
 </style>
 @stop
 
@@ -59,7 +61,7 @@
     </div>
 </div>
 
-{{-- WIZARD SIMULACION --}}
+{{-- WIZARD SIMULACION (TUS MIGAJAS REINTEGRADAS) --}}
 <div class="card mb-3">
     <div class="card-body p-3">
         <div class="d-flex justify-content-between text-center wizard-steps">
@@ -100,7 +102,7 @@
 <div class="card card-outline card-warning">
     <div class="card-body">
 
-        <form action="{{ route('equipos.wizard.saveMonitor', $uuid) }}" method="POST">
+        <form action="{{ route('equipos.wizard.saveMonitor', $uuid) }}" method="POST" id="monitorForm">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -117,9 +119,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Tipo de Activo:</strong> {{ $equipo['tipo_equipo'] ?? '—' }} <br>
                     <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
-                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong> {{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -127,15 +129,30 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="marca">
-                                <i class="fas fa-tag"></i> Marca
-                            </label>
-                            <input type="text"
-                                   id="marca"
-                                   name="marca"
-                                   class="form-control"
-                                    value="{{ old('marca', session('wizard_equipo.monitor.marca')) }}"
-                                   placeholder="Ej. Samsung, LG">
+                            <label for="marca_select"><i class="fas fa-tag"></i> Marca</label>
+                            <select id="marca_select" class="form-control">
+                                <option value="" selected>Seleccione la marca</option>
+                                <optgroup label="Cómputo">
+                                    <option value="Dell">Dell</option>
+                                    <option value="HP">HP</option>
+                                    <option value="Lenovo">Lenovo</option>
+                                    <option value="Samsung">Samsung</option>
+                                    <option value="LG">LG</option>
+                                </optgroup>
+                                <optgroup label="Especializadas">
+                                    <option value="Asus">Asus</option>
+                                    <option value="Acer">Acer</option>
+                                    <option value="BenQ">BenQ</option>
+                                    <option value="ViewSonic">ViewSonic</option>
+                                </optgroup>
+                                <option value="OTRO_VALOR">-- Otra Marca (Escribir) --</option>
+                            </select>
+                            
+                            {{-- Input real para la marca --}}
+                            <input type="text" name="marca" id="marca_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Escriba la marca aquí..."
+                                   value="{{ old('marca', session('wizard_equipo.monitor.marca')) }}">
                             @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -158,15 +175,22 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="escala_pulgadas">
-                                <i class="fas fa-ruler-combined"></i> Tamaño (pulgadas)
-                            </label>
-                            <input type="text"
-                                   id="escala_pulgadas"
-                                   name="escala_pulgadas"
-                                   class="form-control"
-                                   value="{{ old('escala_pulgadas', session('wizard_equipo.monitor.escala_pulgadas')) }}"
-                                   placeholder="Ej. 24, 27, 32">
+                            <label for="pulgadas_select"><i class="fas fa-ruler-combined"></i> Tamaño (pulgadas)</label>
+                            <select id="pulgadas_select" class="form-control">
+                                <option value="">Seleccione tamaño</option>
+                                <option value="19">19"</option>
+                                <option value="20">20"</option>
+                                <option value="22">22"</option>
+                                <option value="24">24"</option>
+                                <option value="27">27"</option>
+                                <option value="OTRO_VALOR">-- Otro tamaño (Escribir) --</option>
+                            </select>
+                            
+                            {{-- Input real para pulgadas --}}
+                            <input type="text" name="escala_pulgadas" id="pulgadas_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej: 15.6 o 32"
+                                   value="{{ old('escala_pulgadas', session('wizard_equipo.monitor.escala_pulgadas')) }}">
                             @error('escala_pulgadas') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -174,12 +198,14 @@
                             <label for="interface">
                                 <i class="fas fa-plug"></i> Interfaz
                             </label>
-                            <input type="text"
-                                   id="interface"
-                                   name="interface"
-                                   class="form-control"
-                                   value="{{ old('interface', session('wizard_equipo.monitor.interface')) }}"
-                                   placeholder="HDMI, DisplayPort, VGA">
+                            <select name="interface" id="interface" class="form-control">
+                                <option value="">Seleccione interfaz</option>
+                                <option {{ old('interface', session('wizard_equipo.monitor.interface')) == 'HDMI' ? 'selected' : '' }}>HDMI</option>
+                                <option {{ old('interface', session('wizard_equipo.monitor.interface')) == 'DisplayPort' ? 'selected' : '' }}>DisplayPort</option>
+                                <option {{ old('interface', session('wizard_equipo.monitor.interface')) == 'VGA' ? 'selected' : '' }}>VGA</option>
+                                <option {{ old('interface', session('wizard_equipo.monitor.interface')) == 'DVI' ? 'selected' : '' }}>DVI</option>
+                                <option {{ old('interface', session('wizard_equipo.monitor.interface')) == 'USB-C' ? 'selected' : '' }}>USB-C</option>
+                            </select>
                             @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -189,15 +215,14 @@
             </fieldset>
 
             {{-- FOOTER --}}
-            <div class="text-right mt-4">
-                <button type="submit" class="btn btn-warning btn-lg">
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-fast-forward"></i> Omitir paso
+                </a>
+
+                <button type="submit" class="btn btn-warning btn-lg px-5">
                     <i class="fas fa-arrow-right"></i> Continuar
                 </button>
-
-                <!-- <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}"
-                   class="btn btn-outline-secondary btn-lg">
-                    Omitir TODO este paso
-                </a> -->
             </div>
 
         </form>
@@ -205,4 +230,36 @@
     </div>
 </div>
 
+@stop
+
+@section('js')
+<script>
+$(document).ready(function() {
+    function setupSelectOtro(selectId, inputId) {
+        const $select = $(`#${selectId}`);
+        const $input = $(`#${inputId}`);
+
+        $select.on('change', function() {
+            if ($(this).val() === 'OTRO_VALOR') {
+                $input.fadeIn().focus();
+                if($input.val() === '') $input.val(''); 
+            } else {
+                $input.hide().val($(this).val()); 
+            }
+        });
+
+        // Sincronización inicial
+        let initialVal = $input.val();
+        if(initialVal && !$select.find(`option[value='${initialVal}']`).length) {
+            $select.val('OTRO_VALOR');
+            $input.show();
+        } else if (initialVal !== '') {
+            $select.val(initialVal);
+        }
+    }
+
+    setupSelectOtro('marca_select', 'marca_input');
+    setupSelectOtro('pulgadas_select', 'pulgadas_input');
+});
+</script>
 @stop

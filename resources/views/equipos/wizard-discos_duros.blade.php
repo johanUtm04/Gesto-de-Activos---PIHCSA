@@ -37,6 +37,9 @@
     .fieldset-group i.fa-3x {
         opacity: 0.25;
     }
+
+    /* Estilo para los campos de "Otro" que inician ocultos */
+    .custom-input { display: none; margin-top: 10px; }
 </style>
 @stop
 
@@ -58,7 +61,7 @@
     </div>
 </div>
 
-{{-- WIZARD SIMULACION --}}
+{{-- WIZARD SIMULACION (MIGAJAS MANTENIDAS) --}}
 <div class="card mb-3">
     <div class="card-body p-3">
         <div class="d-flex justify-content-between text-center wizard-steps">
@@ -77,14 +80,12 @@
             </a>
             </div>
 
-            <div class="wizard-step active">
+            <div class="wizard-step completed">
             <a href="{{ route('equipos.wizard-monitores', $uuid) }}">
                 <i class="fas fa-tv"></i>
                 <div>Monitor</div>
             </a>
             </div>
-
-
 
             <div class="wizard-step active">
             <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}">
@@ -92,7 +93,6 @@
                 <div>Disco Duro</div>
             </a>
             </div>
-
 
             <div class="wizard-step">
                 <i class="fas fa-flag-checkered"></i>
@@ -109,7 +109,7 @@
 <div class="card card-outline card-info">
     <div class="card-body">
 
-        <form action="{{ route('equipos.wizard.saveDiscoduro', $uuid) }}" method="POST">
+        <form action="{{ route('equipos.wizard.saveDiscoduro', $uuid) }}" method="POST" id="discoForm">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -126,9 +126,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Tipo de Activo:</strong> {{ $equipo['tipo_equipo'] ?? '—' }} <br>
                     <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
-                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong> {{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -136,28 +136,47 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="capacidad">
-                                <i class="fas fa-archive"></i> Capacidad
-                            </label>
-                            <input type="text"
-                                   id="capacidad"
-                                   name="capacidad"
-                                   class="form-control"
-                                   value="{{ old('capacidad', session('wizard_equipo.disco_duro.capacidad')) }}"
-                                   placeholder="Ej. 256GB, 512GB, 1TB">
+                            <label for="capacidad_select"><i class="fas fa-archive"></i> Capacidad</label>
+                            <select id="capacidad_select" class="form-control">
+                                <option value="" selected>Seleccione capacidad</option>
+                                <optgroup label="Unidades GB">
+                                    <option value="120GB">120GB</option>
+                                    <option value="240GB">240GB</option>
+                                    <option value="256GB">256GB</option>
+                                    <option value="480GB">480GB</option>
+                                    <option value="500GB">500GB</option>
+                                    <option value="512GB">512GB</option>
+                                </optgroup>
+                                <optgroup label="Unidades TB">
+                                    <option value="1TB">1TB</option>
+                                    <option value="2TB">2TB</option>
+                                    <option value="4TB">4TB</option>
+                                </optgroup>
+                                <option value="OTRO_VALOR">-- Otra capacidad (Escribir) --</option>
+                            </select>
+                            
+                            <input type="text" name="capacidad" id="capacidad_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. 128GB o 10TB"
+                                   value="{{ old('capacidad', session('wizard_equipo.disco_duro.capacidad')) }}">
                             @error('capacidad') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="tipo_hdd_ssd">
-                                <i class="fas fa-memory"></i> Tipo
-                            </label>
-                            <input type="text"
-                                   id="tipo_hdd_ssd"
-                                   name="tipo_hdd_ssd"
-                                   class="form-control"
-                                   value="{{ old('tipo_hdd_ssd', session('wizard_equipo.disco_duro.tipo_hdd_ssd') ) }}"
-                                   placeholder="SSD, NVMe, HDD">
+                            <label for="tipo_select"><i class="fas fa-memory"></i> Tipo de Disco</label>
+                            <select id="tipo_select" class="form-control">
+                                <option value="">Seleccione tipo</option>
+                                <option value="SSD">SSD (Sólido)</option>
+                                <option value="HDD">HDD (Mecánico)</option>
+                                <option value="M.2 NVMe">M.2 NVMe (Alto rendimiento)</option>
+                                <option value="M.2 SATA">M.2 SATA</option>
+                                <option value="OTRO_VALOR">-- Otro tipo (Escribir) --</option>
+                            </select>
+                            
+                            <input type="text" name="tipo_hdd_ssd" id="tipo_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Escriba el tipo de disco..."
+                                   value="{{ old('tipo_hdd_ssd', session('wizard_equipo.disco_duro.tipo_hdd_ssd')) }}">
                             @error('tipo_hdd_ssd') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -167,15 +186,21 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="interface">
-                                <i class="fas fa-plug"></i> Interfaz
-                            </label>
-                            <input type="text"
-                                   id="interface"
-                                   name="interface"
-                                   class="form-control"
-                                   value="{{ old('interface', session('wizard_equipo.disco_duro.interface')) }}"
-                                   placeholder="SATA III, PCIe, M.2">
+                            <label for="interface_select"><i class="fas fa-plug"></i> Interfaz</label>
+                            <select id="interface_select" class="form-control">
+                                <option value="">Seleccione interfaz</option>
+                                <option value="SATA III">SATA III</option>
+                                <option value="PCIe Gen 3">PCIe Gen 3</option>
+                                <option value="PCIe Gen 4">PCIe Gen 4</option>
+                                <option value="SAS">SAS (Servidor)</option>
+                                <option value="USB 3.0 / Externo">USB 3.0 / Externo</option>
+                                <option value="OTRO_VALOR">-- Otra interfaz (Escribir) --</option>
+                            </select>
+                            
+                            <input type="text" name="interface" id="interface_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. IDE, SCSI, etc."
+                                   value="{{ old('interface', session('wizard_equipo.disco_duro.interface')) }}">
                             @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -185,15 +210,14 @@
             </fieldset>
 
             {{-- FOOTER --}}
-            <div class="text-right mt-4">
-                <button type="submit" class="btn btn-info btn-lg">
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ route('equipos.wizard-ram', $uuid) }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-fast-forward"></i> Omitir Almacenamiento
+                </a>
+
+                <button type="submit" class="btn btn-info btn-lg px-5">
                     <i class="fas fa-arrow-right"></i> Continuar
                 </button>
-<!-- 
-                <a href="{{ route('equipos.wizard-ram', $uuid) }}"
-                   class="btn btn-outline-secondary btn-lg">
-                    Omitir
-                </a> -->
             </div>
 
         </form>
@@ -201,4 +225,39 @@
     </div>
 </div>
 
+@stop
+
+@section('js')
+<script>
+$(document).ready(function() {
+    /**
+     * Función para sincronizar Selects con Inputs de "Otro"
+     */
+    function setupSelectOtro(selectId, inputId) {
+        const $select = $(`#${selectId}`);
+        const $input = $(`#${inputId}`);
+
+        $select.on('change', function() {
+            if ($(this).val() === 'OTRO_VALOR') {
+                $input.fadeIn().focus();
+            } else {
+                $input.hide().val($(this).val()); 
+            }
+        });
+
+        // Al cargar (por si hay errores de validación o datos en sesión)
+        let initialVal = $input.val();
+        if(initialVal && !$select.find(`option[value='${initialVal}']`).length && initialVal !== '') {
+            $select.val('OTRO_VALOR');
+            $input.show();
+        } else if (initialVal !== '') {
+            $select.val(initialVal);
+        }
+    }
+
+    setupSelectOtro('capacidad_select', 'capacidad_input');
+    setupSelectOtro('tipo_select', 'tipo_input');
+    setupSelectOtro('interface_select', 'interface_input');
+});
+</script>
 @stop

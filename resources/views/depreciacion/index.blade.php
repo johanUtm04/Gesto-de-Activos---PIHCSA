@@ -4,225 +4,238 @@
 
 @section('css')
 <style>
+    /* --- Estética de Tabla Premium (Gris Financiero) --- */
+    .table-depreciacion {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
     .table-depreciacion thead th {
-        background-color: #f8f9fa;
-        color: #6c757d;
-        font-weight: 700;
+        background-color: #f8f9fa; /* Gris muy claro */
+        color: #495057;
+        font-weight: 800;
         border-bottom: 3px solid #6c757d;
-        vertical-align: middle;
-        padding: 10px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        padding: 15px;
+        border-top: none;
     }
 
     .table-depreciacion tbody td {
-        vertical-align: middle;
-        font-size: 16px;
+        vertical-align: middle; 
+        padding: 15px;
+        font-size: 15px;
+        color: #495057;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .table-depreciacion tbody tr:hover {
+        background-color: rgba(108, 117, 125, 0.03) !important;
+        transition: all 0.2s ease;
     }
 
     .secondary-data {
-        color: #6c757d;
+        color: #888; 
         font-size: 0.85em;
-        display: block;
+        display: block; 
+        margin-top: 2px;
     }
 
-    .valor-actual {
+    /* Estilos específicos para valores financieros */
+    .valor-inicial-label {
         font-weight: 700;
-        color: #198754;
+        color: #2c3e50;
     }
 
-    .valor-depreciado {
-        color: #dc3545;
+    .vida-util-badge {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 4px 8px;
+        border-radius: 6px;
         font-weight: 600;
+        font-size: 0.85rem;
     }
 </style>
 @stop
 
 @section('content_header')
-<div class="d-flex justify-content-between align-items-center mb-2">
+<div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h1 class="mb-0">
-            <i class="fas fa-chart-line text-secondary"></i> Depreciación de Activos
+        <h1 class="text-dark font-weight-bold">
+            <i class="fas fa-chart-line text-secondary mr-2"></i>Depreciación de Activos
         </h1>
-        <small class="text-muted">
-            Análisis financiero y valor actual de activos TI
-        </small>
+        <p class="text-muted mb-0">Análisis financiero y valor actual de activos TI</p>
     </div>
-
     <div>
-        <a href="{{ route('depreciacion.pdf') }}" class="btn btn-outline-secondary btn-sm">
-            <i class="fas fa-file-pdf"></i> Exportar PDF
+        <a href="{{ route('depreciacion.pdf') }}" class="btn btn-outline-secondary shadow-sm px-3">
+            <i class="fas fa-file-pdf mr-1"></i> Exportar PDF
         </a>
     </div>
 </div>
 @stop
 
-
-<div class="modal fade" id="modalDepreciacion" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header bg-secondary text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-chart-line"></i> Depreciación en tiempo real
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal">
-                    &times;
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <p><strong>Activo: </strong><span id="d-activo"></span></p>
-                <p><strong>Valor inicial:</strong> $<span id="d-valor"></span></p>
-                <p><strong>Años transcurridos:</strong> <span id="d-añosTrasncurridos"></span></p>
-                <p><strong>Depreciación acumulada:</strong> 
-                    <span class="text-danger">$<span id="d-depreciado"></span></span>
-                </p>
-                <hr>
-                <p class="h5">
-                    <strong>Valor actual:</strong> 
-                    <span class="text-success">$<span id="d-actual"></span></span>
-                </p>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
 @section('content')
 
-<div class="card">
-    <div class="card-body">
+<div class="card shadow-sm border-0" style="border-radius: 12px;">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-depreciacion">
+            <table class="table table-hover table-depreciacion mb-0">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th><i class="fas fa-desktop"></i> Activo</th>
-                        <th><i class="fas fa-user"></i> Usuario</th>
-                        <th><i class="fas fa-map-marker-alt"></i> Ubicación</th>
-                        <th><i class="fas fa-dollar-sign"></i> Valor Inicial</th>
-                        <th><i class="fas fa-calendar-alt"></i> Fecha Adq.</th>
-                        <th><i class="fas fa-hourglass-half"></i> Vida Útil</th>
-                        <th class="text-center">
-                        <i class="fas fa-bolt"></i>
-                        Calcular Depreciacion
-                        <i class="fas fa-chart-pie ml-1"></i>
-                        </th>
+                        <th style="width: 60px" class="text-center">ID</th>
+                        <th><i class="fas fa-desktop mr-1"></i> Activo</th>
+                        <th><i class="fas fa-user mr-1"></i> Usuario</th>
+                        <th><i class="fas fa-map-marker-alt mr-1"></i> Ubicación</th>
+                        <th><i class="fas fa-dollar-sign mr-1"></i> Valor Inicial</th>
+                        <th><i class="fas fa-calendar-alt mr-1"></i> Adquisición</th>
+                        <th><i class="fas fa-hourglass-half mr-1"></i> Vida Útil</th>
+                        <th class="text-center">Calcular</th>
                     </tr>
                 </thead>
-
                 <tbody>
                 @forelse($equipos as $equipo)
                     <tr>
-                        <td>{{ $equipo->id }}</td>
+                        <td class="text-center font-weight-bold text-muted">{{ $equipo->id }}</td>
 
                         {{-- ACTIVO --}}
                         <td>
-                            <strong>{{ $equipo->marca_equipo }}</strong>
+                            <strong class="text-dark">{{ $equipo->marca_equipo }}</strong>
                             <span class="secondary-data">
-                                {{ $equipo->tipo_equipo }} · Serial: {{ $equipo->serial ?? 'N/A' }}
+                                {{ $equipo->tipo_equipo }} · <small class="text-muted">SN: {{ $equipo->serial ?? 'N/A' }}</small>
                             </span>
                         </td>
 
                         {{-- USUARIO --}}
                         <td>
-                            {{ $equipo->usuario->name ?? 'Sin asignar' }}
+                            <div class="text-muted small">
+                                <i class="fas fa-user-circle mr-1"></i>
+                                {{ $equipo->usuario->name ?? 'Sin asignar' }}
+                            </div>
                         </td>
 
                         {{-- UBICACIÓN --}}
                         <td>
-                            {{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}
+                            <div class="text-muted small">
+                                <i class="fas fa-building mr-1"></i>
+                                {{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}
+                            </div>
                         </td>
 
                         {{-- VALOR INICIAL --}}
-                        <td>
+                        <td class="valor-inicial-label">
                             ${{ number_format($equipo->valor_inicial, 2) }}
                         </td>
 
                         {{-- FECHA --}}
-                        <td>
-                            {{ \Carbon\Carbon::parse($equipo->fecha_adquisicion)->format('d/m/Y') }}
+                        <td class="text-muted">
+                            {{ \Carbon\Carbon::parse($equipo->fecha_adquisicion)->format('d/M/Y') }}
                         </td>
 
                         {{-- VIDA ÚTIL --}}
-                        <td>
-                            {{ $equipo->vida_util_estimada }}
+                        <td class="text-center">
+                            <span class="vida-util-badge border">
+                                {{ $equipo->vida_util_estimada }} años
+                            </span>
                         </td>
 
-                        <!-- BOTON PARA CALCULAR LA DEPRECIACION -->
+                        {{-- ACCIÓN --}}
                         <td class="text-center">
-                            <button class="btn btn-outline-secondary btn-sm btn-depreciar"
+                            <button class="btn btn-sm btn-outline-info shadow-sm btn-depreciar"
                                 data-marca="{{$equipo->marca_equipo}}"
                                 data-valor="{{ $equipo->valor_inicial }}"
                                 data-fecha="{{ $equipo->fecha_adquisicion }}"
                                 data-vida="{{ $equipo->vida_util_estimada }}"
-                                title="Calcular depreciación en tiempo real">
-                                <i class="fas fa-search-dollar"></i>
+                                title="Calcular depreciación">
+                                <i class="fas fa-calculator"></i>
                             </button>
                         </td>
-
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="text-center text-muted">
-                            No hay activos para calcular depreciación
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="fas fa-box-open fa-3x mb-3 d-block opacity-2"></i>
+                            No hay activos registrados para calcular
                         </td>
                     </tr>
                 @endforelse
                 </tbody>
             </table>
+        </div>
+    </div>
+    
+    @if($equipos->hasPages())
+    <div class="card-footer bg-white border-top-0">
+        {{ $equipos->links() }}
+    </div>
+    @endif
+</div>
 
-            <div class="mt-3">
-                {{ $equipos->links() }}
+{{-- EL MODAL SE MANTIENE IGUAL PERO CON CLASES DE BOOTSTRAP MODERNAS --}}
+<div class="modal fade" id="modalDepreciacion" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title font-weight-bold">
+                    <i class="fas fa-chart-bar mr-2 text-info"></i>Depreciación en Tiempo Real
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Activo:</span>
+                    <span class="font-weight-bold text-dark" id="d-activo"></span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Valor Inicial:</span>
+                    <span class="font-weight-bold text-primary">$<span id="d-valor"></span></span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Años Transcurridos:</span>
+                    <span class="badge badge-secondary px-3" id="d-añosTrasncurridos"></span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Depreciación Acumulada:</span>
+                    <span class="font-weight-bold text-danger">-$<span id="d-depreciado"></span></span>
+                </div>
+                <hr>
+                <div class="bg-light p-3 rounded text-center">
+                    <p class="text-muted mb-1 small uppercase font-weight-bold">Valor Actual de Mercado</p>
+                    <h3 class="text-success font-weight-bold mb-0">$<span id="d-actual"></span></h3>
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cerrar Análisis</button>
             </div>
         </div>
     </div>
 </div>
-
-@stop
-
+@endsection
 
 @section('js')
-    <script>
-
-//Buscar el elemento que Actviva el JS
+<script>
 document.querySelectorAll('.btn-depreciar').forEach(btn => {
     btn.addEventListener('click', function () {
-
-        //Tomamos el usuario actual
         const marca = this.dataset.marca;
-
-        //Definimos las constantes de valor, fecha y vida
-        const valor = parseFloat(this.dataset.valor);   //TOMAMOS EL VALOR INCIAL
-        const fecha = new Date(this.dataset.fecha);     //Tomamos la fecha Inicial
-        const vida = parseInt(this.dataset.vida); // AÑOS QUE INGRESO EL USUARIO
-
-        //Tomamos la fecha de hoy
+        const valor = parseFloat(this.dataset.valor);
+        const fecha = new Date(this.dataset.fecha);
+        const vida = parseInt(this.dataset.vida);
         const hoy = new Date();
 
-        //CALULAMOS AÑOS TRANSCURRIDOS
-        const añosTrasncurridos = Math.floor((hoy - fecha) / (1000 * 60 * 60 * 24 * 365));
-
-        //Calulamos la depreciacion Anual
+        const añosTrasncurridos = Math.floor((hoy - fecha) / (1000 * 60 * 60 * 24 * 365.25));
         const depreciacionAnual = valor / vida;
-
-        //Tomamos el reciduoe de esa cosa
-        const depreciado = Math.min(depreciacionAnual * añosTrasncurridos, valor);
-
-        //Damos el actual
+        const depreciado = Math.min(depreciacionAnual * (añosTrasncurridos < 0 ? 0 : añosTrasncurridos), valor);
         const actual = valor - depreciado;
 
-        //Insertamos estos datos en el modal
         document.getElementById('d-activo').innerText = marca;
-        document.getElementById('d-valor').innerText = valor.toFixed(2);
-        document.getElementById('d-añosTrasncurridos').innerText = añosTrasncurridos;
-        document.getElementById('d-depreciado').innerText = depreciado.toFixed(2);
-        document.getElementById('d-actual').innerText = actual.toFixed(2);
+        document.getElementById('d-valor').innerText = valor.toLocaleString('en-US', {minimumFractionDigits: 2});
+        document.getElementById('d-añosTrasncurridos').innerText = añosTrasncurridos < 0 ? 0 : añosTrasncurridos;
+        document.getElementById('d-depreciado').innerText = depreciado.toLocaleString('en-US', {minimumFractionDigits: 2});
+        document.getElementById('d-actual').innerText = actual.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-        //Abre el modal con las datos ya calculados
         $('#modalDepreciacion').modal('show');
     });
 });
 </script>
-
 @stop

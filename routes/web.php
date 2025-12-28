@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/equipos/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork.index');
     Route::post('/equipos/{equipo}/addwork', [EquipoController::class, 'addwork'])->name('equipos.addwork.store');
 
+    Route::get('/equipos/{uuid}/detalles', [EquipoController::class, 'show'])->name('equipos.show');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

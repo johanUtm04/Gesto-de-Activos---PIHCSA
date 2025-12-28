@@ -37,6 +37,9 @@
     .fieldset-group i.fa-3x {
         opacity: 0.25;
     }
+
+    /* Estilo para los campos de "Otro" que inician ocultos */
+    .custom-input { display: none; margin-top: 10px; }
 </style>
 @stop
 
@@ -58,7 +61,7 @@
     </div>
 </div>
 
-{{-- WIZARD SIMULACION --}}
+{{-- WIZARD SIMULACION (MIGAJAS MANTENIDAS) --}}
 <div class="card mb-3">
     <div class="card-body p-3">
         <div class="d-flex justify-content-between text-center wizard-steps">
@@ -77,23 +80,21 @@
             </a>
             </div>
 
-            <div class="wizard-step active">
+            <div class="wizard-step completed">
             <a href="{{ route('equipos.wizard-monitores', $uuid) }}">
                 <i class="fas fa-tv"></i>
                 <div>Monitor</div>
             </a>
             </div>
 
-
-
-            <div class="wizard-step active">
+            <div class="wizard-step completed">
             <a href="{{ route('equipos.wizard-discos_duros', $uuid) }}">
                 <i class="fas fa-hdd"></i>
                 <div>Disco Duro</div>
             </a>
             </div>
 
-            <div class="wizard-step active">
+            <div class="wizard-step completed">
             <a href="{{ route('equipos.wizard-ram', $uuid) }}">
                <i class="fas fa-memory"></i>
                 <div>Ram</div>
@@ -103,7 +104,7 @@
             <div class="wizard-step active">
             <a href="{{ route('equipos.wizard-periferico', $uuid) }}">
               <i class="fas fa-mouse"></i> 
-                <div>Periferio</div>
+                <div>Periferico</div>
             </a>
             </div>
 
@@ -121,9 +122,8 @@
 
 <div class="card card-outline card-info">
     <div class="card-body">
-        
 
-        <form action="{{ route('equipos.wizard.savePeriferico', $uuid) }}" method="POST">
+        <form action="{{ route('equipos.wizard.savePeriferico', $uuid) }}" method="POST" id="perifericoForm">
             @csrf
 
             <fieldset class="fieldset-group">
@@ -140,9 +140,9 @@
 
                 {{-- Info activo --}}
                 <div class="alert alert-light border mb-4">
-                    <strong>Tipo de Activo:</strong>{{ $equipo['tipo_equipo'] ?? '—' }} <br>
+                    <strong>Tipo de Activo:</strong> {{ $equipo['tipo_equipo'] ?? '—' }} <br>
                     <strong>Marca:</strong> {{ $equipo['marca_equipo'] ?? '—' }} <br>
-                    <strong>Numero de Serie: </strong>{{ $equipo['serial'] ?? '—' }} <br>
+                    <strong>Numero de Serie: </strong> {{ $equipo['serial'] ?? '—' }} <br>
                 </div>
 
                 <div class="row">
@@ -150,28 +150,41 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                            <label for="tipo">
-                                <i class="fas fa-mouse-pointer"></i> Tipo
-                            </label>
-                            <input type="text"
-                                   id="tipo"
-                                   name="tipo"
-                                   class="form-control"
-                                   value="{{ old('tipo', session('wizard_equipo.periferico.tipo')) }}"
-                                   placeholder="Teclado, Mouse, Webcam">
+                            <label for="tipo_select"><i class="fas fa-mouse-pointer"></i> Tipo de Periférico</label>
+                            <select id="tipo_select" class="form-control">
+                                <option value="" selected>Seleccione tipo</option>
+                                <option value="Teclado">Teclado</option>
+                                <option value="Mouse">Mouse</option>
+                                <option value="Combo (Teclado+Mouse)">Combo (Teclado+Mouse)</option>
+                                <option value="Webcam">Webcam</option>
+                                <option value="Diadema / Headset">Diadema / Headset</option>
+                                <option value="OTRO_VALOR">-- Otro (Escribir) --</option>
+                            </select>
+                            
+                            <input type="text" name="tipo" id="tipo_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. Scanner, Impresora, etc."
+                                   value="{{ old('tipo', session('wizard_equipo.periferico.tipo')) }}">
                             @error('tipo') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="marca">
-                                <i class="fas fa-tag"></i> Marca
-                            </label>
-                            <input type="text"
-                                   id="marca"
-                                   name="marca"
-                                   class="form-control"
-                                   value="{{ old('marca', session('wizard_equipo.periferico.marca')) }}"
-                                   placeholder="Logitech, HP, Dell">
+                            <label for="marca_select"><i class="fas fa-tag"></i> Marca</label>
+                            <select id="marca_select" class="form-control">
+                                <option value="" selected>Seleccione marca</option>
+                                <option value="Logitech">Logitech</option>
+                                <option value="HP">HP</option>
+                                <option value="Dell">Dell</option>
+                                <option value="Lenovo">Lenovo</option>
+                                <option value="Genius">Genius</option>
+                                <option value="Microsoft">Microsoft</option>
+                                <option value="OTRO_VALOR">-- Otra marca (Escribir) --</option>
+                            </select>
+
+                            <input type="text" name="marca" id="marca_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Escriba la marca..."
+                                   value="{{ old('marca', session('wizard_equipo.periferico.marca')) }}">
                             @error('marca') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -194,15 +207,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="interface">
-                                <i class="fas fa-plug"></i> Interfaz
-                            </label>
-                            <input type="text"
-                                   id="interface"
-                                   name="interface"
-                                   class="form-control"
-                                   value="{{ old('interface', session('wizard_equipo.periferico.interface')) }}"
-                                   placeholder="USB, Bluetooth">
+                            <label for="interface_select"><i class="fas fa-plug"></i> Interfaz</label>
+                            <select id="interface_select" class="form-control">
+                                <option value="">Seleccione interfaz</option>
+                                <option value="USB">USB</option>
+                                <option value="Bluetooth">Bluetooth</option>
+                                <option value="Inalámbrico (Receptor USB)">Inalámbrico (Receptor USB)</option>
+                                <option value="Jack 3.5mm">Jack 3.5mm</option>
+                                <option value="PS/2">PS/2</option>
+                                <option value="OTRO_VALOR">-- Otra interfaz (Escribir) --</option>
+                            </select>
+
+                            <input type="text" name="interface" id="interface_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. USB-C, etc."
+                                   value="{{ old('interface', session('wizard_equipo.periferico.interface')) }}">
                             @error('interface') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
@@ -212,16 +231,14 @@
             </fieldset>
 
             {{-- FOOTER --}}
-            <div class="text-right mt-4">
-                <button type="submit" class="btn btn-warning btn-lg">
-            <i class="fas fa-arrow-right"></i> Continuar
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ route('equipos.wizard-procesador', $uuid) }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-fast-forward"></i> Omitir Periféricos
+                </a>
+
+                <button type="submit" class="btn btn-info btn-lg px-5">
+                    <i class="fas fa-arrow-right"></i> Continuar
                 </button>
-
-                <!-- <a href="{{ route('equipos.wizard-procesador', $uuid) }}"
-                   class="btn btn-outline-secondary btn-lg">
-                    Omitir este paso
-                </a> -->
-
             </div>
 
         </form>
@@ -229,4 +246,36 @@
     </div>
 </div>
 
+@stop
+
+@section('js')
+<script>
+$(document).ready(function() {
+    function setupSelectOtro(selectId, inputId) {
+        const $select = $(`#${selectId}`);
+        const $input = $(`#${inputId}`);
+
+        $select.on('change', function() {
+            if ($(this).val() === 'OTRO_VALOR') {
+                $input.fadeIn().focus();
+            } else {
+                $input.hide().val($(this).val()); 
+            }
+        });
+
+        // Sincronización inicial (Old / Session)
+        let initialVal = $input.val();
+        if(initialVal && !$select.find(`option[value='${initialVal}']`).length && initialVal !== '') {
+            $select.val('OTRO_VALOR');
+            $input.show();
+        } else if (initialVal !== '') {
+            $select.val(initialVal);
+        }
+    }
+
+    setupSelectOtro('tipo_select', 'tipo_input');
+    setupSelectOtro('marca_select', 'marca_input');
+    setupSelectOtro('interface_select', 'interface_input');
+});
+</script>
 @stop
