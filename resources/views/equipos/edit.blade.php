@@ -434,7 +434,7 @@
                                                 <select name="perifericos[{{ $index }}][interface]" class="form-control form-control-sm">
                                                     <option value="">Seleccione...</option>
                                                     @foreach(['HDMI', 'DisplayPort (DP)', 'VGA', 'DVI', 'USB-C'] as $interface)
-                                                        <option value="{{ $interface }}" {{ $periferico->perifericos == $interface ? 'selected' : '' }}>{{ $interface }}</option>
+                                                        <option value="{{ $interface }}" {{ $periferico->interface == $interface ? 'selected' : '' }}>{{ $interface }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

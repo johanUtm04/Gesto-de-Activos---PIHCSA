@@ -47,7 +47,6 @@ class EquipoController extends Controller
         $data['marca_equipo'] = $request->marca_equipo ?? 'Sin marca asignada';
         $data['valor_inicial'] = $request->valor_inicial ?? 0;
 
-        //$uuid es un numero unico generado en cada envio y se guarda en la sesion
         $uuid = Str::uuid()->toString();
         session()->put('wizard_equipo.uuid', $uuid);
         session()->put('wizard_equipo.equipo', $data);
@@ -55,18 +54,30 @@ class EquipoController extends Controller
     }
 
 
-    //Funcion para ver la vista de edicion (pantalla dividida) 🟦
+    //FUNCION PARA VER LA VISTA DE EDICION DE ACTIVOS, 
+    //Donde recibe 3 tablas equipo(junto con sus relaciones), 
+    //usuario y ubicaciones que son independientes, y las 
+    //Usaremos para crear una vista comoda para el usuario
     public function edit(Equipo $equipo)
     {
+        // 1. Eager Loading: Traemos todas las piezas del equipo en un solo viaje
+        $equipo->load([
+            'monitores', 
+            'discosDuros', 
+            'rams', 
+            'perifericos', 
+            'procesadores'
+        ]);
         $usuarios = User::all();
         $ubicaciones = Ubicacion::all();
         return view('equipos.edit', compact('equipo', 'usuarios', 'ubicaciones'));
     }
 
-//Funcion para mandar datos del equipos.edit 🟦
+//FUNCION PARA
 public function update(Request $request, Equipo $equipo)
 {
 
+    //1.-Busca en el Formulario Unicamente estos datos
     $equipo->update($request->only([
         'marca_equipo',
         'tipo_equipo',
@@ -80,22 +91,30 @@ public function update(Request $request, Equipo $equipo)
     ]));
 
 
-    /*
-    En caso de que en la edicion se vea afectada una de las tablas
-    extras, entrara en cualquiera de estas condiciones, 
-    ese es el proposito de esta seccion
+    /* 2.-
+        En caso de que en la edicion se vea afectada una de las tablas
+        extras, entrara en cualquiera de estas condiciones, 
+        ese es el proposito de esta seccion
     */
+    //3.-En caso de ver un input con estos nombres...
     if ($request->has('perifericos')) {
 
-        //1.-Por cada input 'perifericos' recibido lo metemos en una cajita llamada $peripheralData
+        //3.1.- Por cada Input hallado, guardalo como $peripheralData
         foreach ($request->input('perifericos') as $peripheralData) {
 
-        //2.- Ignorar en caso de que este completamente vacio, es decir, no se edito en lo absoluto
+        //3.2.- Si esta completamente Vacio pasamos al sigueinte, ejemplo si 
+        //perifericos[index+2][tipo]
+        //perifericos[index+2][marca]
+        //perifericos[index+2][serial]
+        //perifericos[index+2][interface]
+        //perifericos[index+2][id]  value="{{ $periferico->id }}">
+        //Es decir, todos estos estan vacios
         if (empty(array_filter($peripheralData))) {
             continue;
         }
 
-        //3.-Si tiene ID Valido entrasmos aqui
+        //CASO 1 //perifericos[index+2][id] 
+        //3.3 SI ESE ID ya esta quiere decir que ese ya existe en la DB
         if (isset($peripheralData['id'])) {
 
             //4.-Guardamos la relacion cuando coincida con ese Id
@@ -124,6 +143,7 @@ public function update(Request $request, Equipo $equipo)
                 }
             }
         } 
+        //CASO 2 //perifericos[index+2]['vacio'] viene vacio pq en ningun momento lo llena el Usuario   
 
         else {
         $equipo->perifericos()->create([
