@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-//IMPORTACION DE MODELOS
 use Illuminate\Http\Request;
 use App\Models\Equipo;
 use App\Models\User;
-
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 class EquipoWizardController extends Controller
 {
-
-    // FUNCION PARA ENTRAR AL PRIMER FORMULARIO ANETS DE PASAR AL 
-    // FORMULARIO DE WIZARD, INCIANDO ADEMAS EL ARRAY ASOCIATIVO
-    //QUE USAREMOS DURANTE EL FORMULARIO
+    /**
+     * PASO 1: Formulario Base e Inicialización.
+     * Carga los usuarios y prepara la sesión para el flujo.
+     */
     public function create()
     {
         $wizard = session('wizard_equipo');
@@ -24,7 +24,42 @@ class EquipoWizardController extends Controller
     }
 
     /**
-     * Paso 2: Formulario de Ubicación
+     * PROCESO PASO 1: Validación y creación del UUID.
+     * Aquí nace la "Persistencia Temporal" en la sesión.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'marca_equipo' => 'nullable|string|max:255',
+            'tipo_equipo' => 'required|string|max:255',
+            'serial' => 'nullable|string|max:255',
+            'sistema_operativo' => 'required|string|max:35', 
+            'usuario_id' => 'required|integer|exists:users,id',
+            'valor_inicial' => 'nullable|numeric|min:0|max:99999999.99',
+            'fecha_adquisicion' => 'required|date',
+            'vida_util_estimada' => 'required|string|max:255',
+        ]);
+
+        $data = $validated;
+
+        // Lógica de campos de respaldo (Valores por defecto)
+        $data['serial'] = $data['serial'] ?? 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+        $data['marca_equipo'] = $data['marca_equipo'] ?? 'Sin marca asignada';
+        $data['valor_inicial'] = $data['valor_inicial'] ?? 0;
+
+        // Generación del identificador único para el recorrido de la URL
+        $uuid = Str::uuid()->toString();
+        
+        // Guardamos en sesión el UUID y los datos base del equipo
+        session()->put('wizard_equipo.uuid', $uuid);
+        session()->put('wizard_equipo.equipo', $data);
+
+        return redirect()->route('equipos.wizard-ubicacion', $uuid);
+    }
+
+    /**
+     * PASO 2: Ubicación.
+     * Valida que el UUID de la URL coincida con la sesión activa.
      */
     public function ubicacionForm($uuid)
     {
@@ -39,7 +74,8 @@ class EquipoWizardController extends Controller
     }
 
     /**
-     * Guardar Ubicación
+     * PROCESO PASO 2: Guardar Ubicación.
+     * Almacena la relación de ubicación en un apartado separado de la sesión.
      */
     public function saveUbicacion(Request $request)
     {
@@ -49,7 +85,7 @@ class EquipoWizardController extends Controller
 
         $wizard = session('wizard_equipo');
         
-        // Guardar en la sesión
+        // Agregamos el array de ubicación a la sesión volátil
         session()->put('wizard_equipo.ubicacion', [
             'ubicacion_id' => $request->ubicacion_id,
         ]);
@@ -59,15 +95,12 @@ class EquipoWizardController extends Controller
     }
 
     /**
-     * Paso 3: Monitores
+     * PASO 3: Monitores.
      */
     public function monitoresForm($uuid)
     {
         $wizard = session('wizard_equipo');
-
-        if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Acceso no autorizado al flujo.');
-        }
+        if (!$wizard || $wizard['uuid'] !== $uuid) abort(403, 'Acceso no autorizado.');
 
         $equipo = data_get($wizard, 'equipo');
         return view('equipos.wizard-monitores', compact('equipo', 'uuid'));
@@ -82,12 +115,12 @@ class EquipoWizardController extends Controller
             'interface' => 'nullable|string'
         ]);
 
+        // Quitamos campos nulos para no ensuciar la sesión
         $datos = array_filter($request->only(['marca', 'serial', 'escala_pulgadas', 'interface']));
 
         if (empty($datos)) {
             session()->forget('wizard_equipo.monitor');
         } else {
-            // Guardamos los datos para que el último paso los encuentre
             session()->put('wizard_equipo.monitor', $datos);
         }
 
@@ -95,7 +128,7 @@ class EquipoWizardController extends Controller
     }
 
     /**
-     * Paso 4: Discos Duros
+     * PASO 4: Discos Duros.
      */
     public function discoduroForm($uuid)
     {
@@ -126,7 +159,7 @@ class EquipoWizardController extends Controller
     }
 
     /**
-     * Paso 5: Memoria RAM
+     * PASO 5: Memoria RAM.
      */
     public function ramForm($uuid)
     {
@@ -157,7 +190,7 @@ class EquipoWizardController extends Controller
     }
 
     /**
-     * Paso 6: Periféricos
+     * PASO 6: Periféricos.
      */
     public function perifericoForm($uuid)
     {
@@ -189,7 +222,8 @@ class EquipoWizardController extends Controller
     }
 
     /**
-     * Paso 7: Procesador y GUARDADO FINAL
+     * PASO 7: Formulario de Procesador.
+     * Última etapa de recolección de datos antes del guardado definitivo.
      */
     public function ProcesadorForm($uuid)
     {
@@ -200,37 +234,43 @@ class EquipoWizardController extends Controller
         return view('equipos.wizard-procesador', compact('uuid', 'equipo'));
     }
 
+    /**
+     * PROCESO FINAL: Consolidación de datos en Base de Datos.
+     * Este método vacía la "Memoria Temporal" y crea los registros reales.
+     */
     public function saveProcesador(Request $request, $uuid)
     {
         $request->validate([
-            'marca' => 'nullable|string',
-            'descripcion_tipo' => 'nullable|string',
-            'frecuenciaMicro' => 'nullable|string',
+            'marca' => 'nullable|string|max:255',
+            'descripcion_tipo' => 'nullable|string|max:255',
+            'frecuenciaMicro' => 'nullable|string|max:100',
         ]);
 
-        // Guardar el procesador en la variable local primero
-        $procesadorData = array_filter($request->only(['marca', 'descripcion_tipo', 'frecuenciaMicro']));
+        $datos = array_filter($request->only(['marca', 'descripcion_tipo', 'frecuenciaMicro']));
 
-        if (empty($procesadorData)) {
+        if (empty($datos)) {
             session()->forget('wizard_equipo.procesador');
         } else {
-            session()->put('wizard_equipo.procesador', $procesadorData);
+            session()->put('wizard_equipo.procesador', $datos);
         }
 
-        // Obtener TODO el wizard acumulado
         $wizard = session('wizard_equipo');
-
         if (!$wizard || $wizard['uuid'] !== $uuid) {
-            abort(403, 'Sesión inválida al intentar guardar.');
+            abort(403, 'Sesión inválida al intentar finalizar el registro.');
         }
 
-        // 1. Crear el Equipo Base
+        // --- INICIO DE PERSISTENCIA EN BASE DE DATOS ---
+
+        // A. Crear el Equipo Base
+        // Usamos el operador spread (...) para traer los datos del equipo y sobreescribimos/añadimos la ubicacion
         $equipo = Equipo::create([
-            ...$wizard['equipo'],
+            ...$wizard['equipo'], 
             'ubicacion_id' => $wizard['ubicacion']['ubicacion_id'] ?? null,
         ]);
         
-        // 2. Crear relaciones (si existen datos en la sesión)
+        // B. Crear relaciones mediante el método create() de Eloquent
+        // Solo se ejecutan si el usuario llenó los campos (evitamos registros vacíos)
+
         if (!empty($wizard['monitor'])) {
             $equipo->monitores()->create($wizard['monitor']);
         }
@@ -251,10 +291,12 @@ class EquipoWizardController extends Controller
             $equipo->procesadores()->create($wizard['procesador']);
         }
 
-        // 3. Limpiar sesión
+        // --- CIERRE DE PROCESO ---
+
+        // 4. Limpiar la mochila de la sesión
         session()->forget('wizard_equipo');
 
-        // 4. Calcular paginación para redirigir al registro nuevo
+        // 5. Cálculo inteligente de paginación para redirigir al usuario al nuevo registro
         $perPage = 11;
         $position = Equipo::where('id', '<=', $equipo->id)->count();
         $page = ceil($position / $perPage);
@@ -263,4 +305,7 @@ class EquipoWizardController extends Controller
             ->with('success', '¡Equipo y todos sus componentes registrados con éxito!')
             ->with('new_id', $equipo->id);
     }
+
 }
+
+

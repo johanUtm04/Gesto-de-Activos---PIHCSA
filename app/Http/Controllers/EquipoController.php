@@ -44,8 +44,6 @@ class EquipoController extends Controller
         $data = $request->all();
 
         $data['serial'] = $request->serial ?? 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
-
-        // Valores por defecto directos
         $data['marca_equipo'] = $request->marca_equipo ?? 'Sin marca asignada';
         $data['valor_inicial'] = $request->valor_inicial ?? 0;
 
