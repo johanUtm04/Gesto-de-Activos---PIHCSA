@@ -4,6 +4,11 @@ namespace App\Observers;
 
 use App\Models\Equipo;
 use App\Services\AuditService;
+use Illuminate\Support\Facades\Auth;
+
+
+//1.-Importamos el modelo de la tabla de historiales
+use App\Models\Historial_log;
 
 class EquipoObserver
 {
@@ -12,45 +17,59 @@ class EquipoObserver
      */
     public function created(Equipo $equipo): void
     {
-        AuditService::log(
-            'EQUIPO_CREADO',
-            $equipo->id,
-            [
-                'mensaje' => 'Se creó un equipo',
-                'despues' => $equipo->toArray()
+        //2.se dispara luego de crear un equipo
+        Historial_log::create([
+            'activo_id'         => $equipo->id,
+            'usuario_accion_id' => Auth::id() ?? 1, // ID del usuario o sistema
+            'tipo_registro'     => 'CREATE',
+            'detalles_json'     => [
+                'mensaje' => 'ASIGNO UN EQUIPO A',
+                'datos'   => $equipo->toArray()
             ]
-        );
+        ]);
     }
 
     /**
-     * Handle the Equipo "updated" event.
+     * Al Actualizar un equipo junto don el Json
      */
-    public function updated(Equipo $equipo): void
-    {
-        AuditService::log(
-            'EQUIPO_ACTUALIZADO',
-            $equipo->id,
-            [
-                'mensaje' => 'Se actualizó un equipo',
-                'antes' => $equipo->getOriginal(),
-                'despues' => $equipo->getAttributes()
-            ]
-        );
-    }
+    public function updated(Equipo $equipo)
+        {
+            //3.-Solo registramos si hubo cambios reales
+            if ($equipo->isDirty()) {
+                $cambios = [];
+                foreach ($equipo->getDirty() as $atributo => $nuevoValor) {
+                    $cambios[$atributo] = [
+                        'antes'  => $equipo->getOriginal($atributo),
+                        'despues' => $nuevoValor
+                    ];
+                }
 
-    /**
-     * Handle the Equipo "deleted" event.
-     */
-    public function deleted(Equipo $equipo): void
+                Historial_log::create([
+                    'activo_id'         => $equipo->id,
+                    'usuario_accion_id' => Auth::id() ?? 1,
+                    'tipo_registro'     => 'UPDATE',
+                    'detalles_json'     => [
+                        'mensaje' => 'Se modificaron campos del equipo',
+                        'usuario_asignado' => $equipo->usuario->name ?? 'N/A',
+                        'cambios' => $cambios
+                        
+                    ]
+                ]);
+            }
+        }
+
+
+    public function deleting(Equipo $equipo)
     {
-        AuditService::log(
-            'EQUIPO_ELIMINADO',
-            $equipo->id,
-            [
-                'mensaje' => 'Se eliminó un equipo',
-                'antes' => $equipo->getOriginal()
+        Historial_log::create([
+            'activo_id'         => $equipo->id,
+            'usuario_accion_id' => Auth::id() ?? 1,
+            'tipo_registro'     => 'DELETE',
+            'detalles_json'     => [
+                'mensaje' => 'Equipo eliminado del sistema',
+                'ultimo_estado' => $equipo->toArray()
             ]
-        );
+        ]);
     }
 
     /**

@@ -155,7 +155,7 @@
                                     data-vida="{{ $equipo->vida_util_estimada ?? 'N/A' }}"
                                     data-monitores="{{ $equipo->monitores->count() }}"
                                     data-discos="{{ $equipo->discosDuros->count() }}"
-                                    data-ram="{{ $equipo->rams->pluck('capacidad_gb')->implode('GB, ') }} GB"
+                                    data-ram="{{ $equipo->rams->pluck('capacidad_gb')->implode('GB, ') }}GB"
                                     data-perifericos="{{ $equipo->perifericos->pluck('tipo')->implode(', ') }}"
                                     data-procesadores="{{ $equipo->procesadores->count() }}">
                                     
@@ -232,7 +232,9 @@
 $(document).ready(function() {
     $('.equipo-row').on('mouseenter', function() {
         const d = $(this).data();
+        let contador = 1;
         
+    
         // Estructura Profesional Dinámica
         const html = `
             <div class="animate-details">
@@ -283,11 +285,11 @@ $(document).ready(function() {
                 </div>
                 <div class="info-box-custom">
                     <span class="info-label"><i class="fas fa-desktop mr-1"></i> Monitores</span>
-                    <span class="info-value">${d.monitores} detectados</span>
+                    <span class="info-value">${d.monitores} Asignados</span>
                 </div>
                 <div class="p-3 border-bottom">
                     <span class="info-label d-block mb-2">Otros Periféricos</span>
-                    <p class="small text-dark mb-0 font-italic">${d.perifericos || 'Sin periféricos adicionales registrados'}</p>
+                    <p class="small text-dark mb-0 font-italic"> ${d.perifericos || 'Sin periféricos adicionales registrados'}</p>
                 </div>
 
                 <div class="section-divider">Datos Económicos</div>
@@ -307,7 +309,7 @@ $(document).ready(function() {
                 </div>
             </div>
         `;
-        
+        contador++;
         $('#detail-content').html(html);
     });
 

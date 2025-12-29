@@ -189,17 +189,62 @@
                                 <legend class="w-auto px-2 text-primary"><i class="fas fa-info-circle"></i> Datos Base</legend>
 
                                 <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo</label>
-                                        <input type="text" name="marca_equipo" id="marca_equipo" class="form-control"
-                                            value="{{ old('marca_equipo', $equipo->marca_equipo) }}">
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo</label>
+                                    <select name="marca_equipo" id="marca_equipo" class="form-control">
+                                        <option value="" {{ old('marca_equipo', $equipo->marca_equipo) == '' ? 'selected' : '' }}>Seleccione la marca</option>
+                                        
+                                        @php
+                                            // Definimos los grupos y sus marcas para una gestión más limpia
+                                            $categorias = [
+                                                'Cómputo y Servidores' => ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'MSI', 'Microsoft (Surface)', 'Huawei', 'Samsung'],
+                                                'Infraestructura' => ['IBM', 'Supermicro', 'HPE', 'Oracle', 'Fujitsu'],
+                                                'Redes y Telecomunicaciones' => ['Cisco', 'Ubiquiti', 'MikroTik', 'TP-Link', 'Aruba', 'Juniper', 'Fortinet', 'Huawei'],
+                                                'Impresión' => ['HP', 'Epson', 'Canon', 'Brother', 'Xerox', 'Ricoh', 'Lexmark', 'Kyocera'],
+                                                'Otros' => ['Genérico', 'Otra']
+                                            ];
+                                            $marcaActual = old('marca_equipo', $equipo->marca_equipo);
+                                        @endphp
 
-                                    <div class="form-group col-md-6">
-                                        <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
-                                        <input type="text" name="tipo_equipo" id="tipo_equipo" class="form-control"
-                                            value="{{ old('tipo_equipo', $equipo->tipo_equipo) }}">
-                                    </div>
+                                        @foreach($categorias as $categoria => $marcas)
+                                            <optgroup label="{{ $categoria }}">
+                                                @foreach($marcas as $marca)
+                                                    <option value="{{ $marca }}" {{ $marcaActual == $marca ? 'selected' : '' }}>
+                                                        {{ $marca }}
+                                                    </option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
+                                    <select name="tipo_equipo" id="tipo_equipo" class="form-control">
+                                        <option value="" {{ old('tipo_equipo', $equipo->tipo_equipo) == '' ? 'selected' : '' }}>Seleccione el tipo</option>
+                                        
+                                        @php
+                                            // Definimos las categorías y los tipos de equipos para una gestión más limpia
+                                            $categoriasEquipos = [
+                                                'Dispositivos de Usuario' => ['Laptop', 'Desktop', 'All-in-One', 'Tablet', 'Smartphone', 'Workstation'],
+                                                'Infraestructura' => ['Servidor', 'Rack', 'Switch', 'Router', 'Access Point', 'Firewall', 'UPS'],
+                                                'Periféricos' => ['Monitor', 'Impresora', 'Multifuncional', 'Escáner', 'Proyector', 'Cámara'],
+                                                'Otros' => ['Genérico', 'Otro']
+                                            ];
+                                            $tipoActual = old('tipo_equipo', $equipo->tipo_equipo);
+                                        @endphp
+
+                                        @foreach($categoriasEquipos as $categoria => $tipos)
+                                            <optgroup label="{{ $categoria }}">
+                                                @foreach($tipos as $tipo)
+                                                    <option value="{{ $tipo }}" {{ $tipoActual == $tipo ? 'selected' : '' }}>
+                                                        {{ $tipo }}
+                                                    </option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 </div>
 
                                 <div class="row">
@@ -211,8 +256,34 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="sistema_operativo"><i class="fab fa-windows"></i> Sistema Operativo</label>
-                                        <input type="text" name="sistema_operativo" id="sistema_operativo" class="form-control"
-                                            value="{{ old('sistema_operativo', $equipo->sistema_operativo) }}">
+                                        <select name="sistema_operativo" id="sistema_operativo" class="form-control" required>
+                                            <option value="" disabled {{ old('sistema_operativo', $equipo->sistema_operativo) == '' ? 'selected' : '' }}>
+                                                Seleccione el sistema operativo
+                                            </option>
+
+                                            @php
+                                                $soActual = old('sistema_operativo', $equipo->sistema_operativo);
+                                                
+                                                $categoriasSO = [
+                                                    'Windows' => ['Windows 11', 'Windows 10', 'Windows 8.1', 'Windows 7', 'Windows Server 2022', 'Windows Server 2019', 'Windows Server 2016'],
+                                                    'macOS' => ['macOS Sonoma', 'macOS Ventura', 'macOS Monterey', 'macOS Big Sur', 'macOS Catalina'],
+                                                    'Linux' => ['Ubuntu', 'Ubuntu LTS', 'Debian', 'CentOS', 'Rocky Linux', 'AlmaLinux', 'Red Hat Enterprise Linux', 'Fedora', 'Arch Linux'],
+                                                    'Sistemas Móviles' => ['Android', 'iOS'],
+                                                    'Virtualización / Hipervisores' => ['VMware ESXi', 'Proxmox VE', 'Hyper-V', 'XenServer'],
+                                                    'Otros' => ['Chrome OS', 'FreeBSD', 'Otro', 'No aplica']
+                                                ];
+                                            @endphp
+
+                                            @foreach($categoriasSO as $grupo => $opciones)
+                                                <optgroup label="{{ $grupo }}">
+                                                    @foreach($opciones as $opcion)
+                                                        <option value="{{ $opcion }}" {{ $soActual == $opcion ? 'selected' : '' }}>
+                                                            {{ $opcion }}
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </fieldset>
@@ -261,11 +332,41 @@
                                             value="{{ old('fecha_adquisicion', $equipo->fecha_adquisicion) }}">
                                     </div>
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="vida_util_estimada"><i class="fas fa-hourglass-half"></i> Vida Útil Estimada</label>
-                                        <input type="text" name="vida_util_estimada" id="vida_util_estimada" class="form-control"
-                                            value="{{ old('vida_util_estimada', $equipo->vida_util_estimada) }}">
+                                        <div class="input-group">
+                                            <select class="form-control" name="vida_util_unidad" id="vida_util_unidad" required>
+                                                @php
+                                                    $unidadActual = old('vida_util_unidad', $equipo->vida_util_unidad ?? '');
+                                                @endphp
+                                                <option value="" disabled {{ $unidadActual == '' ? 'selected' : '' }}>Unidad</option>
+                                                <option value="años" {{ $unidadActual == 'años' ? 'selected' : '' }}>Años</option>
+                                                <option value="meses" {{ $unidadActual == 'meses' ? 'selected' : '' }}>Meses</option>
+                                            </select>
+
+                                            <input 
+                                                type="number" 
+                                                name="vida_util_estimada" 
+                                                id="vida_util_input"
+                                                class="form-control" 
+                                                style="width: 50%;"
+                                                placeholder="Cantidad"
+                                                min="1"
+                                                value="{{ old('vida_util_estimada', $equipo->vida_util_estimada) }}" 
+                                                {{ $unidadActual ? '' : 'disabled' }}
+                                                required>
+                                        </div>
                                     </div>
+
+                                    <script>
+                                        // Script sencillo para habilitar el input cuando se seleccione una unidad
+                                        document.getElementById('vida_util_unidad').addEventListener('change', function() {
+                                            const inputPrecio = document.getElementById('vida_util_input');
+                                            if (this.value !== "") {
+                                                inputPrecio.disabled = false;
+                                            }
+                                        });
+                                    </script>
                                 </div>
                             </fieldset>
 
@@ -277,69 +378,82 @@
 
                                 {{-- Periféricos --}}
                                 <div class="component-group">
-                                    <h6 class="text-info"><i class="fas fa-keyboard"></i> Periféricos (Editables)</h6>
-                                    <button type="button"
+                                    <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
+                                        <i class="fas fa-keyboard mr-2"></i> PERIFÉRICOS (EDITABLES)
+                                    </h6>
+                                        <button type="button"
                                         class="btn btn-sm btn-outline-primary mt-2"
                                         onclick="agregarPeriferico()">
-                                        <i class="fas fa-plus"></i> Agregar periférico0
+                                        <i class="fas fa-plus"></i> Agregar periférico
                                     </button>
                                     <hr class="my-2">
                                     <div id="perifericos-container"
                                      data-perifericos-count="{{ $equipo->perifericos->count() }}">
-@foreach($equipo->perifericos as $index => $periferico)
-<div class="periferico-item p-2 mb-2 border rounded bg-white">
-    <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
-    <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
-    <input type="hidden" name="perifericos[{{ $index }}][_delete]" value="">
+                                    @foreach($equipo->perifericos as $index => $periferico)
+                                    <div class="periferico-item p-2 mb-2 border rounded bg-white">
+                                        <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
+                                        <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
+                                        <input type="hidden" name="perifericos[{{ $index }}][_delete]" value="">
 
-    <div class="row">
-        <div class="form-group col-md-6">
-            <label>Tipo / Categoría</label>
-            <select name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm">
-                <option value="">Seleccione tipo...</option>
-                <option value="Teclado" {{ $periferico->tipo == 'Teclado' ? 'selected' : '' }}>Teclado</option>
-                <option value="Mouse" {{ $periferico->tipo == 'Mouse' ? 'selected' : '' }}>Mouse</option>
-                <option value="Monitor" {{ $periferico->tipo == 'Monitor' ? 'selected' : '' }}>Monitor</option>
-                <option value="Diadema" {{ $periferico->tipo == 'Diadema' ? 'selected' : '' }}>Diadema</option>
-                <option value="Cámara" {{ $periferico->tipo == 'Cámara' ? 'selected' : '' }}>Cámara</option>
-            </select>
-        </div>
-        <div class="form-group col-md-6">
-            <label>Marca</label>
-            <select name="perifericos[{{ $index }}][marca]" class="form-control form-control-sm">
-                <option value="">Seleccione marca...</option>
-                <option value="Logitech" {{ $periferico->marca == 'Logitech' ? 'selected' : '' }}>Logitech</option>
-                <option value="HP" {{ $periferico->marca == 'HP' ? 'selected' : '' }}>HP</option>
-                <option value="Dell" {{ $periferico->marca == 'Dell' ? 'selected' : '' }}>Dell</option>
-                <option value="Genius" {{ $periferico->marca == 'Genius' ? 'selected' : '' }}>Genius</option>
-                <option value="Otro" {{ $periferico->marca == 'Otro' ? 'selected' : '' }}>Otro</option>
-            </select>
-        </div>
-    </div>
-    
-    <div class="row mt-2">
-        <div class="form-group col-md-12">
-            <label>Serial</label>
-            <input type="text" name="perifericos[{{ $index }}][serial]" 
-                   class="form-control form-control-sm" 
-                   placeholder="Serial del periférico"
-                   value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
-        </div>
-    </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label>Tipo / Categoría</label>
+                                                <select name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione tipo...</option>
+                                                    <option value="Teclado" {{ $periferico->tipo == 'Teclado' ? 'selected' : '' }}>Teclado</option>
+                                                    <option value="Mouse" {{ $periferico->tipo == 'Mouse' ? 'selected' : '' }}>Mouse</option>
+                                                    <option value="Monitor" {{ $periferico->tipo == 'Monitor' ? 'selected' : '' }}>Monitor</option>
+                                                    <option value="Diadema" {{ $periferico->tipo == 'Diadema' ? 'selected' : '' }}>Diadema</option>
+                                                    <option value="Cámara" {{ $periferico->tipo == 'Cámara' ? 'selected' : '' }}>Cámara</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label>Marca</label>
+                                                <select name="perifericos[{{ $index }}][marca]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione marca...</option>
+                                                    <option value="Logitech" {{ $periferico->marca == 'Logitech' ? 'selected' : '' }}>Logitech</option>
+                                                    <option value="HP" {{ $periferico->marca == 'HP' ? 'selected' : '' }}>HP</option>
+                                                    <option value="Dell" {{ $periferico->marca == 'Dell' ? 'selected' : '' }}>Dell</option>
+                                                    <option value="Genius" {{ $periferico->marca == 'Genius' ? 'selected' : '' }}>Genius</option>
+                                                    <option value="Otro" {{ $periferico->marca == 'Otro' ? 'selected' : '' }}>Otro</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label>Serial</label>
+                                                <input type="text" name="perifericos[{{ $index }}][serial]" 
+                                                    class="form-control form-control-sm" 
+                                                    placeholder="Serial del periférico"
+                                                    value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
+                                            </div>
 
-    <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarPeriferico(this)">
-        <i class="fas fa-trash"></i> Eliminar periférico
-    </button>
-</div>
-@endforeach
+                                            <div class="form-group col-md-6">
+                                                <label>Interfaz</label>
+                                                <select name="perifericos[{{ $index }}][interface]" class="form-control form-control-sm">
+                                                    <option value="">Seleccione...</option>
+                                                    @foreach(['HDMI', 'DisplayPort (DP)', 'VGA', 'DVI', 'USB-C'] as $interface)
+                                                        <option value="{{ $interface }}" {{ $periferico->perifericos == $interface ? 'selected' : '' }}>{{ $interface }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarPeriferico(this)">
+                                            <i class="fas fa-trash"></i> Eliminar periférico
+                                        </button>
+                                    </div>
+                                    @endforeach
                                     </div>
                                 </div>
 
                                 {{-- Rams --}}
                                 <div class="component-group">
 
-                                    <h6 class="text-info"><i class="fas fa-memory"></i> Módulos RAM (Editables)</h6>
-                                    
+                                    <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
+                                        <i class="fas fa-memory mr-2"></i> MÓDULOS RAM (EDITABLES)
+                                    </h6>                                    
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary mt-2"
                                         onclick="agregarRam()">
@@ -397,7 +511,9 @@
 
                                 {{-- Procesadores --}}
                                 <div class="component-group">
-                                    <h6 class="text-info"><i class="fas fa-microchip"></i> Procesadores (Editables)</h6>
+                                <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
+                                    <i class="fas fa-microchip mr-2"></i> PROCESADORES (EDITABLES)
+                                </h6>                                        
                                         <button type="button"
                                         class="btn btn-sm btn-outline-primary mt-2"
                                         onclick="agregarProcesador()">
@@ -442,7 +558,9 @@
 
                                 {{-- Monitores --}}
                                 <div class="component-group">
-                                    <h6 class="text-info"><i class="fas fa-tv"></i> Monitores (Editables)</h6>
+                                    <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
+                                        <i class="fas fa-tv mr-2"></i> MONITORES (EDITABLES)
+                                    </h6>                                    
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary mt-2"
                                         onclick="agregarMonitor()">
@@ -506,8 +624,9 @@
 
                                 {{-- Discos Duros --}}
                                 <div class="component-group">
-                                    <h6 class="text-info"><i class="fas fa-hdd"></i> Discos Duros (Editables)</h6>
-
+                                    <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
+                                    <i class="fas fa-hdd mr-2"></i> DISCOS DUROS (EDITABLES)
+                                    </h6>
                                     <button type="button"
                                         class="btn btn-sm btn-outline-primary mt-2"
                                         onclick="agregarDiscoDuro()">

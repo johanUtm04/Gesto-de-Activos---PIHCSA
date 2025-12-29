@@ -20,7 +20,7 @@ class EquipoController extends Controller
     public function index()
     {
         session()->forget('wizard_equipo');
-        $equipos = Equipo::paginate(8);
+        $equipos = Equipo::paginate(11);
         return view('equipos.index', compact('equipos'));
     }
 
@@ -43,7 +43,7 @@ class EquipoController extends Controller
             'sistema_operativo' => 'required|string|max:35', 
             'usuario_id' => 'required|integer|exists:users,id',
             'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
-            'valor_inicial' => 'nullable|numeric|min:0|max:999999.99',
+            'valor_inicial' => 'nullable|numeric|min:0|max:99999999.99',
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
         ]);
@@ -132,19 +132,23 @@ public function update(Request $request, Equipo $equipo)
                 if (empty($peripheralData['tipo']) && empty($peripheralData['serial'])) {
                     $periferico->delete(); 
                 } else {    
-                    //8.-Si alguno de los 2 tiene datos actualizamos
+                    //11.-Si alguno de los 2 tiene datos actualizamos
                     $periferico->update([
                     'tipo' => $peripheralData['tipo'],
                     'serial' => $peripheralData['serial'],
-                    ]);
+                    'marca' => $peripheralData['marca'],
+                    'interface' => $peripheralData['interface'],
+                ]);
                 }
             }
         } 
 
         else {
         $equipo->perifericos()->create([
-        'tipo' => $peripheralData['tipo'],
-        'serial' => $peripheralData['serial'],
+            'tipo' => $peripheralData['tipo'],
+            'serial' => $peripheralData['serial'],
+            'marca' => $peripheralData['marca'],
+            'interface' => $peripheralData['interface'],
         ]);
         }
 
@@ -336,16 +340,7 @@ public function update(Request $request, Equipo $equipo)
         }
     }
 
-    //Detalles de Auditoria.. en proceso...
-    $detalles = [];
-    foreach($equipo->getChanges() as $campo => $valorNuevo){
-        $detalles[$campo] = [
-            'old' => $equipo->getOriginal($campo),
-            'new' => $valorNuevo
-        ];
-    }
 
-    \App\Services\AuditService::log('EDIT', $equipo->id, $detalles);
     //Detalles de Auditoria.. en proceso...
 
 /**
@@ -354,7 +349,7 @@ public function update(Request $request, Equipo $equipo)
  */
 
     //1.-Tomar en cuenta cuantos registros hay por pagina
-    $perPage =8;
+    $perPage =11;
 
     //2.-Calculamos cuantos registros hay por detras
     $position = Equipo::where('id', '<=', $equipo->id)->count();
@@ -410,7 +405,7 @@ public function update(Request $request, Equipo $equipo)
     //funcion para elminar activos 🟦
     public function destroy(Equipo $equipo)
     {
-        $perPage = 8;
+        $perPage = 11;
 
         $position = Equipo::where('id', '<=', $equipo->id)->count();
 
@@ -425,7 +420,7 @@ public function show($id) // Cambiamos el nombre de la variable de uuid a id par
 {
 
     $equipo = Equipo::with(['usuario', 'ubicacion', 'monitores', 'discosDuros', 'rams', 'perifericos', 'procesadores'])
-                    ->findOrFail($id); 
+    ->findOrFail($id); 
 
     return view('equipos.detalles', compact('equipo'));
 }

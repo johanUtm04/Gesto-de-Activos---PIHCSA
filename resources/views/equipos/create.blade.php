@@ -378,8 +378,8 @@
                     <div class="form-group">
                         <label>Valor inicial </label>
                         <input type="number" name="valor_inicial" class="form-control"
-                               step="0.01" placeholder="15000.00"
-                               value="{{ old('valor_inicial', $equipo['valor_inicial'] ?? '') }}">
+                        step="0.01" placeholder="15000.00"
+                        value="{{ old('valor_inicial', $equipo['valor_inicial'] ?? '') }}">
                     </div>
 
                     <div class="form-group">

@@ -253,7 +253,7 @@ class EquipoWizardController extends Controller
         session()->forget('wizard_equipo');
 
         // 4. Calcular paginación para redirigir al registro nuevo
-        $perPage = 8;
+        $perPage = 11;
         $position = Equipo::where('id', '<=', $equipo->id)->count();
         $page = ceil($position / $perPage);
 

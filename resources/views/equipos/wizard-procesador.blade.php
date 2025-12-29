@@ -228,10 +228,6 @@
 
             {{-- FOOTER FINAL --}}
             <div class="d-flex justify-content-between mt-4">
-                <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary btn-lg">
-                    Cancelar registro
-                </a>
-
                 <button type="submit" class="btn btn-success btn-lg px-5 shadow">
                     <i class="fas fa-check-double"></i> Finalizar y Guardar Activo
                 </button>

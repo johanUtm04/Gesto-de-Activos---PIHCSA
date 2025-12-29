@@ -20,7 +20,7 @@ return view('auth.login');});
 //Full crud to 'equipos'
 Route::middleware(['auth'])->group(function () {
     Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
-    Route::get('/equipos/Historial', [EquipoController::class, 'historial'])->name('equipos.historial');
+
     
 
     Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])->name('equipos.wizard.create');
@@ -98,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     //Historial
-    Route::get('/historial', [HistorialController::class, 'index'])->name('historial.index');
+    Route::get('/historial/', [HistorialController::class, 'index'])->name('historial.index');
 });
 
 Route::get('/dashboard', function () {

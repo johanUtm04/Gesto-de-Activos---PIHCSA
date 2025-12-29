@@ -13,6 +13,7 @@ use App\Models\Disco_Duro;
 use App\Models\Ram;
 use App\Models\Periferico;
 use App\Models\Procesador;
+use App\Models\Historial_log;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Equipo extends Model
@@ -81,4 +82,9 @@ class Equipo extends Model
     {
         return $this->hasMany(Procesador::class, 'equipo_id');
     }
+
+    public function historials() {
+        return $this->hasMany(Historial_log::class, 'activo_id');
+    }
+
 }
