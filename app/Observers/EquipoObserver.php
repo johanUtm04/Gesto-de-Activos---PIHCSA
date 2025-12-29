@@ -23,7 +23,9 @@ class EquipoObserver
             'usuario_accion_id' => Auth::id() ?? 1, // ID del usuario o sistema
             'tipo_registro'     => 'CREATE',
             'detalles_json'     => [
-                'mensaje' => 'ASIGNO UN EQUIPO A',
+                'mensaje' => 'Creacion de Equipo',
+                'usuario_asignado' => $equipo->usuario->name ?? 'N/A',
+                'rol' => $equipo->usuario->rol ?? 'N/A',
                 'datos'   => $equipo->toArray()
             ]
         ]);
@@ -34,9 +36,10 @@ class EquipoObserver
      */
     public function updated(Equipo $equipo)
         {
-            //3.-Solo registramos si hubo cambios reales
+            //1.-Solo registramos si hubo cambios reales (isDirty)
             if ($equipo->isDirty()) {
                 $cambios = [];
+                //Devolvemos Unicamente la columnas que fueron Modificadas
                 foreach ($equipo->getDirty() as $atributo => $nuevoValor) {
                     $cambios[$atributo] = [
                         'antes'  => $equipo->getOriginal($atributo),
@@ -51,6 +54,7 @@ class EquipoObserver
                     'detalles_json'     => [
                         'mensaje' => 'Se modificaron campos del equipo',
                         'usuario_asignado' => $equipo->usuario->name ?? 'N/A',
+                        'rol' => $equipo->usuario->rol ?? 'N/A',
                         'cambios' => $cambios
                         
                     ]
@@ -61,7 +65,7 @@ class EquipoObserver
 
     public function deleting(Equipo $equipo)
     {
-        Historial_log::create([
+        Historial_log::delete([
             'activo_id'         => $equipo->id,
             'usuario_accion_id' => Auth::id() ?? 1,
             'tipo_registro'     => 'DELETE',
@@ -77,14 +81,14 @@ class EquipoObserver
      */
     public function restored(Equipo $equipo): void
     {
-        AuditService::log(
-            'EQUIPO_RESTAURADO',
-            $equipo->id,
-            [
-                'mensaje' => 'Se restauró un equipo',
-                'despues' => $equipo->toArray()
-            ]
-        );
+        // AuditService::log(
+        //     'EQUIPO_RESTAURADO',
+        //     $equipo->id,
+        //     [
+        //         'mensaje' => 'Se restauró un equipo',
+        //         'despues' => $equipo->toArray()
+        //     ]
+        // );
     }
 
     /**
@@ -92,13 +96,13 @@ class EquipoObserver
      */
     public function forceDeleted(Equipo $equipo): void
     {
-        AuditService::log(
-            'EQUIPO_ELIMINACION_PERMANENTE',
-            $equipo->id,
-            [
-                'mensaje' => 'Se eliminó permanentemente un equipo',
-                'antes' => $equipo->getOriginal()
-            ]
-        );
+        // AuditService::historial(
+        //     'EQUIPO_ELIMINACION_PERMANENTE',
+        //     $equipo->id,
+        //     [
+        //         'mensaje' => 'Se eliminó permanentemente un equipo',
+        //         'antes' => $equipo->getOriginal()
+        //     ]
+        // );
     }
 }

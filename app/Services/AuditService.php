@@ -10,16 +10,16 @@ class AuditService
     /**
      * Registra una acción en el historial
      */
-    public static function log(
-        string $tipoRegistro,
-        ?int $activoId = null,
-        array $detalles = []
-    ): void {
-        Historial_log::create([
-            'activo_id' => $activoId,
-            'usuario_accion_id' => auth()->id(),
-            'tipo_registro' => $tipoRegistro,
-            'detalles_json' => $detalles,
-        ]);
-    }
+    // public static function log(
+    //     string $tipoRegistro,
+    //     ?int $activoId = null,
+    //     array $detalles = []
+    // ): void {
+    //     Historial_log::create([
+    //         'activo_id' => $activoId,
+    //         'usuario_accion_id' => auth()->id(),
+    //         'tipo_registro' => $tipoRegistro,
+    //         'detalles_json' => $detalles,
+    //     ]);
+    // }
 }

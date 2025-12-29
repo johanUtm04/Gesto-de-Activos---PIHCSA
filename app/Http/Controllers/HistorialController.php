@@ -11,7 +11,7 @@ class HistorialController extends Controller
     {
 
         //eager loading
-        $equipos = Equipo::with(['historials', 'historials.usuario'])->get();
+        $equipos = Equipo::with(['historials', 'historials.usuario'])->paginate(15);
         // Cargamos los equipos con sus historiales y los usuarios de esos historiales de un solo golpe
         // $equipos = Equipo::with(['historials.usuario'])->get();
         return view('historial.index', compact('equipos'));
