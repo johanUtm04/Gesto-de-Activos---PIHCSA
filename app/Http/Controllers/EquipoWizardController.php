@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
+//IMPORTACION DE MODELOS
 use Illuminate\Http\Request;
 use App\Models\Equipo;
 use App\Models\User;
-use Illuminate\Support\Str;
+
 
 class EquipoWizardController extends Controller
 {
-    /**
-     * Paso 1: Formulario inicial de creación del equipo
-     */
+
+    // FUNCION PARA ENTRAR AL PRIMER FORMULARIO ANETS DE PASAR AL 
+    // FORMULARIO DE WIZARD, INCIANDO ADEMAS EL ARRAY ASOCIATIVO
+    //QUE USAREMOS DURANTE EL FORMULARIO
     public function create()
     {
         $wizard = session('wizard_equipo');
-        $usuarios = User::all();
+        $usuarios = User::select('id', 'name')->get();
         $equipo = data_get($wizard, 'equipo', []);
         
         return view('equipos.create', compact('equipo', 'usuarios'));

@@ -1,40 +1,34 @@
 <?php
 namespace App\Http\Controllers;
 
-//Importacion de Modelos
-use App\Models\DiscoDuro;
+//IMPORTACION DE MODELOS
 use App\Models\Equipo;
-use App\Models\Monitor;
 use App\Models\Ubicacion;
 use App\Models\Historial_log;
-use App\Models\Procesador;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Spatie\FlareClient\View;
 use Illuminate\Support\Str;
 
 
 class EquipoController extends Controller
 {
-    //Funcion para mostrar vista principal 🟦
+    // FUNCION PARA IR AL DASHBOARD PRINCIPAL, 
+    // OLVIDA EL ACTIVO CON UN IDENTIFICADOR UNICO DE SESSION EN CASA DE QUE 
+    // HAGAMOS UN 'BACK' A LA PANTALLA DE DASHBOARD PRINCIPAL, ADEMAS CONPAGINA 
+    // LOS ACTIVOS DE LA BASE DE DATOS
     public function index()
     {
         session()->forget('wizard_equipo');
-        $equipos = Equipo::paginate(11);
+        $equipos = Equipo::with(['usuario', 'ubicacion'])->paginate(11);
         return view('equipos.index', compact('equipos'));
     }
 
-    //Funcion para mostrar fomrulario basico 🟦
-    public function create()
-    {
-        session()->forget('wizard_equipo');
-        $usuarios = User::all();
-        $ubicaciones = Ubicacion::all();
-        return view('equipo.wizard.create', compact('usuarios', 'ubicaciones'));
-    }
-
-    //Funcion para mandar datos del formulario del equipo 🟦
-    public function store(Request $request, Equipo $equipo)
+    //FUNCION PARA VALIDAR DATOS DEL FORMULARIO BASE, MANDARLOS
+    //Y ENTRAR DE UNA VEZ AL WIZARD, OCURRE LA VALIDACIONM ADEMAS
+    //CAMPOS DE RESPALDO EN CASO DE QUE NO SE LLENEN LOS CAMPOS NO 
+    //OBLIGATORIOS, AGREGANDO LA CREACION DEL INENTIFICADOR UNICO QUE 
+    //ESTAREMOS "PASEANDO" POR LA URL DEL WIZARD
+    public function store(Request $request)
     {
         $request->validate([
             'marca_equipo' => 'nullable|string|max:255',
@@ -47,28 +41,18 @@ class EquipoController extends Controller
             'fecha_adquisicion' => 'required|date',
             'vida_util_estimada' => 'required|string|max:255',
         ]);
-
         $data = $request->all();
 
-        if (empty($request->serial)) {
-            $data['serial'] = 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
-        }
-        
-        if (empty($request->marca_equipo)) {
-            $data['marca_equipo'] = 'Sin marca asignada';
-        }
+        $data['serial'] = $request->serial ?? 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
 
-        if (empty($request->valor_inicial)) {
-            $data['valor_inicial'] = 0;
-        }
+        // Valores por defecto directos
+        $data['marca_equipo'] = $request->marca_equipo ?? 'Sin marca asignada';
+        $data['valor_inicial'] = $request->valor_inicial ?? 0;
 
         //$uuid es un numero unico generado en cada envio y se guarda en la sesion
         $uuid = Str::uuid()->toString();
-
         session()->put('wizard_equipo.uuid', $uuid);
-
         session()->put('wizard_equipo.equipo', $data);
-
         return redirect()->route('equipos.wizard-ubicacion', $uuid );
     }
 

@@ -1,53 +1,32 @@
 <?php
 
-//Controllers
+//Controladores
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\EquipoWizardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DepreciacionController;
-use App\Http\Controllers\PapeleraController;
 use App\Http\Controllers\GestionUsuariosController;
 use App\Http\Controllers\GestionUbicacionesController;
 use App\Http\Controllers\HistorialController;
 
 
 
-//Main Route
+//Ruta Principal al entrar
 Route::get('/', function () {
 return view('auth.login');});
 
-//Full crud to 'equipos'
+//Crud Completo -ACCECIBLE UNA VEZ SE LOGEA-- Estamos haiendo uso de laravel/breeze
 Route::middleware(['auth'])->group(function () {
+
+    //CRUD DE EQUIPOS -COMPLETO- 
     Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
 
-    
-
+    //CREACION DE ACTIVO BASE -COMPLETO-
     Route::get('/equipos/wizard/create', [EquipoWizardController::class, 'create'])->name('equipos.wizard.create');
-
+    //VALIDAR ACTIVO BASE Y SEGUIR CON EL WIZARD -COMPLETO-
     Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
-
-    //Editar un equipo
-    // Route::middleware('role:Admin')->group(function () {
-
-    Route::get('/equipos/{equipo}/edit', [EquipoController::class, 'edit'])->name('equipos.edit');
-    Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
-    Route::delete('/equipos/{equipo}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
-    // });
-    Route::get('/equipos/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork.index');
-    Route::post('/equipos/{equipo}/addwork', [EquipoController::class, 'addwork'])->name('equipos.addwork.store');
-
-    Route::get('/equipos/{uuid}/detalles', [EquipoController::class, 'show'])->name('equipos.show');
-
-
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-
-    // Route::put('/equipos/{equipo}', [EquipoController::class, 'updatework'])->name('equipos.updatework');
-    //Wizard, este menu tal vez se use al querer agregar algo extra
-    Route::get('/equipos/{equipo}/wizard', [EquipoWizardController::class, 'show'])->name('equipos.wizard');
+    
 
     Route::get('/equipos/{uuid}/ubicacion', [EquipoWizardController::class, 'ubicacionForm'])->name('equipos.wizard-ubicacion');
     //store
@@ -68,14 +47,31 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'procesadorForm'])->name('equipos.wizard-procesador');
     Route::post('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
+
+
+    
+    //Edicion de un ACTIVO(COMPLETO)
+    Route::get('/equipos/{equipo}/edit', [EquipoController::class, 'edit'])->name('equipos.edit');
+    Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
+    Route::delete('/equipos/{equipo}', [EquipoController::class, 'destroy'])->name('equipos.destroy');
+
+    //AGREGAR MANTENIMIENTO A UN ACTIVO
+    Route::get('/equipos/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork.index');
+    Route::post('/equipos/{equipo}/addwork', [EquipoController::class, 'addwork'])->name('equipos.addwork.store');
+
+    //MOSTRAR DETALLES COMPLETOD DE UN ACTIVO
+    Route::get('/equipos/{uuid}/detalles', [EquipoController::class, 'show'])->name('equipos.show');
+
+
+    //CONFIGURACION ESCENCIAL DE UN PERFIL DESDE EL LADO DE ADMINISTARDOR
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     //Depreciacon de una Activo
     Route::get('/depreciacion', [DepreciacionController::class, 'index'])->name('depreciacion.index');
     Route::get('/depreciacion/reporte/pdf', [DepreciacionController::class, 'exportPdf'])->name('depreciacion.pdf');
     Route::get('/depreciacion/{equipo}', [DepreciacionController::class, 'show'])->name('depreciacion.show');
-
-
-    //Papelera
-    Route::get('/papelera', [PapeleraController::class, 'index'])->name('papelera.index');
 
     //Gestion de Usuarios
     Route::get('/gestionUsuarios', [GestionUsuariosController::class, 'index'])->name('users.index');
