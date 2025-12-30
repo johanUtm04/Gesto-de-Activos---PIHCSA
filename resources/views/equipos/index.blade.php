@@ -233,8 +233,6 @@ $(document).ready(function() {
     $('.equipo-row').on('mouseenter', function() {
         const d = $(this).data();
         let contador = 1;
-        
-    
         // Estructura Profesional Dinámica
         const html = `
             <div class="animate-details">

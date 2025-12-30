@@ -4,93 +4,74 @@ namespace App\Http\Controllers;
 
 use App\Models\Ubicacion;
 use Illuminate\Http\Request;
-use App\Services\AuditService;
-
 
 class GestionUbicacionesController extends Controller
 {
+    // Centralizamos el paginado. 
+    // Si mañana quieres mostrar 10, solo cambias este número.
+    const PER_PAGE = 3;
 
+    public function index()
+    {
+        $ubicaciones = Ubicacion::paginate(self::PER_PAGE);
+        return view('ubicaciones.index', compact('ubicaciones'));
+    }
 
-public function index(Request $request)
-{
-    $ubicaciones = Ubicacion::paginate(3);
-    return view('ubicaciones.index', compact('ubicaciones'));
-}
+    public function create()
+    {
+        return view('ubicaciones.create');
+    }
 
-public function create()
-{
-    $ubicaciones = Ubicacion::all();
-        return view('ubicaciones.create', compact('ubicaciones'));
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'codigo' => 'required|string|max:255|unique:ubicaciones,codigo',
+        ]);
 
-}
+        $ubicacion = Ubicacion::create($data);
 
+        return redirect()->route('ubicaciones.index', ['page' => $this->getReturnPage($ubicacion->id)])
+            ->with('success', 'Ubicación agregada correctamente')
+            ->with('new_id', $ubicacion->id);
+    }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'nombre' => 'required|string|max:255',
-        'codigo' => 'required|string|max:255',
-    ]);
-    $ubicacion=Ubicacion::create($request->all());
+    public function edit(Ubicacion $ubicacion)
+    {
+        return view('ubicaciones.edit', compact('ubicacion'));
+    }
 
-    //1.-Cuantos usuarios mostramos por pagina ??
-    $perPage = 3;
+    public function update(Request $request, Ubicacion $ubicacion)
+    {
+        $data = $request->validate([
+            'nombre' => 'nullable|string|max:255',
+            'codigo' => 'nullable|string|max:255|unique:ubicaciones,codigo,' . $ubicacion->id,
+        ]);
 
+        $ubicacion->update($data);
 
-    //2.-Cuants hay por detras?
-    $position = Ubicacion::where('id', '<=', $ubicacion->id)->count();
+        return redirect()->route('ubicaciones.index', ['page' => $this->getReturnPage($ubicacion->id)])
+            ->with('warning', 'Ubicación editada correctamente')
+            ->with('actualizado_id', $ubicacion->id);
+    }
 
-    //3.-Descubrir en que pagina va?
-    $page = ceil($position/$perPage);
+    public function destroy(Ubicacion $ubicacion)
+    {
+        // 1. Calculamos la página ANTES de eliminarlo de la base de datos
+        $page = $this->getReturnPage($ubicacion->id);
+        
+        $ubicacion->delete();
 
-    return redirect()->route('ubicaciones.index', ['page' => $page])
-    ->with('success', 'Ubicacion agregada correctamente')
-    ->with('new_id', $ubicacion->id);
-}
+        return redirect()->route('ubicaciones.index', ['page' => $page])
+            ->with('danger', 'Ubicación eliminada correctamente');
+    }
 
-
-public function edit(Ubicacion $ubicacion)
-{
-    return view('ubicaciones.edit', compact('ubicacion'));
-}
-
-public function update(Request $request,Ubicacion $ubicacion)
-{
-
-    $request->validate([
-        'nombre' => 'nullable|string|max:255',
-        'codigo' => 'nullable|string|max:255',
-    ]);
-
-    $ubicacion->update($request->all());
-
-
-        //1.-Cuantos usuarios mostramos por pagina ??
-        $perPage = 3;
-
-
-        //2.-Cuants hay por detras?
-        $position = Ubicacion::where('id', '<=', $ubicacion->id)->count();
-
-        //3.-Descubrir en que pagina va?
-        $page = ceil($position/$perPage);
-
-    return redirect()->route('ubicaciones.index', ['page' => $page])
-    ->with('warning', 'Ubicacion editada correctamente')
-    ->with('actualizado->id', $ubicacion->id);
-}
-
-
-public function destroy(Ubicacion $ubicacion)
-{
-    $ubicacion->delete();
-    $perPage = 3;
-
-        //cuantos hay detras ??
-        $position = Ubicacion::where('id', '<=', $ubicacion->id)->count();
-
-        $page = ceil($position/$perPage);
-    return redirect()->route('ubicaciones.index' , ['page' => $page])
-    ->with('danger', 'Ubicacion Eliminada correctamente');
-}
+    /**
+     * LÓGICA REUTILIZABLE: Calcula la página destino basada en el ID
+     */
+    private function getReturnPage($id)
+    {
+        $position = Ubicacion::where('id', '<=', $id)->count();
+        return ceil($position / self::PER_PAGE);
+    }
 }

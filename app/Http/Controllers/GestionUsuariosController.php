@@ -3,108 +3,85 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\User;
-use App\Models\Equipo;
+use Illuminate\Support\Facades\Hash;
 
 class GestionUsuariosController extends Controller
 {
+    // Constante para centralizar el paginado
+    const PER_PAGE = 10;
 
-
-    public function index(Request $request, Equipo $equipo)
+    public function index()
     {
-            $users = User::paginate(10);
-            return view('users.index',compact('users'));
+        $users = User::paginate(self::PER_PAGE);
+        return view('users.index', compact('users'));
     }
 
     public function create()
     {
-        $users = User::all();
-        return view('users.create', compact('users'));
+        // En un create de usuario, normalmente no necesitas pasar todos los usuarios
+        return view('users.create');
     }
 
-
-    public function store(Request $request,)
+    public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-            'password' => 'nullable|string|min:8|confirmed',
-            'rol' => 'required|string|max:35',
+        $data = $request->validate([
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|string|email|max:255|unique:users',
+            'password'     => 'required|string|min:8|confirmed',
+            'rol'          => 'required|string|max:35',
             'departamento' => 'required|string|max:35',
-            'estatus' => 'required|string|max:35',
+            'estatus'      => 'required|string|max:35',
         ]);
 
-       $user = User::create($request->all());
+        // Encriptar contraseña antes de guardar
+        $data['password'] = Hash::make($data['password']);
+        
+        $user = User::create($data);
 
-        //1.-Cuantos usuarios mostramos por pagina ??
-        $perPage = 10;
-
-
-        //2.-Cuants hay por detras?
-        $position = User::where('id', '<=', $user->id)->count();
-
-        //3.-Descubrir en que pagina va?
-        $page = ceil($position/$perPage);
-
-        return redirect()->route('users.index', ['page' => $page])
-        ->with('new_id', $user->id)
-        ->with('success', 'Usuario agregado correctamente');
+        return redirect()->route('users.index', ['page' => $this->getReturnPage($user->id)])
+            ->with('new_id', $user->id)
+            ->with('success', 'Usuario agregado correctamente');
     }
-
 
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));
     }
-    
 
-    public function update(Request $request,User $user)
+    public function update(Request $request, User $user)
     {
-
-        $request->validate([
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|string|max:255',
-            'rol' => 'nullable|string|max:255',
+        $data = $request->validate([
+            'name'         => 'nullable|string|max:255',
+            'email'        => 'nullable|string|email|max:255|unique:users,email,'.$user->id,
+            'rol'          => 'nullable|string|max:255',
             'departamento' => 'nullable|string|max:255',
-            'estatus'=> 'nullable|string|max:255',
+            'estatus'      => 'nullable|string|max:255',
         ]);
 
-        $user->update($request->all());
+        $user->update($data);
 
-
-        //1.-Cuantos usuarios mostramos por pagina ??
-        $perPage = 10;
-
-
-        //2.-Cuants hay por detras?
-        $position = User::where('id', '<=', $user->id)->count();
-
-        //3.-Descubrir en que pagina va?
-        $page = ceil($position/$perPage);
-
-        return redirect()->route('users.index', ['page' => $page])
-        ->with('actualizado->id', $user->id)
-        ->with('warning', 'Usuario editado correctamente');
+        return redirect()->route('users.index', ['page' => $this->getReturnPage($user->id)])
+            ->with('warning', 'Usuario editado correctamente');
     }
-
-
 
     public function destroy(User $user)
     {
+        // Calculamos la página ANTES de borrarlo
+        $page = $this->getReturnPage($user->id);
+        
         $user->delete();
-        //Cuantos registros cargamos por pagina
-        $perPage = 10;
-
-        //cuantos hay detras ??
-        $position = User::where('id', '<=', $user->id)->count();
-
-        $page = ceil($position/$perPage);
-
 
         return redirect()->route('users.index', ['page' => $page])
-        ->with('danger', 'Equipo Eliminado correctamente');
+            ->with('danger', 'Usuario eliminado correctamente');
     }
 
-
+    /**
+     * MÉTODO HELPER: Calcula la página en la que se encuentra un registro
+     */
+    private function getReturnPage($userId)
+    {
+        $position = User::where('id', '<=', $userId)->count();
+        return ceil($position / self::PER_PAGE);
+    }
 }

@@ -87,7 +87,9 @@ class EquipoController extends Controller
         ]));
 
         // 2. Sincronizar relaciones dinámicas (RAM, Discos, etc.)
-        // Nota: 'discoDuros' debe coincidir con el atributo 'name' del HTML
+        /**
+         * Aqui lo que pasa es que pasa es que que se busca la funcion sincrona 
+         */
         $this->syncRelation($equipo->perifericos(),  $request->input('perifericos', []));
         $this->syncRelation($equipo->rams(),         $request->input('rams', []));
         $this->syncRelation($equipo->procesadores(), $request->input('procesadores', []));
@@ -107,7 +109,7 @@ class EquipoController extends Controller
     public function show($id)
     {
         $equipo = Equipo::with(['usuario', 'ubicacion', 'monitores', 'discosDuros', 'rams', 'perifericos', 'procesadores'])
-                        ->findOrFail($id); 
+        ->findOrFail($id); 
 
         return view('equipos.detalles', compact('equipo'));
     }
@@ -155,6 +157,7 @@ class EquipoController extends Controller
      */
     private function syncRelation($relation, $dataArray)
     {
+        //$dataArray = $equipo->perifericos(), data $request->input('perifericos', [])
         foreach ($dataArray as $data) {
             // Saltamos si el array no tiene datos útiles
             if (empty(array_filter($data))) continue;
@@ -171,7 +174,6 @@ class EquipoController extends Controller
                     }
                 }
             } else {
-                // Si no tiene ID y tiene contenido real, es un registro nuevo
                 if (!$this->isEmptyRecord($data) && empty($data['_delete'])) {
                     $relation->create(collect($data)->except(['_delete'])->toArray());
                 }

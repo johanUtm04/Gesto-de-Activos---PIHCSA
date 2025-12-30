@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EquipoController;
-use App\Http\Controllers\EquipoWizardController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DepreciacionController;
-use App\Http\Controllers\GestionUsuariosController;
-use App\Http\Controllers\GestionUbicacionesController;
-use App\Http\Controllers\HistorialController;
+use App\Http\Controllers\EquipoController; //🤙
+use App\Http\Controllers\EquipoWizardController;  //🤙
+use App\Http\Controllers\ProfileController;  //🤙
+use App\Http\Controllers\DepreciacionController;  //🤙    
+use App\Http\Controllers\GestionUsuariosController;  //🤙    
+use App\Http\Controllers\GestionUbicacionesController;  //🤙    
+use App\Http\Controllers\HistorialController;  //🤙    
 
 /*
 |--------------------------------------------------------------------------
