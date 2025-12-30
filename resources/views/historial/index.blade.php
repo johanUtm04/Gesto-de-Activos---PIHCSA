@@ -51,8 +51,6 @@
                 @php                     
                     $badgeColor = ['CREATE'=>'success', 'UPDATE'=>'warning', 'DELETE'=>'danger'][$log->tipo_registro] ?? 'secondary';
                     $detalles = $log->detalles_json;
-
-                    DD($detalles);
                 @endphp
 
                 <div class="timeline-entry p-3 rounded shadow-sm">
