@@ -359,7 +359,6 @@
                                     </div>
 
                                     <script>
-                                        // Script sencillo para habilitar el input cuando se seleccione una unidad
                                         document.getElementById('vida_util_unidad').addEventListener('change', function() {
                                             const inputPrecio = document.getElementById('vida_util_input');
                                             if (this.value !== "") {
