@@ -535,73 +535,36 @@
                                 </div>
 
                                 {{-- Monitores --}}
-                                <div class="component-group">
-                                    <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
-                                        <i class="fas fa-tv mr-2"></i> MONITORES (EDITABLES)
-                                    </h6>                                    
-                                    <button type="button"
-                                        class="btn btn-sm btn-outline-primary mt-2"
-                                        onclick="agregarMonitor()">
-                                        <i class="fas fa-plus"></i> Agregar Procesador
-                                    </button>
-                                    <hr class="my-2">
-                                   <div id="monitores-container"
-                                    data-monitores-count="{{ $equipo->monitores->count() }}">
-                                    @foreach($equipo->monitores as $index => $monitor)
-                                    <div class="monitor-item p-2 mb-2 border rounded bg-white">
-                                        <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Monitor #{{ $index + 1 }}</h6>
-
-                                        <input type="hidden" name="monitores[{{ $index }}][id]" value="{{ $monitor->id }}">
-                                        <input type="hidden" name="monitores[{{ $index }}][_delete]" value="">
-
-                                        <div class="row">
-                                            <div class="form-group col-md-3">
-                                                <label>Marca</label>
-                                                <select name="monitores[{{ $index }}][marca]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    @foreach(['HP', 'Dell', 'Lenovo', 'LG', 'Samsung', 'Acer', 'Asus', 'ViewSonic', 'BenQ'] as $marca)
-                                                        <option value="{{ $marca }}" {{ $monitor->marca == $marca ? 'selected' : '' }}>{{ $marca }}</option>
-                                                    @endforeach
-                                                    <option value="Otra" {{ !in_array($monitor->marca, ['HP', 'Dell', 'Lenovo', 'LG', 'Samsung', 'Acer', 'Asus', 'ViewSonic', 'BenQ']) ? 'selected' : '' }}>Otra</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-md-3">
-                                                <label>Serial</label>
-                                                <input type="text" name="monitores[{{ $index }}][serial]" class="form-control form-control-sm" value="{{ $monitor->serial }}" placeholder="Serial único">
-                                            </div>
-
-                                            <div class="form-group col-md-3">
-                                                <label>Pulgadas</label>
-                                                <select name="monitores[{{ $index }}][escala_pulgadas]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    @foreach(['17', '19', '20', '21', '22', '24', '27', '32'] as $pulg)
-                                                        <option value="{{ $pulg }}" {{ $monitor->escala_pulgadas == $pulg ? 'selected' : '' }}>{{ $pulg }}"</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-md-3">
-                                                <label>Interfaz</label>
-                                                <select name="monitores[{{ $index }}][interface]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    @foreach(['HDMI', 'DisplayPort (DP)', 'VGA', 'DVI', 'USB-C'] as $inter)
-                                                        <option value="{{ $inter }}" {{ $monitor->interface == $inter ? 'selected' : '' }}>{{ $inter }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                    <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-info font-weight-bold mb-0">
+                                                <i class="fas fa-hdd mr-2"></i> Monitores
+                                            </h6>
+                                            
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('monitor')">
+                                                <i class="fas fa-plus-circle"></i> Agregar Monitor
+                                            </button>
                                         </div>
 
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarMonitor(this)">
-                                            <i class="fas fa-trash"></i> Eliminar Monitor
-                                        </button>
+                                        
+                                        <div id="monitor-container" data-count="{{ $equipo->monitores->count() }}">
+                                            @foreach($equipo->monitores as $index => $monitor)
+                                                @include('equipos.partials.item-monitor', [
+                                                    'index' => $index, 
+                                                    'monitor' => $monitor
+                                                ])
+                                            @endforeach
+                                        </div>
+
+                                        <template id="template-monitor">
+                                            @include('equipos.partials.item-monitor', [
+                                                'index' => '__INDEX__', 
+                                                'monitor' => null
+                                            ])
+                                        </template>
                                     </div>
-                                    @endforeach
-                                    </div>
-                                </div>
 
                                 {{-- Discos Duros --}}
-
                                     <div class="component-group border p-3 mb-4 shadow-sm bg-white">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h6 class="text-info font-weight-bold mb-0">
@@ -648,6 +611,5 @@
 
 {{-- -------------------------------------------------------------------------------- --}}
 @section('js')
-    {{-- Llamada al archivo externo --}}
     <script src="{{ asset('js/equipos/edit-equipos.js') }}"></script>
 @stop

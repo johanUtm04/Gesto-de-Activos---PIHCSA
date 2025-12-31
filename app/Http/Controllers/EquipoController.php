@@ -93,7 +93,7 @@ class EquipoController extends Controller
         $this->syncRelation($equipo->perifericos(),  $request->input('perifericos', []));
         $this->syncRelation($equipo->rams(),         $request->input('rams', []));
         $this->syncRelation($equipo->procesadores(), $request->input('procesadores', []));
-        $this->syncRelation($equipo->monitores(),    $request->input('monitores', []));
+        $this->syncRelation($equipo->monitores(),    $request->input('monitor', []));
         $this->syncRelation($equipo->discosDuros(),  $request->input('discoDuro', []));
 
 
@@ -175,7 +175,6 @@ class EquipoController extends Controller
             // 2. Preparar los datos (quitamos _delete para que no choque con la BD)
             $id = $item['id'] ?? null;
             $data = collect($item)->forget(['id', '_delete'])->toArray();
-
             // 3. Actualizar o Crear
             // Laravel buscará por ID, si lo halla actualiza, si es null crea.
             $relation->updateOrCreate(['id' => $id], $data);

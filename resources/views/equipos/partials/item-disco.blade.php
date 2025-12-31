@@ -44,7 +44,7 @@
         </div>
 
         <div class="form-group col-md-4">
-            <label class="small font-weight-bold">Capacidad</label>
+            <label class="small font-weight-bold">Interface</label>
             <select name="discoDuro[{{$index}}][interface]" class="form-control form-control-sm">
                 <option value="">Seleccione...</option>
                 @foreach(['SATA', 'NVMe', 'USB', 'SAS'] as $interface)
