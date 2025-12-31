@@ -91,7 +91,7 @@ class EquipoController extends Controller
          * Aqui lo que pasa es que pasa es que que se busca la funcion sincrona 
          */
         $this->syncRelation($equipo->perifericos(),  $request->input('perifericos', []));
-        $this->syncRelation($equipo->rams(),         $request->input('rams', []));
+        $this->syncRelation($equipo->rams(),         $request->input('ram', []));
         $this->syncRelation($equipo->procesadores(), $request->input('procesador', []));
         $this->syncRelation($equipo->monitores(),    $request->input('monitor', []));
         $this->syncRelation($equipo->discosDuros(),  $request->input('discoDuro', []));
