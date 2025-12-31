@@ -488,51 +488,30 @@
                                 </div>
 
                                 {{-- Procesadores --}}
-                                <div class="component-group">
-                                <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
-                                    <i class="fas fa-microchip mr-2"></i> PROCESADORES (EDITABLES)
-                                </h6>                                        
-                                        <button type="button"
-                                        class="btn btn-sm btn-outline-primary mt-2"
-                                        onclick="agregarProcesador()">
-                                        <i class="fas fa-plus"></i> Agregar Procesador
-                                    </button>
-                                    <hr class="my-2">
-                                    <div id="procesadores-container"data-procesadores-count="{{ $equipo->procesadores->count() }}">
-                                    @foreach($equipo->procesadores as $index => $procesador)
-                                    <div class="procesador-item p-2 mb-2 border rounded bg-white">
-                                        <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Procesador #{{ $index + 1 }} </h6>
-                                        <input type="hidden" name="procesadores[{{ $index }}][id]" value="{{ $procesador->id }}">
-                                        <input type="hidden" name="procesadores[{{ $index }}][_delete]" value="">
-                                        
-                                        <div class="row">
-                                            <div class="form-group col-md-4">
-                                                <label>Marca</label>
-                                                <select name="procesadores[{{ $index }}][marca]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    <option value="Intel" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'Intel') ? 'selected' : '' }}>Intel</option>
-                                                    <option value="AMD" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'AMD') ? 'selected' : '' }}>AMD</option>
-                                                    <option value="Apple" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'Apple') ? 'selected' : '' }}>Apple (M1/M2/M3)</option>
-                                                    <option value="Otro" {{ (old('procesadores.'.$index.'.marca', $procesador->marca) == 'Otro') ? 'selected' : '' }}>Otro</option>
-                                                </select>
-                                            </div>
-                                            
-                                            <div class="form-group col-md-8">
-                                                <label>Descripción / Modelo</label>
-                                                <input type="text" name="procesadores[{{$index}}][descripcion_tipo]" 
-                                                    class="form-control form-control-sm"
-                                                    value="{{ old('procesadores.' . $index . '.descripcion_tipo', $procesador->descripcion_tipo ?? '') }}" 
-                                                    placeholder="Ej: Core i5-10400F / Ryzen 5 5600G">
-                                            </div> 
+                                      <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-info font-weight-bold mb-0">
+                                                <i class="fas fa-hdd mr-2"></i> Procesadores
+                                            </h6>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('procesador')">
+                                                <i class="fas fa-plus-circle"></i> Agregar Monitor
+                                            </button>
                                         </div>
-
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarProcesador(this)">
-                                            <i class="fas fa-trash"></i> Eliminar Procesador
-                                        </button>
+                                        <div id="procesador-container" data-count="{{ $equipo->procesadores->count() }}">
+                                            @foreach($equipo->procesadores as $index => $procesador)
+                                                @include('equipos.partials.item-procesador', [
+                                                    'index' => $index, 
+                                                    'procesador' => $procesador
+                                                ])
+                                            @endforeach
+                                        </div>
+                                        <template id="template-procesador">
+                                            @include('equipos.partials.item-procesador', [
+                                                'index' => '__INDEX__', 
+                                                'procesador' => null
+                                            ])
+                                        </template>
                                     </div>
-                                    @endforeach
-                                    </div>
-                                </div>
 
                                 {{-- Monitores --}}
                                     <div class="component-group border p-3 mb-4 shadow-sm bg-white">

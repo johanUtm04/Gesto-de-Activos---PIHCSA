@@ -92,7 +92,7 @@ class EquipoController extends Controller
          */
         $this->syncRelation($equipo->perifericos(),  $request->input('perifericos', []));
         $this->syncRelation($equipo->rams(),         $request->input('rams', []));
-        $this->syncRelation($equipo->procesadores(), $request->input('procesadores', []));
+        $this->syncRelation($equipo->procesadores(), $request->input('procesador', []));
         $this->syncRelation($equipo->monitores(),    $request->input('monitor', []));
         $this->syncRelation($equipo->discosDuros(),  $request->input('discoDuro', []));
 
