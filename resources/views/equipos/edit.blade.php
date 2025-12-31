@@ -352,146 +352,109 @@
                             {{-- SECCIÓN COMPONENTES EDITABLES --}}
                             <h5 class="section-title mt-4"><i class="fas fa-tools"></i> Edición Detallada de Componentes</h5>
 
-                            <div id="componentes-editables">
+                                <div id="componentes-editables">
 
-                                {{-- Periféricos --}}
-                                    <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                    {{-- Periféricos --}}
+                                    <div class="component-group bg-light border-left border-info p-3 mb-4 shadow-sm">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h6 class="text-info font-weight-bold mb-0">
-                                                <i class="fas fa-hdd mr-2"></i> Perifericos
+                                                <i class="fas fa-keyboard mr-2"></i> Periféricos
                                             </h6>
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('periferico')">
-                                                <i class="fas fa-plus-circle"></i> Agregar Periferico
+                                            <button type="button" class="btn btn-sm btn-info" onclick="agregarComponente('periferico')">
+                                                <i class="fas fa-plus-circle"></i> Agregar Periférico
                                             </button>
                                         </div>
                                         <div id="periferico-container" data-count="{{ $equipo->perifericos->count() }}">
                                             @foreach($equipo->perifericos as $index => $periferico)
-                                                @include('equipos.partials.item-periferico', [
-                                                    'index' => $index, 
-                                                    'periferico' => $periferico
-                                                ])
+                                                @include('equipos.partials.item-periferico', ['index' => $index, 'periferico' => $periferico])
                                             @endforeach
                                         </div>
                                         <template id="template-periferico">
-                                            @include('equipos.partials.item-periferico', [
-                                                'index' => '__INDEX__', 
-                                                'periferico' => null
-                                            ])
+                                            @include('equipos.partials.item-periferico', ['index' => '__INDEX__', 'periferico' => null])
                                         </template>
-                                    </div>>
-                                </div>
+                                    </div>
 
-                                {{-- RAMs --}}
-                                    <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                    {{-- RAMs --}}
+                                    <div class="component-group bg-white border-left border-warning p-3 mb-4 shadow-sm">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 class="text-info font-weight-bold mb-0">
-                                                <i class="fas fa-hdd mr-2"></i> Rams
+                                            <h6 class="text-warning font-weight-bold mb-0">
+                                                <i class="fas fa-memory mr-2"></i> RAMs
                                             </h6>
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('ram')">
-                                                <i class="fas fa-plus-circle"></i> Agregar Ram
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="agregarComponente('ram')">
+                                                <i class="fas fa-plus-circle"></i> Agregar RAM
                                             </button>
                                         </div>
                                         <div id="ram-container" data-count="{{ $equipo->rams->count() }}">
                                             @foreach($equipo->rams as $index => $ram)
-                                                @include('equipos.partials.item-ram', [
-                                                    'index' => $index, 
-                                                    'ram' => $ram
-                                                ])
+                                                @include('equipos.partials.item-ram', ['index' => $index, 'ram' => $ram])
                                             @endforeach
                                         </div>
                                         <template id="template-ram">
-                                            @include('equipos.partials.item-ram', [
-                                                'index' => '__INDEX__', 
-                                                'ram' => null
-                                            ])
+                                            @include('equipos.partials.item-ram', ['index' => '__INDEX__', 'ram' => null])
                                         </template>
                                     </div>
 
-                                {{-- Procesadores --}}
-                                      <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                    {{-- Procesadores --}}
+                                    <div class="component-group bg-light border-left border-danger p-3 mb-4 shadow-sm">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 class="text-info font-weight-bold mb-0">
-                                                <i class="fas fa-hdd mr-2"></i> Procesadores
+                                            <h6 class="text-danger font-weight-bold mb-0">
+                                                <i class="fas fa-microchip mr-2"></i> Procesadores
                                             </h6>
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('procesador')">
-                                                <i class="fas fa-plus-circle"></i> Agregar Monitor
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="agregarComponente('procesador')">
+                                                <i class="fas fa-plus-circle"></i> Agregar Procesador
                                             </button>
                                         </div>
                                         <div id="procesador-container" data-count="{{ $equipo->procesadores->count() }}">
                                             @foreach($equipo->procesadores as $index => $procesador)
-                                                @include('equipos.partials.item-procesador', [
-                                                    'index' => $index, 
-                                                    'procesador' => $procesador
-                                                ])
+                                                @include('equipos.partials.item-procesador', ['index' => $index, 'procesador' => $procesador])
                                             @endforeach
                                         </div>
                                         <template id="template-procesador">
-                                            @include('equipos.partials.item-procesador', [
-                                                'index' => '__INDEX__', 
-                                                'procesador' => null
-                                            ])
+                                            @include('equipos.partials.item-procesador', ['index' => '__INDEX__', 'procesador' => null])
                                         </template>
                                     </div>
 
-                                {{-- Monitores --}}
-                                    <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                    {{-- Monitores --}}
+                                    <div class="component-group bg-white border-left border-success p-3 mb-4 shadow-sm">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 class="text-info font-weight-bold mb-0">
-                                                <i class="fas fa-hdd mr-2"></i> Monitores
+                                            <h6 class="text-success font-weight-bold mb-0">
+                                                <i class="fas fa-tv mr-2"></i> Monitores
                                             </h6>
-                                            
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('monitor')">
+                                            <button type="button" class="btn btn-sm btn-success" onclick="agregarComponente('monitor')">
                                                 <i class="fas fa-plus-circle"></i> Agregar Monitor
                                             </button>
                                         </div>
-
-                                        
                                         <div id="monitor-container" data-count="{{ $equipo->monitores->count() }}">
                                             @foreach($equipo->monitores as $index => $monitor)
-                                                @include('equipos.partials.item-monitor', [
-                                                    'index' => $index, 
-                                                    'monitor' => $monitor
-                                                ])
+                                                @include('equipos.partials.item-monitor', ['index' => $index, 'monitor' => $monitor])
                                             @endforeach
                                         </div>
-
                                         <template id="template-monitor">
-                                            @include('equipos.partials.item-monitor', [
-                                                'index' => '__INDEX__', 
-                                                'monitor' => null
-                                            ])
+                                            @include('equipos.partials.item-monitor', ['index' => '__INDEX__', 'monitor' => null])
                                         </template>
                                     </div>
 
-                                {{-- Discos Duros --}}
-                                    <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                    {{-- Discos Duros --}}
+                                    <div class="component-group bg-light border-left border-primary p-3 mb-4 shadow-sm">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 class="text-info font-weight-bold mb-0">
-                                                <i class="fas fa-hdd mr-2"></i> ALMACENAMIENTO (DISCOS DUROS)
+                                            <h6 class="text-primary font-weight-bold mb-0">
+                                                <i class="fas fa-hdd mr-2"></i> Almacenamiento (Discos Duros)
                                             </h6>
-                                            
                                             <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('discoDuro')">
                                                 <i class="fas fa-plus-circle"></i> Agregar Disco
                                             </button>
                                         </div>
-
-                                        
                                         <div id="discoDuro-container" data-count="{{ $equipo->discosDuros->count() }}">
                                             @foreach($equipo->discosDuros as $index => $discoDuro)
-                                                @include('equipos.partials.item-disco', [
-                                                    'index' => $index, 
-                                                    'discoDuro' => $discoDuro
-                                                ])
+                                                @include('equipos.partials.item-disco', ['index' => $index, 'discoDuro' => $discoDuro])
                                             @endforeach
                                         </div>
-
                                         <template id="template-discoDuro">
-                                            @include('equipos.partials.item-disco', [
-                                                'index' => '__INDEX__', 
-                                                'discoDuro' => null
-                                            ])
+                                            @include('equipos.partials.item-disco', ['index' => '__INDEX__', 'discoDuro' => null])
                                         </template>
                                     </div>
+
+                                </div>
 
                                 {{-- BOTÓN FINAL (FUERA DE TODO COMPONENT-GROUP) --}}
                                 <div class="mt-4">
