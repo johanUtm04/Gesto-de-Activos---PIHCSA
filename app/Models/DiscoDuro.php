@@ -9,6 +9,15 @@ class DiscoDuro extends Model
 {
     use HasFactory;
     protected $table = 'discos_duros';
+
+    protected $fillable = [
+        'equipo_id',
+        'capacidad',
+        'tipo_hdd_ssd',
+        'interface',
+        'modelo',
+        'serial'
+    ];
     protected $guarded = ['id'];
     
     public function equipos() 

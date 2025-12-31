@@ -94,13 +94,16 @@ class EquipoController extends Controller
         $this->syncRelation($equipo->rams(),         $request->input('rams', []));
         $this->syncRelation($equipo->procesadores(), $request->input('procesadores', []));
         $this->syncRelation($equipo->monitores(),    $request->input('monitores', []));
-        $this->syncRelation($equipo->discosDuros(),  $request->input('discoDuros', []));
+        $this->syncRelation($equipo->discosDuros(),  $request->input('discoDuro', []));
 
-        // 3. Cálculo de página para retornar al mismo lugar en el index
-        $page = ceil(Equipo::where('id', '<=', $equipo->id)->count() / 11);
-        
+
+        $perPage = 11;
+        $position = Equipo::where('id', '<=', $equipo->id)->count();
+        $page = ceil($position / $perPage);
+
         return redirect()->route('equipos.index', ['page' => $page])
-                         ->with('warning', 'Equipo actualizado correctamente');
+        ->with('warning', 'Equipo actualizado correctamente')
+        ->with('actualizado->id', $equipo->id);;
     }
 
     /**
@@ -155,29 +158,27 @@ class EquipoController extends Controller
     /**
      * Sincroniza una relación HasMany: crea nuevos, actualiza existentes o elimina.
      */
-    private function syncRelation($relation, $dataArray)
+    protected function syncRelation($relation, array $items)
     {
-        //$dataArray = $equipo->perifericos(), data $request->input('perifericos', [])
-        foreach ($dataArray as $data) {
-            // Saltamos si el array no tiene datos útiles
-            if (empty(array_filter($data))) continue;
-
-            if (isset($data['id'])) {
-                $record = $relation->find($data['id']);
-                if ($record) {
-                    // Si el usuario marcó para borrar o los campos están vacíos
-                    if (!empty($data['_delete']) || $this->isEmptyRecord($data)) {
-                        $record->delete();
-                    } else {
-                        // Actualizamos omitiendo campos de control
-                        $record->update(collect($data)->except(['id', '_delete'])->toArray());
-                    }
+        foreach ($items as $item) {
+            // 1. Verificar si el usuario marcó para eliminar
+            if (!empty($item['_delete'])) {
+                if (!empty($item['id'])) {
+                    // Si tiene ID, lo borramos físicamente de la BD
+                    $relation->getRelated()->where('id', $item['id'])->delete();
                 }
-            } else {
-                if (!$this->isEmptyRecord($data) && empty($data['_delete'])) {
-                    $relation->create(collect($data)->except(['_delete'])->toArray());
-                }
+                // Si era un ítem nuevo que se marcó para eliminar antes de guardar, 
+                // simplemente lo ignoramos y pasamos al siguiente.
+                continue;
             }
+
+            // 2. Preparar los datos (quitamos _delete para que no choque con la BD)
+            $id = $item['id'] ?? null;
+            $data = collect($item)->forget(['id', '_delete'])->toArray();
+
+            // 3. Actualizar o Crear
+            // Laravel buscará por ID, si lo halla actualiza, si es null crea.
+            $relation->updateOrCreate(['id' => $id], $data);
         }
     }
 

@@ -601,69 +601,35 @@
                                 </div>
 
                                 {{-- Discos Duros --}}
-                                <div class="component-group">
-                                    <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
-                                    <i class="fas fa-hdd mr-2"></i> DISCOS DUROS (EDITABLES)
-                                    </h6>
-                                    <button type="button"
-                                        class="btn btn-sm btn-outline-primary mt-2"
-                                        onclick="agregarDiscoDuro()">
-                                        <i class="fas fa-plus"></i> Agregar Disco Duro
-                                    </button>
 
-                                    <hr class="my-2">
-
-                                    {{-- SOLO discos aquí --}}
-                                    <div id="discosDuros-container" 
-                                    data-discos-count="{{ $equipo->discosDuros->count() }}">
-                                    @foreach($equipo->discosDuros as $index => $discoDuro)
-                                    <div class="disco-item p-2 mb-2 border rounded bg-white">
-                                        <h6 class="text-secondary">
-                                            <i class="fas fa-dot-circle"></i> Disco Duro #{{ $index + 1 }}
-                                        </h6>
-
-                                        <input type="hidden" name="discoDuros[{{ $index }}][id]" value="{{ $discoDuro->id }}">
-                                        <input type="hidden" name="discoDuros[{{ $index }}][_delete]" value="">
-
-                                        <div class="row">
-                                            <div class="form-group col-md-4">
-                                                <label>Capacidad</label>
-                                                <select name="discoDuros[{{$index}}][capacidad]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    @foreach(['120GB', '240GB', '480GB', '500GB', '1TB', '2TB', '4TB'] as $cap)
-                                                        <option value="{{ $cap }}" {{ $discoDuro->capacidad == $cap ? 'selected' : '' }}>{{ $cap }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-md-4">
-                                                <label>Tipo</label>
-                                                <select name="discoDuros[{{$index}}][tipo_hdd_ssd]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    <option value="SSD" {{ $discoDuro->tipo_hdd_ssd == 'SSD' ? 'selected' : '' }}>SSD (Sólido)</option>
-                                                    <option value="HDD" {{ $discoDuro->tipo_hdd_ssd == 'HDD' ? 'selected' : '' }}>HDD (Mecánico)</option>
-                                                    <option value="M.2 NVMe" {{ $discoDuro->tipo_hdd_ssd == 'M.2 NVMe' ? 'selected' : '' }}>M.2 NVMe</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group col-md-4">
-                                                <label>Interface</label>
-                                                <select name="discoDuros[{{$index}}][interface]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    <option value="SATA" {{ $discoDuro->interface == 'SATA' ? 'selected' : '' }}>SATA</option>
-                                                    <option value="PCIe" {{ $discoDuro->interface == 'PCIe' ? 'selected' : '' }}>PCIe</option>
-                                                    <option value="USB" {{ $discoDuro->interface == 'USB' ? 'selected' : '' }}>USB (Externo)</option>
-                                                </select>
-                                            </div>
+                                    <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-info font-weight-bold mb-0">
+                                                <i class="fas fa-hdd mr-2"></i> ALMACENAMIENTO (DISCOS DUROS)
+                                            </h6>
+                                            
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('discoDuro')">
+                                                <i class="fas fa-plus-circle"></i> Agregar Disco
+                                            </button>
                                         </div>
 
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarDiscoDuro(this)">
-                                            <i class="fas fa-trash"></i> Eliminar Disco
-                                        </button>
+                                        
+                                        <div id="discoDuro-container" data-count="{{ $equipo->discosDuros->count() }}">
+                                            @foreach($equipo->discosDuros as $index => $discoDuro)
+                                                @include('equipos.partials.item-disco', [
+                                                    'index' => $index, 
+                                                    'discoDuro' => $discoDuro
+                                                ])
+                                            @endforeach
+                                        </div>
+
+                                        <template id="template-discoDuro">
+                                            @include('equipos.partials.item-disco', [
+                                                'index' => '__INDEX__', 
+                                                'discoDuro' => null
+                                            ])
+                                        </template>
                                     </div>
-                                    @endforeach
-                                    </div>
-                                </div>
 
                                 {{-- BOTÓN FINAL (FUERA DE TODO COMPONENT-GROUP) --}}
                                 <div class="mt-4">

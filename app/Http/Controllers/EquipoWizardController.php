@@ -305,6 +305,8 @@ class EquipoWizardController extends Controller
             ->with('success', '¡Equipo y todos sus componentes registrados con éxito!')
             ->with('new_id', $equipo->id);
     }
+   
+    
 
 }
 
