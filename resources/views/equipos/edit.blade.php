@@ -355,75 +355,30 @@
                             <div id="componentes-editables">
 
                                 {{-- Periféricos --}}
-                                <div class="component-group">
-                                    <h6 class="text-info pl-3 border-left border-info font-weight-bold" style="border-left-width: 4px !important; line-height: 1.5;">
-                                        <i class="fas fa-keyboard mr-2"></i> PERIFÉRICOS (EDITABLES)
-                                    </h6>
-                                        <button type="button"
-                                        class="btn btn-sm btn-outline-primary mt-2"
-                                        onclick="agregarPeriferico()">
-                                        <i class="fas fa-plus"></i> Agregar periférico
-                                    </button>
-                                    <hr class="my-2">
-                                    <div id="perifericos-container"
-                                     data-perifericos-count="{{ $equipo->perifericos->count() }}">
-                                    @foreach($equipo->perifericos as $index => $periferico)
-                                    <div class="periferico-item p-2 mb-2 border rounded bg-white">
-                                        <h6 class="text-secondary"><i class="fas fa-dot-circle"></i> Periférico #{{ $index + 1 }} </h6>
-                                        <input type="hidden" name="perifericos[{{ $index }}][id]" value="{{ $periferico->id }}"> 
-                                        <input type="hidden" name="perifericos[{{ $index }}][_delete]" value="">
-
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label>Tipo / Categoría</label>
-                                                <select name="perifericos[{{ $index }}][tipo]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione tipo...</option>
-                                                    <option value="Teclado" {{ $periferico->tipo == 'Teclado' ? 'selected' : '' }}>Teclado</option>
-                                                    <option value="Mouse" {{ $periferico->tipo == 'Mouse' ? 'selected' : '' }}>Mouse</option>
-                                                    <option value="Monitor" {{ $periferico->tipo == 'Monitor' ? 'selected' : '' }}>Monitor</option>
-                                                    <option value="Diadema" {{ $periferico->tipo == 'Diadema' ? 'selected' : '' }}>Diadema</option>
-                                                    <option value="Cámara" {{ $periferico->tipo == 'Cámara' ? 'selected' : '' }}>Cámara</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label>Marca</label>
-                                                <select name="perifericos[{{ $index }}][marca]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione marca...</option>
-                                                    <option value="Logitech" {{ $periferico->marca == 'Logitech' ? 'selected' : '' }}>Logitech</option>
-                                                    <option value="HP" {{ $periferico->marca == 'HP' ? 'selected' : '' }}>HP</option>
-                                                    <option value="Dell" {{ $periferico->marca == 'Dell' ? 'selected' : '' }}>Dell</option>
-                                                    <option value="Genius" {{ $periferico->marca == 'Genius' ? 'selected' : '' }}>Genius</option>
-                                                    <option value="Otro" {{ $periferico->marca == 'Otro' ? 'selected' : '' }}>Otro</option>
-                                                </select>
-                                            </div>
+                                    <div class="component-group border p-3 mb-4 shadow-sm bg-white">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="text-info font-weight-bold mb-0">
+                                                <i class="fas fa-hdd mr-2"></i> Perifericos
+                                            </h6>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarComponente('periferico')">
+                                                <i class="fas fa-plus-circle"></i> Agregar Periferico
+                                            </button>
                                         </div>
-                                        
-                                        <div class="row">
-                                            <div class="form-group col-md-6">
-                                                <label>Serial</label>
-                                                <input type="text" name="perifericos[{{ $index }}][serial]" 
-                                                    class="form-control form-control-sm" 
-                                                    placeholder="Serial del periférico"
-                                                    value="{{ old('perifericos.' . $index . '.serial', $periferico->serial ?? '') }}">
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label>Interfaz</label>
-                                                <select name="perifericos[{{ $index }}][interface]" class="form-control form-control-sm">
-                                                    <option value="">Seleccione...</option>
-                                                    @foreach(['HDMI', 'DisplayPort (DP)', 'VGA', 'DVI', 'USB-C'] as $interface)
-                                                        <option value="{{ $interface }}" {{ $periferico->interface == $interface ? 'selected' : '' }}>{{ $interface }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                        <div id="periferico-container" data-count="{{ $equipo->perifericos->count() }}">
+                                            @foreach($equipo->perifericos as $index => $periferico)
+                                                @include('equipos.partials.item-periferico', [
+                                                    'index' => $index, 
+                                                    'periferico' => $periferico
+                                                ])
+                                            @endforeach
                                         </div>
-
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="eliminarPeriferico(this)">
-                                            <i class="fas fa-trash"></i> Eliminar periférico
-                                        </button>
-                                    </div>
-                                    @endforeach
-                                    </div>
+                                        <template id="template-periferico">
+                                            @include('equipos.partials.item-periferico', [
+                                                'index' => '__INDEX__', 
+                                                'periferico' => null
+                                            ])
+                                        </template>
+                                    </div>>
                                 </div>
 
                                 {{-- RAMs --}}
