@@ -31,9 +31,6 @@ class EquipoObserver
         ]);
     }
 
-    /**
-     * Al Actualizar un equipo junto don el Json
-     */
     public function updated(Equipo $equipo)
         {
             //1.-Solo registramos si hubo cambios reales (isDirty)
@@ -74,35 +71,5 @@ class EquipoObserver
                 'ultimo_estado' => $equipo->toArray()
             ]
         ]);
-    }
-
-    /**
-     * Handle the Equipo "restored" event.
-     */
-    public function restored(Equipo $equipo): void
-    {
-        // AuditService::log(
-        //     'EQUIPO_RESTAURADO',
-        //     $equipo->id,
-        //     [
-        //         'mensaje' => 'Se restauró un equipo',
-        //         'despues' => $equipo->toArray()
-        //     ]
-        // );
-    }
-
-    /**
-     * Handle the Equipo "force deleted" event.
-     */
-    public function forceDeleted(Equipo $equipo): void
-    {
-        // AuditService::historial(
-        //     'EQUIPO_ELIMINACION_PERMANENTE',
-        //     $equipo->id,
-        //     [
-        //         'mensaje' => 'Se eliminó permanentemente un equipo',
-        //         'antes' => $equipo->getOriginal()
-        //     ]
-        // );
     }
 }

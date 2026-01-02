@@ -11,10 +11,11 @@
             {{$equipos->count()}}
         </span>
     </h4>
+
     @foreach($equipos as $equipo)
     <div class="card mb-3 shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center" 
-             style="cursor: pointer;" 
+        <!-- Barra de presentacion de Activo -->
+        <div class="card-header bg-white d-flex justify-content-between align-items-center"  
              data-toggle="collapse" 
              data-target="#collapseEquipo{{ $equipo->id }}">
             
@@ -34,7 +35,7 @@
                  <span class="text-muted ml-3 small">| A cargo de: - <strong>{{ $equipo->usuario->name ?? '' }}</strong> </span>
             </div>
             
-            <div>
+            <div style="cursor: pointer;">
                 <span class="badge badge-pill badge-light border">
                     {{ $equipo->historials->count() }} Movimientos
                 </span>
@@ -42,11 +43,13 @@
             </div>
         </div>
 
-    <!-- Dentro de cada tarjeta  (ENCABEZADO) -->
+<!-- Dentro de cada tarjeta  (ENCABEZADO) -->
 <div id="collapseEquipo{{ $equipo->id }}" class="collapse">
     <div class="card-body bg-light">
         <div class="timeline-container">
             <!-- Accedemos a la relacion de la base de datos, mostramos los mas recientes y los llammos get -->
+            
+            <!-- ->nombreRelacion, traer el mas reciente, y nombrarlo como $log -->
             @forelse($equipo->historials()->latest()->get() as $log)
                 @php                     
                     $badgeColor = ['CREATE'=>'success', 'UPDATE'=>'warning', 'DELETE'=>'danger'][$log->tipo_registro] ?? 'secondary';
@@ -57,8 +60,10 @@
                     <!-- Parte del encabezado -->
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div>
+                            <!-- Tipo de Registro que de paso toma el badge -->
                             <span class="badge badge-{{ $badgeColor }} mr-2">{{ $log->tipo_registro }}</span>
                             <small class="text-dark font-weight-bold">
+                                <!-- Cargar el Usuarioq que realizo la modificacacion, es decir el administrador -->
                                 <i class="fas fa-user-edit text-muted"></i> {{ $log->usuario->name ?? 'Sistema' }}
                             </small>
                         </div>
@@ -66,7 +71,7 @@
                     </div>
 
                     <!-- Cajita de datos -->
-                    <div class="bg-light p-2 rounded border-left border-info">
+                    <div class="bg-light p-2 rounded border-left border-success">
                         <span class="small text-muted d-block mb-1">Usuario que maneja el Activo En esta Operacion: <strong>{{ $detalles['usuario_asignado'] ?? 'N/A' }}</strong></span>
                         <span class="small text-muted d-block mb-1">Rol: <strong>{{ $detalles['rol'] ?? 'N/A' }}</strong></span>
                         <!-- SI ES UNA ACTUALIZACION -->
@@ -108,6 +113,7 @@
 </div>
     </div>
     @endforeach
+    <!-- Paginacion -->
     @if($equipos->hasPages())
     <div class="card-footer bg-white border-top-0">
         {{ $equipos->links() }}

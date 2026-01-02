@@ -336,15 +336,6 @@
                                                 required>
                                         </div>
                                     </div>
-
-                                    <script>
-                                        document.getElementById('vida_util_unidad').addEventListener('change', function() {
-                                            const inputPrecio = document.getElementById('vida_util_input');
-                                            if (this.value !== "") {
-                                                inputPrecio.disabled = false;
-                                            }
-                                        });
-                                    </script>
                                 </div>
                             </fieldset>
 

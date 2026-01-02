@@ -54,3 +54,11 @@ function eliminarComponente(btn, clasePadre) {
         item.remove();
     }
 }
+
+//Campo de Vida Util estimada
+document.getElementById('vida_util_unidad').addEventListener('change', function() {
+    const inputPrecio = document.getElementById('vida_util_input');
+    if (this.value !== "") {
+        inputPrecio.disabled = false;
+    }
+});
