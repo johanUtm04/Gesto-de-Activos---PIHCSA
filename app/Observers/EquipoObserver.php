@@ -12,6 +12,8 @@ use App\Models\Historial_log;
 
 class EquipoObserver
 {
+    // Esta variable vive solo durante la ejecución de la página actual
+    protected static $registrado = false;
     /**
      * Handle the Equipo "created" event.
      */
@@ -33,11 +35,14 @@ class EquipoObserver
 
     public function updated(Equipo $equipo)
         {
+            // Si ya se registró un log en esta carga, ignora el resto
+            if (self::$registrado) return;
             //1.-Solo registramos si hubo cambios reales (isDirty)
             if ($equipo->isDirty()) {
                 $cambios = [];
                 //Devolvemos Unicamente la columnas que fueron Modificadas
                 foreach ($equipo->getDirty() as $atributo => $nuevoValor) {
+                if ($atributo === 'updated_at') continue; //Opcional: saltarse feche de Actualizacion 
                     $cambios[$atributo] = [
                         'antes'  => $equipo->getOriginal($atributo),
                         'despues' => $nuevoValor
@@ -56,6 +61,9 @@ class EquipoObserver
                         
                     ]
                 ]);
+
+                // Marcamos que ya cumplimos la misión
+                self::$registrado = true;
             }
         }
 
