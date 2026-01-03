@@ -17,13 +17,36 @@ class EquipoController extends Controller
      * Muestra el listado principal de activos.
      * Limpia sesiones previas del Wizard para evitar conflictos de datos.
      */
-    public function index()
+    public function index(Request $request)
     {
         session()->forget('wizard_equipo');
-        
-        $equipos = Equipo::with(['usuario', 'ubicacion'])->paginate(11);
-        
-        return view('equipos.index', compact('equipos'));
+
+        //Oye Laravel, prepárate para traerme equipos y tráelos con todas sus piezas (RAM, Discos, etc.) de una vez
+        $query = Equipo::with(['usuario', 'ubicacion', 'monitores', 'discosDuros', 'rams', 'perifericos', 'procesadores']);
+        #"Viene Algo en Buscador -seccion-"
+        if ($request->filled('seccion')) {
+            # code...
+            $busqueda = $request->seccion;
+            $query->where(function($seccion) use ($busqueda) {
+            $seccion->where('marca_equipo', 'LIKE', '%' . $busqueda . '%')
+              ->orWhere('serial', 'LIKE', '%' . $busqueda . '%')
+              ->orWhere('tipo_equipo', 'LIKE', '%' . $busqueda . '%');
+            });
+        }
+
+        #Filtro por Ubicacion
+        if ($request->filled('ubicacion_id')) {
+        $query->where('ubicacion_id', $request->ubicacion_id);
+        }
+
+        #Filtro por Tipo de Activo
+        if ($request->filled('tipo_equipo')) {
+            $query->where('tipo_equipo', $request->tipo_equipo);
+        }
+
+        $equipos = $query->latest()->paginate(11)->appends($request->all());
+        $ubicaciones = Ubicacion::all();
+        return view('equipos.index', compact('equipos', 'ubicaciones'));
     }
 
     /**

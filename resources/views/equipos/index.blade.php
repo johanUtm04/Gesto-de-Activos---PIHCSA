@@ -4,7 +4,7 @@
 
 @section('css')
 <style>
-    /* --- Estética de la Tabla --- */
+
     .table-assets thead th {
         background-color: #f4f6f9; 
         color: #17a2b8; 
@@ -29,7 +29,6 @@
         display: block; 
     }
 
-    /* --- Panel de Detalles Profesional --- */
     .sticky-details {
         position: -webkit-sticky;
         position: sticky;
@@ -88,7 +87,6 @@
         color: #ccc;
     }
 
-    /* Animación de entrada */
     @keyframes fadeInRight {
         from { opacity: 0; transform: translateX(20px); }
         to { opacity: 1; transform: translateX(0); }
@@ -123,6 +121,83 @@
             </div>
         @endif
     @endforeach
+
+    {{-- SECCIÓN DE FILTROS AVANZADOS --}}
+    <div class="card card-outline card-info shadow-sm mb-4">
+        <div class="card-header">
+            <h3 class="card-title text-info font-weight-bold">
+                <i class="fas fa-filter mr-1"></i> Panel de Búsqueda
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('equipos.index') }}" method="GET">
+                <div class="row">
+                    {{-- 1. Buscador por Texto --}}
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="small font-weight-bold text-muted">Búsqueda General</label>
+                            <div class="input-group">
+                                <input type="text" name="seccion" class="form-control form-control-sm" 
+                                    placeholder="Marca, Serial o Tipo..." value="{{ request('seccion') }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text bg-white"><i class="fas fa-search text-info"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 2. Filtro por Ubicación --}}
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="small font-weight-bold text-muted">Ubicación</label>
+                            <select name="ubicacion_id" class="form-control form-control-sm">
+                                <option value="">-- Todas las sedes --</option>
+                                @foreach($ubicaciones as $u)
+                                    <option value="{{ $u->id }}" {{ request('ubicacion_id') == $u->id ? 'selected' : '' }}>
+                                        {{ $u->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- 3. Filtro por Tipo de Equipo --}}
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="small font-weight-bold text-muted">Tipo de Activo</label>
+                            <select name="tipo_equipo" class="form-control form-control-sm">
+                                <option value="">-- Todos los tipos --</option>
+                                @foreach(['Escritorio', 'Laptop', 'Servidor', 'Monitor'] as $tipo)
+                                    <option value="{{ $tipo }}" {{ request('tipo_equipo') == $tipo ? 'selected' : '' }}>
+                                        {{ $tipo }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- 4. Botones --}}
+                    <div class="col-md-2 d-flex align-items-end">
+                        <div class="form-group w-100">
+                            <div class="btn-group w-100">
+                                <button type="submit" class="btn btn-info btn-sm shadow-sm">
+                                    <i class="fas fa-filter mr-1"></i> Filtrar
+                                </button>
+                                <a href="{{ route('equipos.index') }}" class="btn btn-default btn-sm shadow-sm" title="Limpiar búsqueda">
+                                    <i class="fas fa-sync-alt text-danger"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div class="row">
         {{-- TABLA (LADO IZQUIERDO) --}}
