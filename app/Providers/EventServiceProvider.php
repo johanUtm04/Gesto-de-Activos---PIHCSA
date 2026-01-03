@@ -34,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
         \App\Models\DiscoDuro::observe(\App\Observers\DiscoDuroObserver::class);
         \App\Models\Periferico::observe(\App\Observers\PerifericoObserver::class);  
         \App\Models\Ram::observe(\App\Observers\RamObserver::class);     
+        \App\Models\Procesador::observe(\App\Observers\ProcesadorObserver::class); 
     }
 
     /**
