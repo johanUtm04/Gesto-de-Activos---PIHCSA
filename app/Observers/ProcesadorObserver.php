@@ -6,6 +6,8 @@ use App\Models\Procesador;
 use App\Models\Historial_log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class ProcesadorObserver
 {
     /**
@@ -82,10 +84,37 @@ class ProcesadorObserver
     /**
      * Handle the Procesador "deleted" event.
      */
-    public function deleted(Procesador $procesador): void
-    {
-        //
+public function deleting(Procesador $procesador): void
+{
+    // 1. IMPORTANTE: Obtenemos el ID directamente de la columna, no de la relación
+    $equipoId = $procesador->equipo_id; 
+
+    // 2. Buscamos el equipo de forma manual para asegurar que exista
+    $equipoPadre = \App\Models\Equipo::find($equipoId);
+
+    if ($equipoPadre) {
+        \App\Models\Historial_log::create([
+            'activo_id'         => $equipoPadre->id, // Vinculamos al ID del equipo
+            'usuario_accion_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'tipo_registro'     => 'DELETE',
+            'detalles_json'     => [
+                'mensaje'          => "COMPONENTE ELIMINADO: Se retiró un procesador del equipo",
+                'usuario_asignado' => $equipoPadre->usuario->name ?? 'N/A',
+                'rol'              => $equipoPadre->usuario->rol ?? 'N/A',
+                'cambios'          => [
+                    'Procesador Retirado' => [
+                        'antes'   => "Marca: {$procesador->marca} | Desc: {$procesador->descripcion_tipo}",
+                        'despues' => 'ELIMINADO'
+                    ]
+                ],
+                'respaldo' => $procesador->toArray() 
+            ]
+        ]);
+    } else {
+        // Esto te ayudará a saber si el problema es que el procesador no tiene equipo_id
+        Log::warning("No se pudo crear log de eliminación: El procesador {$procesador->id} no tiene un equipo asociado.");
     }
+}
 
     /**
      * Handle the Procesador "restored" event.

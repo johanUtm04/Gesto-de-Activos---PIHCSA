@@ -165,7 +165,10 @@ class EquipoController extends Controller
             if (!empty($item['_delete'])) {
                 if (!empty($item['id'])) {
                     // Si tiene ID, lo borramos físicamente de la BD
-                    $relation->getRelated()->where('id', $item['id'])->delete();
+                    $model = $relation->getRelated()->find($item['id']);
+                    if ($model) {
+                    $model->delete(); 
+                }
                 }
                 // Si era un ítem nuevo que se marcó para eliminar antes de guardar, 
                 // simplemente lo ignoramos y pasamos al siguiente.

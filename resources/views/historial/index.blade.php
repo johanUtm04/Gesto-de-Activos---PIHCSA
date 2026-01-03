@@ -100,39 +100,41 @@
                                     </div>
                                 </div>
 
-                            @if($log->tipo_registro == 'UPDATE' || isset($detalles['cambios']))
-                                <div class="table-responsive rounded border bg-light p-2">
-                                    <table class="table table-sm table-borderless mb-0">
-                                        <tbody> {{-- <-- Aquí empieza la tabla --}}
-                                            
-                                            {{-- REEMPLAZA DESDE AQUÍ --}}
-                                            @foreach($detalles['cambios'] as $campo => $valor)
-                                                <tr>
-                                                    <td class="text-muted font-weight-bold small py-2" style="width: 25%;">
-                                                        {{ Str::headline($campo) }}
-                                                    </td>
-                                                    <td class="py-2">
-                                                        <div class="d-flex align-items-center">
-                                                            {{-- Operador ternario: (Condición) ? si_verdadero : si_falso --}}
-                                                            <span class="val-old shadow-xs">
-                                                                {{ (isset($valor['antes']) && $valor['antes'] !== '') ? $valor['antes'] : 'Inexistente' }}
-                                                            </span>
+                                    @if(isset($detalles['cambios']))
+                                        <div class="table-responsive rounded border bg-light p-2">
+                                            <table class="table table-sm table-borderless mb-0">
+                                                <tbody>
+                                                    @foreach($detalles['cambios'] as $campo => $valor)
+                                                        <tr>
+                                                            <td class="text-muted font-weight-bold small py-2" style="width: 25%;">
+                                                                {{ Str::headline($campo) }}
+                                                            </td>
+                                                            <td class="py-2">
+                                                                <div class="d-flex align-items-center">
+                                                                    {{-- Valor Anterior --}}
+                                                                    <span class="val-old shadow-xs">
+                                                                        {{ (isset($valor['antes']) && $valor['antes'] !== '') ? $valor['antes'] : 'Inexistente' }}
+                                                                    </span>
 
-                                                            <i class="fas fa-long-arrow-alt-right mx-3 text-primary opacity-50"></i>
+                                                                    {{-- Icono dinámico: Flecha si es UPDATE, texto si es DELETE --}}
+                                                                    @if($log->tipo_registro == 'DELETE')
+                                                                        <span class="mx-3 text-danger font-weight-bold small">ELIMINADO <i class="fas fa-arrow-right"></i></span>
+                                                                    @else
+                                                                        <i class="fas fa-long-arrow-alt-right mx-3 text-primary opacity-50"></i>
+                                                                    @endif
 
-                                                            <span class="val-new shadow-xs">
-                                                                {!! (isset($valor['despues']) && $valor['despues'] !== '') ? $valor['despues'] : 'Sin datos' !!}
-                                                            </span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                            {{-- HASTA AQUÍ --}}
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                @else
+                                                                    {{-- Valor Nuevo --}}
+                                                                    <span class="val-new shadow-xs {{ $log->tipo_registro == 'DELETE' ? 'border-danger text-danger' : '' }}">
+                                                                        {!! (isset($valor['despues']) && $valor['despues'] !== '') ? $valor['despues'] : 'Sin datos' !!}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
                                     <div class="info-msg p-3 rounded">
                                         <i class="fas fa-info-circle text-primary mr-2"></i> <strong>Nota:</strong> {{ $detalles['mensaje'] ?? 'Sin descripción adicional' }}
                                     </div>

@@ -199,7 +199,7 @@
 
                                 <div class="form-group col-md-6">
                                     <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
-                                    <select name="tipo_equipo" id="tipo_equipo" class="form-control">
+                                    <select name="tipo_equipo" id="tipo_equipo" class="form-control" required>
                                         <option value="" {{ old('tipo_equipo', $equipo->tipo_equipo) == '' ? 'selected' : '' }}>Seleccione el tipo</option>
                                         
                                         @php
