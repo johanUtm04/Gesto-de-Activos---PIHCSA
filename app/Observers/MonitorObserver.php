@@ -75,8 +75,8 @@ public function created(Monitor $monitor): void
                     'tipo_registro'     => 'UPDATE',
                     'detalles_json'     => [
                         'mensaje'          => 'Se actualizó información del monitor',
-                        'usuario_asignado' => $monitor->equipo->usuario->name ?? 'N/A',
-                        'rol'              => $monitor->equipo->usuario->rol ?? 'N/A',
+                        'usuario_asignado' => $monitor->equipos->usuario->name ?? 'N/A',
+                        'rol'              => $monitor->equipos->usuario->rol ?? 'N/A',
                         'cambios'          => $cambios
                     ]
                 ]);
