@@ -73,8 +73,8 @@ class PerifericoObserver
                     'tipo_registro'     => 'UPDATE',
                     'detalles_json'     => [
                         'mensaje'          => 'Se actualizó información del periiferico',
-                        'usuario_asignado' => $monitor->equipos->usuario->name ?? 'N/A',
-                        'rol'              => $monitor->equipos->usuario->rol ?? 'N/A',
+                        'usuario_asignado' => $periferico->equipos->usuario->name ?? 'N/A',
+                        'rol'              => $periferico->equipos->usuario->rol ?? 'N/A',
                         'cambios'          => $cambios
                     ]
                 ]);

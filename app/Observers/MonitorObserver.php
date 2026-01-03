@@ -56,32 +56,32 @@ public function created(Monitor $monitor): void
             $cambios = [];
 
             foreach ($monitor->getDirty() as $atributo => $nuevoValor) {
-                if ($atributo === 'updated_at' || $atributo === 'equipo_id') continue;
+                    if ($atributo === 'updated_at' || $atributo === 'equipo_id') continue;
 
-                // 2. Creamos una etiqueta clara para el historial
-                $campoLegible = "Monitor -> " . Str::headline($atributo);
+                    // 2. Creamos una etiqueta clara para el historial
+                    $campoLegible = "Monitor -> " . Str::headline($atributo);
 
-                $cambios[$campoLegible] = [
-                    'antes'   => $monitor->getOriginal($atributo),
-                    'despues' => $nuevoValor
-                ];
-            }
+                    $cambios[$campoLegible] = [
+                        'antes'   => $monitor->getOriginal($atributo),
+                        'despues' => $nuevoValor
+                    ];
+                }
 
-            // 3. Solo creamos el log si el array de cambios no quedó vacío
-            if (!empty($cambios)) {
-                Historial_log::create([
-                    'activo_id'         => $monitor->equipo_id, // Vinculamos al equipo padre
-                    'usuario_accion_id' => Auth::id() ?? 1,
-                    'tipo_registro'     => 'UPDATE',
-                    'detalles_json'     => [
-                        'mensaje'          => 'Se actualizó información del monitor',
-                        'usuario_asignado' => $monitor->equipos->usuario->name ?? 'N/A',
-                        'rol'              => $monitor->equipos->usuario->rol ?? 'N/A',
-                        'cambios'          => $cambios
-                    ]
-                ]);
-            }}
-    }
+                // 3. Solo creamos el log si el array de cambios no quedó vacío
+                if (!empty($cambios)) {
+                    Historial_log::create([
+                        'activo_id'         => $monitor->equipo_id, // Vinculamos al equipo padre
+                        'usuario_accion_id' => Auth::id() ?? 1,
+                        'tipo_registro'     => 'UPDATE',
+                        'detalles_json'     => [
+                            'mensaje'          => 'Se actualizó información del monitor',
+                            'usuario_asignado' => $monitor->equipos->usuario->name ?? 'N/A',
+                            'rol'              => $monitor->equipos->usuario->rol ?? 'N/A',
+                            'cambios'          => $cambios
+                        ]
+                    ]);
+                }}
+        }
 
     /**
      * Handle the Monitor "deleted" event.
