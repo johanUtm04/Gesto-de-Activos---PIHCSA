@@ -86,14 +86,16 @@ class ProcesadorObserver
      */
 public function deleting(Procesador $procesador): void
 {
-    // 1. IMPORTANTE: Obtenemos el ID directamente de la columna, no de la relación
+    // 1.- Obtenemos el ID directamente de la columna, no de la relación es decir, $168 por ejemplo
     $equipoId = $procesador->equipo_id; 
 
     // 2. Buscamos el equipo de forma manual para asegurar que exista
+    //es decir buscamos ese registro en la tabla
     $equipoPadre = \App\Models\Equipo::find($equipoId);
 
+    //3.- Si la Tomamos de Buena Manera crearemos un registro en Historial_Log
     if ($equipoPadre) {
-        \App\Models\Historial_log::create([
+        Historial_log::create([
             'activo_id'         => $equipoPadre->id, // Vinculamos al ID del equipo
             'usuario_accion_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
             'tipo_registro'     => 'DELETE',
@@ -110,8 +112,7 @@ public function deleting(Procesador $procesador): void
                 'respaldo' => $procesador->toArray() 
             ]
         ]);
-    } else {
-        // Esto te ayudará a saber si el problema es que el procesador no tiene equipo_id
+    } else {    //4.-En caso de Error
         Log::warning("No se pudo crear log de eliminación: El procesador {$procesador->id} no tiene un equipo asociado.");
     }
 }

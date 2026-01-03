@@ -6,7 +6,7 @@ use App\Models\Periferico;
 use App\Models\Historial_log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
 
 class PerifericoObserver
 {
@@ -32,9 +32,9 @@ class PerifericoObserver
                         'Periferico Adicional' => [
                             'antes'   => 'Inexistente',
                             'despues' => "<ul class='list-unstyled mb-0'>" .
-                            "<li><b>Marca:</b> {$periferico->tipo}</li>" .
-                            "<li><b>S/N:</b> {$periferico->marca}</li>" .
-                            "<li><b>Escala:</b> {$periferico->serial}\"</li>" .
+                            "<li><b>Tipo:</b> {$periferico->tipo}</li>" .
+                            "<li><b>Marca:</b> {$periferico->marca}</li>" .
+                            "<li><b>Serial:</b> {$periferico->serial}\"</li>" .
                             "<li><b>Interface:</b> {$periferico->interface}</li>" .
                             "</ul>"                    
                             ]
@@ -89,6 +89,41 @@ class PerifericoObserver
     public function deleted(Periferico $periferico): void
     {
         //
+    }
+
+
+    public function deleting(Periferico $periferico): void
+    {
+        // 1.- Obtenemos el ID directamente de la columna, no de la relación es decir, $168 por ejemplo
+        $equipoId = $periferico->equipo_id; 
+
+        // 2. Buscamos el equipo de forma manual para asegurar que exista
+        //es decir buscamos ese registro en la tabla
+        $equipoPadre = \App\Models\Equipo::find($equipoId);
+
+        //3.- Si la Tomamos de Buena Manera crearemos un registro en Historial_Log
+        if ($equipoPadre) {
+            Historial_log::create([
+                'activo_id'         => $equipoPadre->id, // Vinculamos al ID del equipo
+                'usuario_accion_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+                'tipo_registro'     => 'DELETE',
+                'detalles_json'     => [
+                    'mensaje'          => "COMPONENTE ELIMINADO: Se retiró un Periferico del equipo",
+                    'usuario_asignado' => $equipoPadre->usuario->name ?? 'N/A',
+                    'rol'              => $equipoPadre->usuario->rol ?? 'N/A',
+                    'cambios'          => [
+                        'Periferico Retirado' => [
+                            'antes'   => "Tipo: {$periferico->tipo} | Marca: {$periferico->marca} | Serial: {$periferico->serial}
+                            | Interface: {$periferico->interface}",
+                            'despues' => 'ELIMINADO'
+                        ]
+                    ],
+                    'respaldo' => $periferico->toArray() 
+                ]
+            ]);
+        } else {    //4.-En caso de Error
+            Log::warning("No se pudo crear log de eliminación: El procesador {$periferico->id} no tiene un equipo asociado.");
+        }
     }
 
     /**
