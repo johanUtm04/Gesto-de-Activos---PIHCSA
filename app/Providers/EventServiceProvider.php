@@ -31,6 +31,7 @@ class EventServiceProvider extends ServiceProvider
         //
         Equipo::observe(EquipoObserver::class);
         \App\Models\Monitor::observe(\App\Observers\MonitorObserver::class);
+        \App\Models\DiscoDuro::observe(\App\Observers\DiscoDuroObserver::class);    
     }
 
     /**

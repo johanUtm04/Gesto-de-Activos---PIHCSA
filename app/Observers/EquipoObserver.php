@@ -67,16 +67,24 @@ class EquipoObserver
             }
         }
 
-
-    public function deleting(Equipo $equipo)
+public function deleting(Equipo $equipo)
     {
-        Historial_log::delete([
-            'activo_id'         => $equipo->id,
+        Historial_log::create([
+            'activo_id'         => $equipo->id, // El ID se queda grabado como número
             'usuario_accion_id' => Auth::id() ?? 1,
             'tipo_registro'     => 'DELETE',
             'detalles_json'     => [
-                'mensaje' => 'Equipo eliminado del sistema',
-                'ultimo_estado' => $equipo->toArray()
+                'mensaje' => 'ELIMINACIÓN DEFINITIVA: El activo ha sido removido.',
+                'usuario_asignado' => $equipo->usuario->name ?? 'N/A',
+                'rol' => $equipo->usuario->rol ?? 'N/A',
+                'cambios' => [
+                    'Registro Eliminado' => [
+                        'antes' => "Equipo: {$equipo->nombre_equipo} | S/N: {$equipo->serial}",
+                        'despues' => 'BORRADO POR USUARIO'
+                    ]
+                ],
+                // GUARDAMOS TODO EL EQUIPO AQUÍ ADENTRO POR SEGURIDAD
+                'respaldo_total' => $equipo->toArray() 
             ]
         ]);
     }

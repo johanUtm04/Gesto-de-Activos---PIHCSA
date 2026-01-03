@@ -46,7 +46,9 @@
                     <i class="fas {{ $equipo->tipo_equipo == 'Laptop' ? 'fa-laptop text-primary' : 'fa-desktop text-purple' }} fa-lg"></i>
                 </div>
                 <div>
-                    <h6 class="mb-0 font-weight-bold text-dark text-uppercase">{{ $equipo->nombre_equipo }}</h6>
+                    <h6 class="mb-0 font-weight-bold text-dark text-uppercase">
+                    {{ $equipo->nombre_equipo }}
+                    </h6>
                     <div class="d-flex align-items-center">
                         <span class="badge badge-light border text-muted px-2 mr-2">ID: {{ $equipo->id }}</span>
                         <small class="text-muted"><i class="fas fa-user-circle mr-1"></i> Custodio: <strong>{{ $equipo->usuario->name ?? 'N/A' }}</strong></small>
