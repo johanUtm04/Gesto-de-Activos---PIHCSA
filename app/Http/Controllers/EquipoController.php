@@ -120,7 +120,7 @@ class EquipoController extends Controller
     /**
      * Registro de mantenimiento en el historial (Log).
      */
-    public function addwork(Equipo $equipo, Request $request)
+    public function saveWork (Equipo $equipo, Request $request)
     {
         $data = $request->validate([
             'tipo_evento'  => 'required|string',
@@ -133,7 +133,7 @@ class EquipoController extends Controller
             'activo_id'         => $equipo->id,
             'usuario_accion_id' => auth()->id(),
             'tipo_registro'     => 'MANTENIMIENTO',
-            'detalles_json'     => $data, // Laravel lo castea automáticamente si el modelo tiene 'casts'
+            'detalles_json'     => $data, 
         ]);
 
         return redirect()->route('equipos.index')->with('success', 'Mantenimiento registrado');
@@ -189,4 +189,11 @@ class EquipoController extends Controller
         $filtered = collect($data)->except(['id', '_delete'])->filter();
         return $filtered->isEmpty();
     }
+
+
+public function indexaddwork (Equipo $equipo){
+    $usuarios    = User::all();
+    return view('equipos.addwork.store', compact('equipo', 'usuarios'));
+}
+
 }

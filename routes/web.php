@@ -63,8 +63,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/equipos/{uuid}/procesador', [EquipoWizardController::class, 'saveProcesador'])->name('equipos.wizard.saveProcesador');
 
     /* --- MANTENIMIENTOS (ADD WORK) --- */
-    Route::get('/equipos/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork.index');
-    Route::post('/equipos/{equipo}/addwork', [EquipoController::class, 'addwork'])->name('equipos.addwork.store');
+    Route::get('/equipos/{equipo}/addwork', [EquipoController::class, 'indexaddwork'])->name('equipos.addwork');
+    Route::post('/equipos/{equipo}/addwork', [EquipoController::class, 'saveWork'])->name('equipos.addwork.store');
 
     /* --- DEPRECIACIÓN Y REPORTES --- */
     Route::get('/depreciacion', [DepreciacionController::class, 'index'])->name('depreciacion.index');

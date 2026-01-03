@@ -43,7 +43,7 @@ class AuthServiceProvider extends ServiceProvider
 
     // Agregar mantenimiento a un equipo (solo admin)
     Gate::define('mantenimiento-equipo', function ($user) {
-        return $user->rol === 'admin';
+        return in_array(strtolower($user->rol), ['admin', 'sistemas']);
     });
     }
 }

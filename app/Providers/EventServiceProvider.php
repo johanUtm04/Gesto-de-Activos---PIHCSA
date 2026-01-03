@@ -30,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
     {
         //
         Equipo::observe(EquipoObserver::class);
+        \App\Models\Monitor::observe(\App\Observers\MonitorObserver::class);
     }
 
     /**

@@ -182,7 +182,7 @@
                                             <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-sm btn-default text-warning" title="Editar"><i class="fas fa-pen"></i></a>
                                             @endcan
                                             @can('mantenimiento-equipo')
-                                            <a href="{{ route('equipos.addwork.index', $equipo) }}" class="btn btn-sm btn-default text-primary" title="Mantenimiento"><i class="fas fa-tools"></i></a>
+                                            <a href="{{ route('equipos.addwork', $equipo) }}" class="btn btn-sm btn-default text-primary" title="Mantenimiento"><i class="fas fa-tools"></i></a>
                                             @endcan
                                             @can('eliminar-equipo')
                                             <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
