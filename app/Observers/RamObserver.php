@@ -6,6 +6,7 @@ use App\Models\Ram;
 use App\Models\Historial_log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RamObserver
 {
@@ -86,6 +87,41 @@ public function updated(Ram $ram): void
     {
         //
     }
+
+
+public function deleting(Ram $ram): void
+{
+    // 1.- Obtenemos el ID directamente de la columna, no de la relación es decir, $168 por ejemplo
+    $equipoId = $ram->equipo_id; 
+
+    // 2. Buscamos el equipo de forma manual para asegurar que exista
+    //es decir buscamos ese registro en la tabla
+    $equipoPadre = \App\Models\Equipo::find($equipoId);
+
+    //3.- Si la Tomamos de Buena Manera crearemos un registro en Historial_Log
+    if ($equipoPadre) {
+        Historial_log::create([
+            'activo_id'         => $equipoPadre->id, // Vinculamos al ID del equipo
+            'usuario_accion_id' => \Illuminate\Support\Facades\Auth::id() ?? 1,
+            'tipo_registro'     => 'DELETE',
+            'detalles_json'     => [
+                'mensaje'          => "COMPONENTE ELIMINADO: Se retiró una Ram del equipo",
+                'usuario_asignado' => $equipoPadre->usuario->name ?? 'N/A',
+                'rol'              => $equipoPadre->usuario->rol ?? 'N/A',
+                'cambios'          => [
+                    'Ram Retirada' => [
+                        'antes'   => "Capacidad en GB: {$ram->capacidad_gb} | Clock Mhz: {$ram->clock_mhz}
+                        | Tipo de CHZ: {$ram->tipo_chz}",
+                        'despues' => 'ELIMINADO'
+                    ]
+                ],
+                'respaldo' => $ram->toArray() 
+            ]
+        ]);
+    } else {    //4.-En caso de Error
+        Log::warning("No se pudo crear log de eliminación: El procesador {$ram->id} no tiene un equipo asociado.");
+    }
+}
 
     /**
      * Handle the Ram "restored" event.
