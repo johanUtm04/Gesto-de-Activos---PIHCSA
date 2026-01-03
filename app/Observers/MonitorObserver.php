@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Observers;
+
+use App\Models\Equipo;
 use App\Models\Monitor;
 use App\Models\Historial_log;
 use Illuminate\Support\Str;
@@ -11,10 +13,36 @@ class MonitorObserver
     /**
      * Handle the Monitor "created" event.
      */
-    public function created(Monitor $monitor): void
-    {
-        //
+public function created(Monitor $monitor): void
+{
+    // Obtenemos el equipo al que se le sumó el monitor
+    $equipo = $monitor->equipos; 
+
+    if ($equipo) {
+        Historial_log::create([
+            'activo_id'         => $equipo->id,
+            'usuario_accion_id' => Auth::id() ?? 1,
+            'tipo_registro'     => 'CREATE', 
+            'detalles_json'     => [
+                'mensaje'          => 'NUEVO COMPONENTE: Se sumó un monitor',
+                'usuario_asignado' => $equipo->usuario->name ?? 'N/A',
+                'rol'              => $equipo->usuario->rol ?? 'N/A',
+                // Forzamos la estructura de cambios para que el Blade la pinte bonito
+                'cambios'          => [
+                    'Monitor Adicional' => [
+                        'antes'   => 'Inexistente',
+                        'despues' => "<ul class='list-unstyled mb-0'>" .
+                        "<li><b>Marca:</b> {$monitor->marca}</li>" .
+                        "<li><b>S/N:</b> {$monitor->serial}</li>" .
+                        "<li><b>Escala:</b> {$monitor->escala_pulgadas}\"</li>" .
+                        "<li><b>Interface:</b> {$monitor->interface}</li>" .
+                        "</ul>"                    
+                        ]
+                ]   
+            ]
+        ]);
     }
+}
 
     /**
      * Handle the Monitor "updated" event.
