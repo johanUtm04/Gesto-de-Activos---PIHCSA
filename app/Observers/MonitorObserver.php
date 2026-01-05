@@ -28,7 +28,6 @@ public function created(Monitor $monitor): void
                 'mensaje'          => 'NUEVO COMPONENTE: Se sumó un monitor',
                 'usuario_asignado' => $equipo->usuario->name ?? 'N/A',
                 'rol'              => $equipo->usuario->rol ?? 'N/A',
-                // Forzamos la estructura de cambios para que el Blade la pinte bonito
                 'cambios'          => [
                     'Monitor Adicional' => [
                         'antes'   => 'Inexistente',

@@ -126,7 +126,7 @@ class EquipoController extends Controller
 
         return redirect()->route('equipos.index', ['page' => $page])
         ->with('warning', 'Equipo actualizado correctamente')
-        ->with('actualizado->id', $equipo->id);;
+        ->with('actualizado->id', $equipo->id);
     }
 
     /**
@@ -212,7 +212,7 @@ class EquipoController extends Controller
             'contexto'     => 'required|string',
             'costo'        => 'required|numeric',
         ]);
-        
+
             Historial_log::create([
                   'activo_id'         => $equipo->id,
                    'usuario_accion_id' => auth()->id(),
@@ -235,7 +235,13 @@ class EquipoController extends Controller
                       ]
                 ]);
 
-        return redirect()->route('equipos.index')->with('success', 'Mantenimiento registrado');
+
+        $perPage = 11;
+        $position = Equipo::where('id', '<=', $equipo->id)->count();
+        $page = ceil($position / $perPage);
+
+        return redirect()->route('equipos.index', ['page' => $page])->with('secondary', 'Mantenimiento registrado')
+        ->with('new_mantenimiento', $equipo->id);
     }
 
 }

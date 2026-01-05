@@ -113,7 +113,7 @@
 
 @section('content')
     {{-- Alertas --}}
-    @foreach (['success', 'danger', 'warning', 'info'] as $msg)
+    @foreach (['success', 'danger', 'warning', 'info', 'secondary'] as $msg)
         @if(Session::has($msg))
             <div class="alert alert-{{ $msg }} alert-dismissible fade show shadow-sm" role="alert">
                 <i class="fas fa-info-circle mr-2"></i> {{ Session::get($msg) }}
@@ -236,12 +236,16 @@
                                     
                                     <td class="text-center font-weight-bold text-muted">{{ $equipo->id }}</td>
                                     <td>
-                                        {{-- TUS BADGES ORIGINALES --}}
+                            
                                         @if(session('actualizado->id') == $equipo->id)
                                             <span class="badge badge-warning">Editado</span>
                                         @endif
                                         @if(session('new_id') == $equipo->id)
                                             <span class="badge badge-success">Nuevo Activo</span>
+                                        @endif
+
+                                        @if(session('new_mantenimiento') == $equipo->id)
+                                            <span class="badge badge-secondary">Mantenimiento Registrado</span>
                                         @endif
 
                                         <div class="font-weight-bold text-dark">{{ $equipo->tipo_equipo }} {{ $equipo->marca_equipo }}</div>
