@@ -54,7 +54,7 @@
                 <div class="px-4 py-3 bg-white border-bottom">
                     <form action="{{ route('historial.index') }}" method="GET" class="form-inline">
                         <input type="hidden" name="equipo_id" value="{{ $equipo->id }}">
-                        
+                        <input type="hidden" name="page" value="{{ request('page', 1) }}">
                         <label class="mr-2 small font-weight-bold text-muted">Filtrar logs de este equipo:</label>
                         
                         <select name="tipo_registro" class="form-control form-control-sm mr-2">
