@@ -143,24 +143,7 @@ class EquipoController extends Controller
     /**
      * Registro de mantenimiento en el historial (Log).
      */
-    public function saveWork (Equipo $equipo, Request $request)
-    {
-        $data = $request->validate([
-            'tipo_evento'  => 'required|string',
-            'fecha_evento' => 'required|date',
-            'contexto'     => 'required|string',
-            'costo'        => 'nullable|numeric',
-        ]);
 
-        Historial_log::create([
-            'activo_id'         => $equipo->id,
-            'usuario_accion_id' => auth()->id(),
-            'tipo_registro'     => 'MANTENIMIENTO',
-            'detalles_json'     => $data, 
-        ]);
-
-        return redirect()->route('equipos.index')->with('success', 'Mantenimiento registrado');
-    }
 
     /**
      * Elimina el equipo y calcula la redirección de página.
@@ -207,9 +190,6 @@ class EquipoController extends Controller
         }
     }
 
-    /**
-     * Verifica si el conjunto de datos de un componente está vacío de información útil.
-     */
     private function isEmptyRecord($data) 
     {
         $filtered = collect($data)->except(['id', '_delete'])->filter();
@@ -217,9 +197,45 @@ class EquipoController extends Controller
     }
 
 
-public function indexaddwork (Equipo $equipo){
-    $usuarios    = User::all();
-    return view('equipos.addwork.store', compact('equipo', 'usuarios'));
-}
+    public function indexaddwork (Equipo $equipo){
+        $usuarios    = User::all();
+        return view('equipos.addwork', compact('equipo', 'usuarios'));
+    }
+
+
+
+        public function saveWork (Equipo $equipo, Request $request)
+    {
+        $data = $request->validate([
+            'tipo_evento'  => 'required|string',
+            'fecha_evento' => 'required|date',
+            'contexto'     => 'required|string',
+            'costo'        => 'required|numeric',
+        ]);
+        
+            Historial_log::create([
+                  'activo_id'         => $equipo->id,
+                   'usuario_accion_id' => auth()->id(),
+                      'tipo_registro'     => 'MANTENIMIENTO', 
+                      'detalles_json' => [
+                        'mensaje' => 'Nuevo Mantenimiento agregado',
+                        'usuario_asignado' => $historial->name ?? 'conexion mal hecha we',
+                        'rol' => $historial->rol ?? 'conexion mal hecha amor',
+                        'cambios'          => [
+                            'Mantenimiento Creado' => [
+                                'antes'   => 'Inexistente',
+                                'despues' => "<ul class='list-unstyled mb-0'>" .
+                                "<li><b>Marca:</b> $data[tipo_evento]</li>" .
+                                "<li><b>S/N:</b> $data[fecha_evento]</li>" .
+                                "<li><b>Interface:</b> $data[contexto]</li>" .
+                                 "<li><b>Interface:</b> $data[costo]</li>" .
+                                "</ul>"                    
+                                ]
+                        ]   
+                      ]
+                ]);
+
+        return redirect()->route('equipos.index')->with('success', 'Mantenimiento registrado');
+    }
 
 }

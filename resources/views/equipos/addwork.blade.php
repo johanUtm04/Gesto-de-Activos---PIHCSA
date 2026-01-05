@@ -55,7 +55,6 @@
                     @csrf
 
                     <div class="card-body">
-
                         <fieldset class="fieldset-group">
                             <legend>
                                 <i class="fas fa-clipboard-list"></i>

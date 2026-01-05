@@ -279,9 +279,6 @@
                         Generado el {{ date('d/m/Y H:i') }}.
                     </p>
                 </div>
-                <div class="col-md-4 text-right">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data={{ Request::url() }}" alt="QR Code" class="img-thumbnail">
-                </div>
             </div>
         </div>
     </div>

@@ -62,6 +62,8 @@
                             <option value="CREATE" {{ (request('tipo_registro') == 'CREATE' && request('equipo_id') == $equipo->id) ? 'selected' : '' }}>Creación</option>
                             <option value="UPDATE" {{ (request('tipo_registro') == 'UPDATE' && request('equipo_id') == $equipo->id) ? 'selected' : '' }}>Actualización</option>
                             <option value="DELETE" {{ (request('tipo_registro') == 'DELETE' && request('equipo_id') == $equipo->id) ? 'selected' : '' }}>Eliminación</option>
+                            <option value="MANTENIMIENTO" {{ (request('tipo_registro') == 'MANTENIMIENTO' && request('equipo_id') == $equipo->id) ? 'selected' : '' }}>MANTENIMIENTO</option>
+
                         </select>
 
                         <button type="submit" class="btn btn-primary btn-sm mr-1">
@@ -115,7 +117,7 @@
                                                             <div class="d-flex align-items-center">
                                                                 <span class="val-old">{{ $valor['antes'] ?? 'N/A' }}</span>
                                                                 <i class="fas fa-arrow-right mx-2 text-muted small"></i>
-                                                                <span class="val-new">{{ $valor['despues'] ?? 'N/A' }}</span>
+                                                                <span class="val-new">{{!! $valor['despues'] ?? 'N/A' !!}}</span>
                                                             </div>
                                                         </td>
                                                     </tr>
