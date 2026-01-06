@@ -20,16 +20,15 @@ Build: Passing
 ## Visuales (GIFs)
 
 1. Dashboard principal  
-   Main dashboard  
+![Dashboard principal](resources/images/inicio.png)
 
 2. Wizard de registro (primer paso)  
    Asset registration wizard (first step)  
+![Wizard Registro](resources/images/menuCreacion.png)
 
 3. Historial de movimientos del activo  
    Asset activity and history log  
-
-> Los GIFs representan el flujo real del sistema y su enfoque en experiencia de usuario y trazabilidad.  
-> The GIFs showcase the real system flow and its focus on user experience and traceability.
+  ![Historial](resources/images/historial.png)
 
 ---
 
