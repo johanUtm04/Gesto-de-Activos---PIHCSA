@@ -1,187 +1,56 @@
-# GestionUsuariosController
+# 🎮 GestionUsuariosController
+
+> **Nota para el futuro Ingeniero:**
+> Este controlador centraliza la administración de accesos al sistema. Un detalle crítico aquí es el uso de la constante `PER_PAGE` y el método helper `getReturnPage`. Están diseñados para que, tras añadir, editar o borrar un usuario, el sistema te devuelva exactamente a la página de la tabla donde estabas, evitando que el administrador pierda el foco de navegación.
+
+## 📌 Responsabilidades
+* Registro de nuevos operadores del sistema con contraseñas encriptadas.
+* Gestión de perfiles: Roles, Departamentos y Estatus (ACTIVO/INACTIVO).
+* Control de paginación inteligente para la interfaz administrativa.
+* Validación de unicidad de correos electrónicos para evitar duplicidad de cuentas.
 
 ---
 
-## Propósito / Purpose
+## 🛠️ Métodos Principales
 
-### Español
-El `GestionUsuariosController` se encarga de la **administración de usuarios del sistema**, permitiendo crear, listar, editar y eliminar usuarios.  
-Este controlador está orientado a **roles administrativos**, garantizando control y organización del acceso al sistema.
-
-### English
-The `GestionUsuariosController` is responsible for **system user management**, allowing administrators to create, list, edit, and delete users.  
-This controller is designed for **administrative roles**, ensuring structured access control across the system.
-
----
-
-## Responsabilidades / Responsibilities
-
-### Español
-- Listar usuarios con paginación
-- Crear nuevos usuarios
-- Editar información de usuarios existentes
-- Eliminar usuarios
-- Redirigir correctamente según la paginación
-- Proporcionar feedback visual (alerts y highlights)
-
-### English
-- List users with pagination
-- Create new users
-- Edit existing user information
-- Delete users
-- Redirect correctly based on pagination
-- Provide visual feedback (alerts and highlights)
-
----
-
-## Métodos del Controlador / Controller Methods
-
-| Método | HTTP | Ruta | Descripción |
-|------|------|------|-------------|
-| index | GET | /gestionUsuarios | Listado de usuarios |
-| create | GET | /gestionUsuarios/create | Formulario de creación |
-| store | POST | /gestionUsuarios | Guardar nuevo usuario |
-| edit | GET | /gestionUsuarios/{user}/edit | Edición de usuario |
-| update | PUT | /gestionUsuarios/{user} | Actualización de usuario |
-| destroy | DELETE | /gestionUsuarios/{user} | Eliminación de usuario |
-
----
-
-## Detalle de Métodos / Method Details
-
----
-
-### `index(Request $request)`
-
-**ES:**  
-Obtiene los usuarios del sistema mediante paginación y los envía a la vista principal de gestión de usuarios.
-
-**EN:**  
-Retrieves system users using pagination and sends them to the main user management view.
-
----
-
-### `create()`
-
-**ES:**  
-Muestra el formulario para la creación de un nuevo usuario.
-
-**EN:**  
-Displays the form for creating a new user.
-
----
+### `index()`
+Muestra el listado de usuarios.
+* **Paginación**: Utiliza la constante `PER_PAGE` fijada en **10 registros** para mantener una interfaz limpia.
 
 ### `store(Request $request)`
-
-**ES:**  
-Registra un nuevo usuario en el sistema.
-
-#### Funcionalidades clave:
-- Valida los campos requeridos
-- Crea el usuario en base de datos
-- Calcula la página correcta de la paginación
-- Redirige al listado resaltando el nuevo registro
-
-**EN:**  
-Registers a new user in the system.
-
-#### Key features:
-- Validates required fields
-- Creates the user in the database
-- Calculates the correct pagination page
-- Redirects to the list highlighting the new record
-
----
-
-### `edit(User $user)`
-
-**ES:**  
-Muestra el formulario de edición para un usuario específico.
-
-**EN:**  
-Displays the edit form for a specific user.
-
----
+Crea un nuevo usuario en la base de datos.
+* **Seguridad**: Implementa `Hash::make` para encriptar la contraseña antes de la persistencia.
+* **Validación**: Verifica que el `email` sea único en la tabla `users` y que la contraseña coincida con su confirmación (`confirmed`).
+* **Retorno**: Redirige a la página correspondiente del nuevo registro usando el helper de posición.
 
 ### `update(Request $request, User $user)`
-
-**ES:**  
-Actualiza la información de un usuario existente.
-
-#### Funcionalidades clave:
-- Validación flexible (campos opcionales)
-- Actualización directa del modelo
-- Cálculo de paginación
-- Feedback visual de actualización
-
-**EN:**  
-Updates an existing user's information.
-
-#### Key features:
-- Flexible validation (optional fields)
-- Direct model update
-- Pagination calculation
-- Visual update feedback
-
----
+Actualiza la información del perfil.
+* **Validación dinámica**: Al validar el email, ignora el ID del usuario actual para permitir guardar cambios sin error de "email ya existe" si el correo no fue modificado.
 
 ### `destroy(User $user)`
-
-**ES:**  
-Elimina un usuario del sistema y redirige correctamente según la paginación actual.
-
-> ⚠️ Nota: Actualmente la eliminación es **definitiva**. Puede adaptarse a eliminación lógica (`soft deletes`) si el sistema lo requiere.
-
-**EN:**  
-Deletes a user from the system and redirects according to pagination.
-
-> ⚠️ Note: Deletion is currently **permanent**. It can be adapted to soft deletes if required.
+Elimina la cuenta de usuario.
+* **Cálculo preventivo**: Calcula la página de retorno **antes** de ejecutar el borrado para asegurar que la redirección sea coherente con los registros restantes.
 
 ---
 
-## Seguridad / Security
+## 🔧 Lógica de Helper Functions (Privadas)
 
-### Español
-- Controlado mediante middleware de autenticación
-- Recomendado limitar el acceso solo a usuarios ADMIN
-- Validaciones del lado servidor
-- Riesgo reducido de edición accidental
-
-### English
-- Controlled via authentication middleware
-- Recommended restriction to ADMIN users only
-- Server-side validation
-- Reduced risk of accidental edits
+### `getReturnPage($userId)`
+Este método es vital para la Experiencia de Usuario (UX) administrativa:
+1. Cuenta cuántos registros existen con un ID menor o igual al afectado.
+2. Divide ese total entre el número de registros por página (`PER_PAGE`).
+3. Aplica `ceil()` para obtener el número de página exacto.
 
 ---
 
-## 🛠 Dependencias / Dependencies
+## 📝 Reglas de Validación (User Management)
 
-- `App\Models\User`
-- `Illuminate\Http\Request`
-
----
-
-## Consideraciones de Escalabilidad / Scalability Notes
-
-### Español
-- Puede integrarse con:
-  - Auditoría de acciones administrativas
-  - Soft deletes para usuarios
-  - Asignación de permisos más granular
-- Fácil migración a `FormRequest` para validaciones
-
-### English
-- Can be integrated with:
-  - Administrative action auditing
-  - Soft deletes for users
-  - Granular permission management
-- Easy migration to `FormRequest` validation
+| Campo | Regla | Descripción |
+| :--- | :--- | :--- |
+| `email` | `email \| unique` | Debe tener formato de correo y no existir en la DB.
+| `password` | `min:8 \| confirmed` | Mínimo 8 caracteres y debe coincidir con el campo de confirmación.
+| `rol` | `required` | Define el nivel de acceso (ADMIN, SISTEMAS, etc.).
+| `estatus` | `required` | Define si el usuario puede loguearse (ACTIVO/INACTIVO).
 
 ---
-
-## 📎 Notas Finales / Final Notes
-
-Este controlador representa el **núcleo administrativo del sistema**, siendo crítico para la correcta gestión de accesos y responsabilidades.
-
-This controller represents the **administrative core of the system**, making it critical for proper access and responsibility management.
+**Tip de Mantenimiento:** Si decides cambiar el tamaño de las tablas en el frontend, solo necesitas modificar el valor de `const PER_PAGE` en este controlador y el sistema recalculará todas las redirecciones automáticamente.

@@ -1,166 +1,42 @@
-# ProfileController
+# 🎮 ProfileController
+
+> **Nota para el futuro Ingeniero:**
+> Este controlador gestiona la seguridad y los datos personales del usuario autenticado. A diferencia de `GestionUsuariosController`, aquí el usuario solo tiene poder sobre sus propios datos. La seguridad se refuerza mediante un "Closure" de validación que obliga a verificar la identidad antes de permitir cualquier cambio crítico.
+
+## 📌 Responsabilidades
+* Visualización del formulario de perfil del usuario en sesión.
+* Actualización segura de credenciales (Nombre, Email y Contraseña).
+* Gestión del cierre de cuenta y limpieza de sesiones activas.
 
 ---
 
-## Propósito / Purpose
+## 🛠️ Métodos Principales
 
-### Español
-El `ProfileController` gestiona la **configuración del perfil del usuario autenticado**, permitiendo la visualización, actualización de información personal y la eliminación segura de la cuenta.  
-Está enfocado en **seguridad**, **validación estricta** y **protección de credenciales**.
-
-### English
-The `ProfileController` manages the **authenticated user's profile settings**, allowing profile viewing, personal information updates, and secure account deletion.  
-It is focused on **security**, **strict validation**, and **credential protection**.
-
----
-
-## Responsabilidades / Responsibilities
-
-### Español
-- Mostrar el formulario de edición de perfil
-- Actualizar nombre, correo electrónico y contraseña
-- Verificar la contraseña actual antes de aplicar cambios
-- Encriptar contraseñas nuevas
-- Eliminar cuentas de forma segura
-- Cerrar sesión y limpiar sesión al eliminar la cuenta
-
-### English
-- Display the profile edit form
-- Update name, email, and password
-- Verify current password before applying changes
-- Encrypt new passwords
-- Securely delete user accounts
-- Log out and invalidate session on account deletion
-
----
-
-## Métodos del Controlador / Controller Methods
-
-| Método | HTTP | Ruta | Descripción |
-|------|------|------|-------------|
-| edit | GET | /profile | Muestra formulario de perfil |
-| update | PUT/PATCH | /profile | Actualiza datos del usuario |
-| destroy | DELETE | /profile | Elimina la cuenta del usuario |
-
----
-
-## Detalle de Métodos / Method Details
-
----
-
-### `edit(Request $request): View`
-
-**ES:**  
-Devuelve la vista del perfil del usuario autenticado, enviando la información del usuario actual.
-
-**EN:**  
-Returns the authenticated user's profile view, passing the current user data.
-
----
+### `edit(Request $request)`
+Carga la vista de edición.
+* **Contexto**: Retorna los datos del usuario que dispara la petición mediante `$request->user()`.
 
 ### `update(Request $request)`
+Procesa los cambios del perfil con lógica de validación manual:
+* **Verificación de Identidad**: Implementa una función anónima (Closure) en `current_password` que usa `Hash::check` para comparar lo ingresado con el hash de la base de datos.
+* **Cambio de Password Condicional**: 
+    * Si el campo `password` está vacío, se elimina del arreglo de datos (`unset`) para no sobreescribir la contraseña actual con un valor nulo.
+    * Si contiene datos, se aplica `Hash::make` y se cumplen las reglas de `Password::defaults()` de Laravel Breeze.
+* **Email Único**: Valida que el correo no esté duplicado, pero ignora el ID del usuario actual para permitir mantener el mismo email.
 
-**ES:**  
-Actualiza la información del perfil del usuario autenticado.
-
-#### Funcionalidades clave:
-- Obtiene el usuario autenticado por ID
-- Valida:
-  - Nombre
-  - Correo único (ignorando el propio usuario)
-  - Contraseña actual
-  - Nueva contraseña (opcional)
-- Verifica que la contraseña actual sea correcta
-- Encripta la nueva contraseña si se proporciona
-- Evita sobrescribir la contraseña si no se envía
-- Actualiza los datos del usuario
-
-**EN:**  
-Updates the authenticated user's profile information.
-
-#### Key features:
-- Retrieves authenticated user by ID
-- Validates:
-  - Name
-  - Unique email (excluding current user)
-  - Current password
-  - Optional new password
-- Verifies current password correctness
-- Hashes the new password if provided
-- Prevents password overwrite if not submitted
-- Updates user data
+### `destroy(Request $request)`
+Elimina la cuenta del usuario actual:
+* **Seguridad**: Requiere la contraseña actual para confirmar la acción.
+* **Limpieza**: Tras eliminar el registro, invalida la sesión y regenera el token CSRF para evitar ataques de fijación de sesión antes de redirigir al inicio.
 
 ---
 
-### `destroy(Request $request): RedirectResponse`
+## 🛡️ Lógica de Validación Especial
 
-**ES:**  
-Elimina la cuenta del usuario de forma segura.
-
-#### Proceso:
-1. Valida la contraseña actual
-2. Cierra la sesión del usuario
-3. Elimina el registro del usuario
-4. Invalida la sesión
-5. Regenera el token CSRF
-6. Redirige a la página principal
-
-**EN:**  
-Securely deletes the user account.
-
-#### Flow:
-1. Validates current password
-2. Logs out the user
-3. Deletes the user record
-4. Invalidates the session
-5. Regenerates CSRF token
-6. Redirects to the home page
-
----
-
-## Seguridad / Security
-
-### Español
-- Autenticación obligatoria
-- Verificación de contraseña actual antes de cambios críticos
-- Uso de `Hash` para encriptación
-- Limpieza de sesión tras eliminación de cuenta
-- Protección contra duplicidad de correos
-
-### English
-- Mandatory authentication
-- Current password verification for critical changes
-- Use of `Hash` for encryption
-- Session cleanup after account deletion
-- Protection against duplicate emails
-
----
-
-## Dependencias / Dependencies
-
-- `App\Models\User`
-- `Illuminate\Support\Facades\Auth`
-- `Illuminate\Support\Facades\Hash`
-- `Illuminate\Validation\Rules\Password`
-
----
-
-## Consideraciones de Escalabilidad / Scalability Notes
-
-### Español
-- Puede integrarse con un sistema de auditoría de cambios de perfil
-- Puede extenderse para manejo de avatar o MFA
-- Validaciones listas para internacionalización
-
-### English
-- Can be integrated with a profile audit logging system
-- Ready to extend for avatar handling or MFA
-- Validation rules prepared for internationalization
-
----
-
-## 📎 Notas Finales / Final Notes
-
-Este controlador sigue buenas prácticas de Laravel para **seguridad de cuentas**, siendo una pieza clave para la confianza del usuario final.
-
-This controller follows Laravel best practices for **account security**, making it a key component for end-user trust.
+```php
+// Validación personalizada de la contraseña actual
+'current_password' => ['required', function($attribute, $value, $fail) use ($user){
+    if (!Hash::check($value, $user->password)) {
+        $fail("El campo Contraseña Actual es incorrecto");
+    }
+}],
