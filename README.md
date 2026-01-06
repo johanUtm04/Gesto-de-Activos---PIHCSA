@@ -1,4 +1,7 @@
-# Gestión de Activos de PIHCSA  
+<h1>
+  <img src="resources/images/tu-logo.png" width="30" vertical-align="middle"> 
+  Gestión de Activos de PIHCSA
+</h1>
 ## PIHCSA Asset Management
 
 Sistema de Gestión de Activos de TI desarrollado para **PIHCSA**, enfocado en optimizar el control, registro, seguimiento y auditoría de activos tecnológicos dentro del **sector médico**.
@@ -26,7 +29,7 @@ Build: Passing
    Asset registration wizard (first step)  
 ![Wizard Registro](resources/images/menuCreacion.png)
 
-3. Calculo de depreciacion de Activos
+3. Calculo de asset depreciation
    Asset activity and history log  
   ![depreciacion](resources/images/depreciacion.png)
 
