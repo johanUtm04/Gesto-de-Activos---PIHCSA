@@ -41,13 +41,52 @@ Build: Passing
 
 ## Instalación / Installation
 
-Pendiente.
+Requisitos Previos / Prerequisites
+PHP >= 8.2
 
-Esta sección será documentada una vez concluida la configuración final del sistema en un entorno estable.
+Composer
 
-Pending.
+MariaDB >= 10.4
 
-This section will be documented once the system’s final configuration is completed in a stable environment.
+Servidor Apache con módulo mod_rewrite habilitado.
+
+Pasos de Configuración / Configuration Steps
+
+1.-Clonar el repositorio / Clone the repository:
+  git clone https://github.com/tu-usuario/gestion_activos.git
+  cd gestion_activos
+
+2.-Instalar dependencias / Install dependencies:
+  composer install
+
+3.-Configurar variables de entorno / Environment configuration:
+  DB_CONNECTION=mysql
+  DB_HOST=127.0.0.1
+  DB_PORT=3306
+  DB_DATABASE=gestion_activos
+  DB_USERNAME=tu_usuario
+  DB_PASSWORD=tu_contraseña
+
+4.-Generar llave de aplicación / Generate app key:
+  php artisan key:generate
+
+5.-Restaurar Base de Datos / Database Restoration:
+  mysql -u tu_usuario -p gestion_activos < database/backups/base.sql
+
+6.-Optimización de servidor (Producción) / Server Optimization
+  # Apache Conf
+  <Directory /var/www/html/public>
+      AllowOverride All
+  </Directory>
+
+7.-Limpieza de caché / Clear Cache:
+  php artisan config:cache
+  php artisan route:cache
+
+
+Notas de Implementación / Implementation Notes
+-La interfaz está construida sobre AdminLTE 3, integrada mediante el paquete oficial para Laravel.
+-Se requiere permisos de escritura en las carpetas storage y bootstrap/cache.
 
 ---
 
