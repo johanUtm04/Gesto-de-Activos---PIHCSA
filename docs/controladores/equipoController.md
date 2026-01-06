@@ -1,217 +1,59 @@
-# EquipoController
+# 🎮 EquipoController
+
+> **Nota para el futuro Ingeniero:**
+> Este controlador es el cerebro operativo del sistema de activos. Su diseño principal se basa en un **Wizard de Pasos** para la creación y un sistema de **Sincronización Dinámica** para la actualización de hardware. Si necesitas modificar cómo se guardan las RAMs o Discos, el método clave es `syncRelation`.
+
+## 📌 Responsabilidades
+* Gestión del ciclo de vida completo de los Activos (Equipos).
+* Filtrado avanzado de inventario por ubicación, tipo y marca.
+* Orquestación de datos mediante sesiones temporales (Wizard).
+* Registro de eventos de mantenimiento en el historial de auditoría.
 
 ---
 
-## Propósito / Purpose
+## 🛠️ Métodos Principales
 
-### Español
-El `EquipoController` es el controlador principal encargado de la **gestión integral de activos (equipos)** dentro del sistema.  
-Centraliza las operaciones CRUD, la edición avanzada de componentes relacionados y el registro de mantenimientos, asegurando trazabilidad y control mediante auditoría.
-
-### English
-The `EquipoController` is the main controller responsible for **comprehensive asset (equipment) management** within the system.  
-It centralizes CRUD operations, advanced editing of related components, and maintenance logging, ensuring traceability and control through auditing.
-
----
-
-## Responsabilidades / Responsibilities
-
-### Español
-- Mostrar el inventario de activos con paginación
-- Iniciar el flujo de creación de activos (wizard)
-- Editar activos mediante vista comparativa
-- Actualizar información principal y componentes relacionados
-- Registrar mantenimientos
-- Eliminar activos de forma lógica
-- Registrar auditoría de cambios
-
-### English
-- Display paginated asset inventory
-- Start the asset creation wizard flow
-- Edit assets using a split comparison view
-- Update main asset data and related components
-- Register maintenance events
-- Perform logical asset deletion
-- Log audit records for changes
-
----
-
-## Métodos del Controlador / Controller Methods
-
-| Método | HTTP | Ruta | Descripción |
-|------|------|------|-------------|
-| index | GET | /equipos | Listado principal de activos |
-| create | GET | /equipos/create | Inicio del wizard de creación |
-| store | POST | /equipos | Almacena datos base del activo |
-| edit | GET | /equipos/{equipo}/edit | Vista de edición dividida |
-| update | PUT | /equipos/{equipo} | Actualización completa del activo |
-| indexaddwork | GET | /equipos/{equipo}/addwork | Vista de mantenimiento |
-| addwork | POST | /equipos/{equipo}/addwork | Registro de mantenimiento |
-| destroy | DELETE | /equipos/{equipo} | Eliminación lógica del activo |
-
----
-
-## Detalle de Métodos / Method Details
-
-### `index()`
-
-**ES:**  
-Muestra el listado principal de activos con paginación.  
-Limpia cualquier sesión activa del wizard para evitar inconsistencias.
-
-**EN:**  
-Displays the main paginated asset list.  
-Clears any active wizard session to avoid inconsistencies.
-
----
-
-### `create()`
-
-**ES:**  
-Inicializa el flujo de creación de activos mediante wizard, cargando usuarios y ubicaciones disponibles.
-
-**EN:**  
-Initializes the asset creation wizard flow, loading available users and locations.
-
----
+### `index(Request $request)`
+Muestra el inventario global.
+* **Eager Loading**: Carga todas las piezas (RAM, Discos, etc.) en una sola consulta para optimizar el rendimiento.
+* **Filtros**: Soporta búsqueda por sección (marca/serial/tipo), ubicación física y categoría de activo.
+* **Paginación**: Configurada a **11 registros** por página para ajuste de diseño.
 
 ### `store(Request $request)`
-
-**ES:**  
-Valida y almacena los datos base del activo.  
-Genera un UUID único y guarda la información en sesión para continuar el wizard.
-
-**Características clave:**
-- Validaciones de datos
-- Generación automática de serial interno
-- Inicialización de sesión `wizard_equipo`
-
-**EN:**  
-Validates and stores base asset data.  
-Generates a unique UUID and stores data in session to continue the wizard.
-
----
-
-### `edit(Equipo $equipo)`
-
-**ES:**  
-Devuelve una vista de edición dividida que permite comparar los valores actuales con los nuevos.
-
-**EN:**  
-Returns a split-view edit screen allowing comparison between current and new values.
-
----
+Inicia el proceso de alta.
+* **Wizard**: No guarda directamente en la BD. Valida los datos base y los almacena en la sesión (`wizard_equipo`) junto con un **UUID** único.
+* **Autogeneración**: Si el serial no se proporciona, genera uno interno con el formato `INT-YYYY-RAND`.
 
 ### `update(Request $request, Equipo $equipo)`
+Procesa cambios masivos.
+* Actualiza los datos base del equipo.
+* Invoca a `syncRelation` para cada componente de hardware, permitiendo crear, actualizar o eliminar piezas desde una misma vista.
+* **Cálculo de Posición**: Redirige al usuario exactamente a la página donde se encuentra el equipo editado.
 
-**ES:**  
-Actualiza la información principal del activo y gestiona la edición de componentes relacionados:
-- Periféricos
-- RAM
-- Procesadores
-- Monitores
-- Discos duros
-
-Incluye:
-- Creación
-- Actualización
-- Eliminación condicional
-- Auditoría de cambios
-- Redirección inteligente según paginación
-
-**EN:**  
-Updates the main asset information and manages related components:
-- Peripherals
-- RAM
-- Processors
-- Monitors
-- Hard drives
-
-Includes:
-- Creation
-- Update
-- Conditional deletion
-- Change auditing
-- Intelligent pagination redirect
+### `saveWork(Equipo $equipo, Request $request)`
+Registra acciones de mantenimiento.
+* Almacena el evento en `historiales_log`.
+* Inserta una estructura **HTML/JSON** en los detalles para facilitar la visualización del historial en el frontend.
 
 ---
 
-### `indexaddwork(Equipo $equipo)`
+## 🔧 Lógica de Helper Functions (Privadas)
 
-**ES:**  
-Muestra el formulario para registrar mantenimientos del activo.
-
-**EN:**  
-Displays the asset maintenance registration form.
-
----
-
-### `addwork(Equipo $equipo, Request $request)`
-
-**ES:**  
-Registra un evento de mantenimiento en el historial del activo, asociándolo al usuario autenticado.
-
-**EN:**  
-Registers a maintenance event in the asset history, linked to the authenticated user.
+### `syncRelation($relation, array $items)`
+Esta es la función más crítica para el mantenimiento de hardware:
+1. **Detección de Eliminación**: Si el ítem viene con la bandera `_delete`, lo remueve físicamente de la base de datos.
+2. **UpdateOrCreate**: Para el resto de los ítems, busca por `id`; si existe lo actualiza con los nuevos datos, si no, crea uno nuevo vinculado al equipo.
 
 ---
 
-### `destroy(Equipo $equipo)`
+## 📝 Reglas de Validación (Store/Update)
 
-**ES:**  
-Elimina el activo de forma lógica y redirige al usuario a la página correcta del inventario.
-
-**EN:**  
-Performs a logical deletion of the asset and redirects the user to the correct inventory page.
-
----
-
-## Seguridad / Security
-
-### Español
-- Requiere autenticación (`auth`)
-- Acceso controlado por roles
-- Validación de datos de entrada
-- Registro de auditoría mediante `AuditService`
-
-### English
-- Requires authentication (`auth`)
-- Role-based access control
-- Input validation
-- Audit logging via `AuditService`
+| Campo | Regla | Descripción |
+| :--- | :--- | :--- |
+| `tipo_equipo` | `required` | Debe ser Laptop, Escritorio, etc. |
+| `sistema_operativo`| `max:35` | Limitado según la estructura de la BD. |
+| `usuario_id` | `exists:users` | El usuario asignado debe existir previamente. |
+| `valor_inicial` | `numeric` | Máximo 8 dígitos enteros y 2 decimales. |
 
 ---
-
-## Modelos Relacionados / Related Models
-
-- Equipo
-- User
-- Ubicacion
-- Historial_log
-- Monitor
-- DiscoDuro
-- Procesador
-- RAM
-- Periferico
-
----
-
-## Consideraciones de Escalabilidad / Scalability Notes
-
-### Español
-- La lógica de componentes puede migrarse a Services si crece la complejidad
-- El sistema de auditoría está preparado para extenderse
-- El wizard permite agregar nuevos pasos sin afectar el flujo actual
-
-### English
-- Component logic can be migrated to Services if complexity grows
-- Audit system is ready for extension
-- Wizard flow supports adding new steps without breaking existing logic
-
----
-
-## 📎 Notas Finales / Final Notes
-
-Este controlador está diseñado como un **núcleo funcional del sistema**, priorizando claridad, trazabilidad y facilidad de mantenimiento.
-
-This controller is designed as a **core functional component of the system**, prioritizing clarity, traceability, and maintainability.
+**Tip de Mantenimiento:** Si el sistema de "Wizard" falla, asegúrate de que el driver de sesión en el `.env` sea `file` o `database` para soportar el almacenamiento de los datos temporales del equipo.
