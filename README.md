@@ -17,7 +17,7 @@ Build: Passing
 
 ---
 
-## Visuales (GIFs)
+## Visuales
 
 1. Dashboard principal  
 ![Dashboard principal](resources/images/inicio.png)
@@ -26,7 +26,11 @@ Build: Passing
    Asset registration wizard (first step)  
 ![Wizard Registro](resources/images/menuCreacion.png)
 
-3. Historial de movimientos del activo  
+3. Calculo de depreciacion de Activos
+   Asset activity and history log  
+  ![depreciacion](resources/images/depreciacion.png)
+
+4. Historial de movimientos del activo  
    Asset activity and history log  
   ![Historial](resources/images/historial.png)
 
