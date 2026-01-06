@@ -1,93 +1,57 @@
-# 1. Introducción
+# 📑 1. Introducción al Proyecto
 
-## 1.1 Objetivos del Sistema y Métricas de Éxito
-
-En esta sección se definen de forma clara y resumida los **objetivos centrales** del sistema de Gestión de Activos de **PIHCSA**, así como las **métricas clave** que permitirán evaluar el éxito de la aplicación web.
-
-Esta visión general establece el marco de referencia para los requisitos funcionales y técnicos descritos en el resto de la documentación.
+> **Nota para el futuro Ingeniero:**
+> Este documento marca la pauta de *por qué* existe este sistema. Cuando el código se vuelva complejo, vuelve aquí para recordar que el valor real de PIHCSA Activos no es solo guardar datos, sino eliminar el caos de los archivos Excel y convertirlos en **integridad operativa**.
 
 ---
 
-### Objetivo del sistema
+## 🎯 1.1 Objetivos y Métricas de Éxito
 
-El objetivo principal de este proyecto es **modernizar y profesionalizar la gestión de activos de TI** dentro de la empresa **PIHCSA (sede Morelia)**.
+Esta sección define el marco de referencia estratégico. Todo componente desarrollado en Laravel (Modelos, Vistas o Controladores) debe alinearse con estos pilares.
 
-Actualmente, el registro y control de activos de las sucursales (laptops, computadoras de escritorio, tabletas, entre otros dispositivos) se realiza mediante **hojas de cálculo en Excel**, lo cual presenta múltiples limitaciones:
 
-- Alta probabilidad de errores manuales  
-- Falta de trazabilidad histórica  
-- Ausencia de auditoría de cambios y mantenimientos  
 
-El nuevo sistema propone una **aplicación web centralizada**, **segura** y **accesible**, que permite:
+### 🚀 Visión General
+El objetivo primordial es **modernizar y profesionalizar la gestión de activos de TI** en **PIHCSA (Sede Morelia)**. El sistema reemplaza el flujo arcaico de hojas de cálculo por una infraestructura web centralizada.
 
-- Registrar activos de forma estructurada  
-- Mantener un historial completo de cambios y mantenimientos  
-- Facilitar consultas rápidas y confiables  
+#### 🛡️ Problemática Actual (El "Por qué")
+* **Volatilidad de Datos:** Errores manuales frecuentes en Excel.
+* **Puntos Ciegos:** Falta de trazabilidad histórica de quién tuvo qué equipo.
+* **Silencios Técnicos:** Ausencia de registros de mantenimiento y auditoría.
 
-El sistema está desarrollado en **Laravel (PHP)**, utiliza **MySQL** como motor de base de datos y se despliega sobre un **servidor Linux**, siendo accesible desde entornos **Windows** y **Linux** para los usuarios finales.
-
----
-
-### Métricas de éxito
-
-El éxito del sistema se medirá mediante los siguientes indicadores:
-
-- Reducción significativa de errores en el registro de activos (validaciones y reglas de negocio)  
-- Tiempo de consulta eficiente (objetivo: menos de 5 segundos por búsqueda)  
-- Centralización del inventario en una única fuente confiable  
-- Disponibilidad de historial completo por cada activo  
+#### 💎 Propuesta de Valor (El "Cómo")
+* **Estructura:** Registro de activos mediante formularios validados (Wizard).
+* **Trazabilidad:** Historial completo (`historiales_log`) de cada movimiento.
+* **Accesibilidad:** Aplicación web centralizada en **Laravel + MySQL** sobre servidores **Linux**.
 
 ---
 
-### Impacto esperado
+## 📈 1.2 Métricas de Éxito (KPIs)
 
-La implementación de este sistema permitirá una **mejor organización, trazabilidad y actualización de la información**, optimizando los procesos internos de la empresa y garantizando la **integridad y consistencia de los datos a largo plazo**.
+El éxito de este desarrollo se evalúa bajo los siguientes indicadores técnicos y operativos:
 
----
-
-## English
-
----
-
-## 1.1 System Objectives and Success Metrics
-
-This section defines, in a concise and clear manner, the **core objectives** of the **PIHCSA Asset Management System**, along with the **key metrics** used to evaluate the success of the project.
-
-It establishes the reference framework for all functional and technical requirements described throughout the documentation.
+| Indicador | Meta / Objetivo | Impacto esperado |
+| :--- | :--- | :--- |
+| **Integridad de Datos** | 0% Registros huérfanos | Uso estricto de llaves foráneas y validaciones. |
+| **Rendimiento** | < 5s por consulta | Optimización mediante *Eager Loading* en controladores. |
+| **Centralización** | 100% de activos en DB | Eliminación total de archivos Excel externos. |
+| **Auditoría** | Log completo por activo | Capacidad de reconstruir la historia de cualquier ID. |
 
 ---
 
-### System objective
+## 🛠️ 1.3 Stack Tecnológico
 
-The main objective of this project is to **modernize and professionalize IT asset management** within **PIHCSA**.
+Para asegurar la **integridad y consistencia a largo plazo**, se seleccionaron las siguientes herramientas:
 
-Currently, asset tracking and control (laptops, desktops, tablets, and other devices) is handled using **Excel spreadsheets**, which presents several limitations:
-
-- High risk of manual errors  
-- Lack of historical traceability  
-- No audit trail for changes or maintenance  
-
-The new system introduces a **centralized, secure, and accessible web application** designed to:
-
-- Register assets in a structured manner  
-- Maintain a complete history of changes and maintenance records  
-- Enable fast and reliable data queries  
-
-The system is built with **Laravel (PHP)**, uses **MySQL** as the database engine, and is deployed on a **Linux server**, while remaining accessible from both **Windows** and **Linux** environments.
+* **Backend:** PHP 8.x + Laravel Framework (Robustez y seguridad).
+* **Base de Datos:** MySQL (Relacionamiento estricto de hardware).
+* **Servidor:** Linux (Estabilidad para entornos productivos).
+* **Clientes:** Compatible con estaciones de trabajo Windows y Linux.
 
 ---
 
-### Success metrics
-
-The success of the system will be measured through the following indicators:
-
-- Significant reduction in asset registration errors  
-- Efficient information retrieval time (target: under 5 seconds per query)  
-- Centralized inventory as a single source of truth  
-- Complete historical tracking for each asset  
+### 💡 Impacto esperado
+La implementación de este sistema transformará la gestión de TI en una ventaja competitiva, garantizando que la información financiera (Depreciación) y técnica (Hardware) sea **verificable, auditable y escalable**.
 
 ---
-
-### Expected impact
-
-The implementation of this system will result in **better organization, traceability, and data accuracy**, optimizing internal processes and ensuring **long-term data integrity**.
+**Última revisión de objetivos:** Enero, 2026.
