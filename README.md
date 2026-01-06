@@ -1,5 +1,5 @@
 <h1>
-  <img src="resources/images/tu-logo.png" width="30" vertical-align="middle"> 
+  <img src="resources/images/logohd.png" width="30" vertical-align="middle"> 
   Gestión de Activos de PIHCSA
 </h1>
 ## PIHCSA Asset Management
