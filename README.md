@@ -42,51 +42,57 @@ Build: Passing
 ## Instalación / Installation
 
 Requisitos Previos / Prerequisites
-PHP >= 8.2
+- PHP >= 8.2
 
-Composer
+- Composer
 
-MariaDB >= 10.4
+- MariaDB >= 10.4
 
-Servidor Apache con módulo mod_rewrite habilitado.
+- Servidor Apache con módulo mod_rewrite habilitado.
 
 Pasos de Configuración / Configuration Steps
 
-1.-Clonar el repositorio / Clone the repository:
-  git clone https://github.com/tu-usuario/gestion_activos.git
-  cd gestion_activos
+- 1.-Clonar el repositorio / Clone the repository:
+  ``git clone https://github.com/tu-usuario/gestion_activos.git
+  cd gestion_activos``
 
-2.-Instalar dependencias / Install dependencies:
-  composer install
+- 2.-Instalar dependencias / Install dependencies:
+  ``composer install``
 
-3.-Configurar variables de entorno / Environment configuration:
+- 3.-Configurar variables de entorno / Environment configuration:
+``
   DB_CONNECTION=mysql
   DB_HOST=127.0.0.1
   DB_PORT=3306
   DB_DATABASE=gestion_activos
   DB_USERNAME=tu_usuario
   DB_PASSWORD=tu_contraseña
+  ``
 
-4.-Generar llave de aplicación / Generate app key:
-  php artisan key:generate
+- 4.-Generar llave de aplicación / Generate app key:
+  ``php artisan key:generate``
 
-5.-Restaurar Base de Datos / Database Restoration:
-  mysql -u tu_usuario -p gestion_activos < database/backups/base.sql
+- 5.-Restaurar Base de Datos / Database Restoration:
+  ``mysql -u tu_usuario -p gestion_activos < database/backups/base.sql``
 
-6.-Optimización de servidor (Producción) / Server Optimization
-  # Apache Conf
+- 6.-Optimización de servidor (Producción) / Server Optimization
+  ### Apache Conf
+  ``
   <Directory /var/www/html/public>
       AllowOverride All
   </Directory>
+  ``
 
-7.-Limpieza de caché / Clear Cache:
+- 7.-Limpieza de caché / Clear Cache:
+  ``
   php artisan config:cache
   php artisan route:cache
+  ``
 
 
-Notas de Implementación / Implementation Notes
--La interfaz está construida sobre AdminLTE 3, integrada mediante el paquete oficial para Laravel.
--Se requiere permisos de escritura en las carpetas storage y bootstrap/cache.
+### Notas de Implementación / Implementation Notes
+- La interfaz está construida sobre AdminLTE 3, integrada mediante el paquete oficial para Laravel.
+- Se requiere permisos de escritura en las carpetas storage y bootstrap/cache.
 
 ---
 
