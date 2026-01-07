@@ -37,8 +37,6 @@
     .fieldset-group i.fa-3x {
         opacity: 0.25;
     }
-
-    /* Estilo para los campos de "Otro" que inician ocultos */
     .custom-input { display: none; margin-top: 10px; }
 </style>
 @stop
@@ -262,8 +260,7 @@ $(document).ready(function() {
                 $input.hide().val($(this).val()); 
             }
         });
-
-        // Sincronización inicial (Old / Session)
+        
         let initialVal = $input.val();
         if(initialVal && !$select.find(`option[value='${initialVal}']`).length && initialVal !== '') {
             $select.val('OTRO_VALOR');

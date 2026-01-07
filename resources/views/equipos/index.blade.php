@@ -92,6 +92,12 @@
         to { opacity: 1; transform: translateX(0); }
     }
     .animate-details { animation: fadeInRight 0.4s ease-out; }
+
+    .custom-input {
+    display: none;
+    margin-top: 10px;
+    }
+
 </style>
 @stop
 
@@ -169,17 +175,31 @@
                     {{-- 3. Filtro por Tipo de Equipo --}}
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label class="small font-weight-bold text-muted">Tipo de Activo</label>
-                            <select name="tipo_equipo" class="form-control form-control-sm">
+                            <label for="" class="small font-weight-bold text-muted">Tipo de Activo</label>
+                            <select id="tipo_activo" class="form-control form-control-sm">
                                 <option value="">-- Todos los tipos --</option>
-                                @foreach(['Escritorio', 'Laptop', 'Servidor', 'Monitor'] as $tipo)
-                                    <option value="{{ $tipo }}" {{ request('tipo_equipo') == $tipo ? 'selected' : '' }}>
-                                        {{ $tipo }}
-                                    </option>
+
+                                @foreach ($categorias as $categoria => $marcas)
+                                    <optgroup label="{{ $categoria }}">
+                                        @foreach ($marcas as $marca)
+                                            <option value="{{ $marca }}"
+                                                {{ request('tipo_equipo') == $marca ? 'selected' : '' }}>
+                                                {{ $marca }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
                                 @endforeach
+
+                            <option value="OTRO_VALOR">-- Otro (Escribir) --</option>
                             </select>
+                            <input type="text" id="tipo_input" 
+                            class="form-control custom-input" 
+                            placeholder="Escriba El tipo..."
+                                name="tipo_equipo"  
+                            value="">
                         </div>
                     </div>
+
 
                     {{-- 4. Botones --}}
                     <div class="col-md-2 d-flex align-items-end">
@@ -402,6 +422,24 @@ $(document).ready(function() {
             }, 1000);
         }
     }
+});
+
+
+$(document).ready(function() {
+    function setupSelectOtro(selectId, inputId) {
+        const $select = $(`#${selectId}`);
+        const $input = $(`#${inputId}`);
+
+        //Si se nota un cambio en la etiqueta <select>
+        $select.on('change', function() {
+            if ($(this).val() === 'OTRO_VALOR') {
+                $input.fadeIn().focus();
+            } else {
+                $input.hide().val($(this).val()); 
+            }
+        });
+    }
+    setupSelectOtro('tipo_activo', 'tipo_input');
 });
 </script>
 @stop

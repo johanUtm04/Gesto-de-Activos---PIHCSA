@@ -462,7 +462,6 @@
 
 @stop
 
-{{-- -------------------------------------------------------------------------------- --}}
 @section('js')
     <script src="{{ asset('js/equipos/edit-equipos.js') }}"></script>
 @stop

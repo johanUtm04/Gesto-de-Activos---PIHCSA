@@ -46,7 +46,14 @@ class EquipoController extends Controller
 
         $equipos = $query->latest()->paginate(11)->appends($request->all());
         $ubicaciones = Ubicacion::all();
-        return view('equipos.index', compact('equipos', 'ubicaciones'));
+
+        $categorias = [
+        'Dispositivos de Usuario' => ['Laptop', 'Desktop', 'All-in-One', 'Tablet', 'Smartphone', 'Workstation'],
+        'Infraestructura' => ['Servidor', 'Rack', 'Switch', 'Router', 'Access Point', 'Firewall', 'UPS'],
+        'Periféricos' => ['Monitor', 'Impresora', 'Multifuncional', 'Escáner', 'Proyector', 'Cámara'],
+        ];
+
+        return view('equipos.index', compact('equipos', 'ubicaciones', 'categorias'));
     }
 
     /**
