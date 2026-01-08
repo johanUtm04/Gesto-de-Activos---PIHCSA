@@ -47,6 +47,11 @@
     .form-group label {
         font-weight: 500;
     }
+
+    .custom-input {
+    display: none;
+    margin-top: 10px;
+    }
 </style>
 @stop
 
@@ -123,8 +128,8 @@
 
                     <div class="form-group">
                     <label>Marca</label>
-                    <select name="marca_equipo" class="form-control">
-                        <option value="" selected>Seleccione la marca</option>
+                    <select name="marca_equipo" id="marca_equipo" class="form-control">
+                        <option value="" selected>Seleccione la marca del Activo</option>
                         <optgroup label="Cómputo y Servidores">
                             <option>Dell</option>
                             <option>HP</option>
@@ -207,14 +212,19 @@
 
                         <optgroup label="Otros">
                             <option>Genérico</option>
-                            <option>Otro</option>
+                            <option value="OTRO_VALOR">--Otro--</option>
                         </optgroup>
                     </select>
+                        <input type="text" id="marca_equipo_input" 
+                        class="form-control custom-input" 
+                        placeholder="Escriba el campos"
+                        name="marca_equipo_input"  
+                        value="">
                     </div>
 
                     <div class="form-group">
                         <label>Tipo de activo </label>
-                        <select name="tipo_equipo" class="form-control" required>
+                        <select name="tipo_equipo" id="tipo_equipo" class="form-control" required>
                             <option value="" disabled selected>Seleccione el tipo de activo</option>
 
                             <optgroup label="Equipos de Cómputo">
@@ -274,9 +284,14 @@
                             <optgroup label="Otros">
                                 <option value="Licencia de Software">Licencia de Software</option>
                                 <option value="UPS">UPS / No Break</option>
-                                <option value="Otro">Otro</option>
+                                <option value="OTRO_VALOR">--Otro--</option>
                             </optgroup>
                         </select>
+                        <input type="text" id="tipo_equipo_input" 
+                        class="form-control custom-input" 
+                        placeholder="Escriba el campos"
+                        name="tipo_equipo_input"  
+                        value="">
                     </div>
 
 
@@ -340,7 +355,6 @@
                             <optgroup label="Otros">
                                 <option>Chrome OS</option>
                                 <option>FreeBSD</option>
-                                <option>Otro</option>
                                 <option>No aplica</option>
                             </optgroup>
                         </select>
@@ -442,6 +456,33 @@
         ? 'Ej. 5' : 'Ej. 60';
     });
 
+    //1.-JavaScript para input dinamico
+    $(document).ready(function() {
+    function setupSelectOtro(selectId, inputId) {
+        const $select = $(`#${selectId}`);
+        const $input = $(`#${inputId}`);
+
+        //Si se nota un cambio en la etiqueta <select>
+        $select.on('change', function() {
+
+
+            if ($(this).val() === 'OTRO_VALOR') {
+                $input
+                .val('')  
+                .fadeIn().
+                focus();
+            } else {
+                $input
+                .hide()
+                .val(''); 
+            }
+        });
+    }
+    //Select | Input Oculto
+    setupSelectOtro('marca_equipo', 'marca_equipo_input');
+    setupSelectOtro('tipo_equipo', 'tipo_equipo_input');
+
+});
 
 </script>
 @stop

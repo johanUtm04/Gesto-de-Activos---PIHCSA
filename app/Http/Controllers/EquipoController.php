@@ -60,35 +60,59 @@ class EquipoController extends Controller
      * Valida e inicia el proceso de creación (Wizard).
      * Genera un UUID único para trackear la sesión del equipo nuevo.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'marca_equipo'      => 'nullable|string|max:255',
-            'tipo_equipo'       => 'required|string|max:255',
-            'serial'            => 'nullable|string|max:255',
-            'sistema_operativo' => 'required|string|max:35', 
-            'usuario_id'        => 'required|integer|exists:users,id',
-            'ubicacion_id'      => 'nullable|integer|exists:ubicaciones,id',
-            'valor_inicial'     => 'nullable|numeric|min:0|max:99999999.99',
-            'fecha_adquisicion' => 'required|date',
-            'vida_util_estimada'=> 'required|string|max:255',
-        ]);
+public function store(Request $request)
+{
+$request->validate([
+    'marca_equipo' => 'required|string|max:255',
+    'marca_equipo_input' => 'required_if:marca_equipo,OTRO_VALOR|nullable|string|max:255',
 
-        $data = $request->all();
+    'tipo_equipo' => 'required|string|max:255',
+    'tipo_equipo_input' => 'required_if:tipo_equipo,OTRO_VALOR|nullable|string|max:255',
 
-        // Valores por defecto si vienen vacíos
-        $data['serial']        = $request->serial ?? 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
-        $data['marca_equipo']  = $request->marca_equipo ?? 'Sin marca asignada';
-        $data['valor_inicial'] = $request->valor_inicial ?? 0;
+    'sistema_operativo' => 'required|string|max:35',
 
-        $uuid = Str::uuid()->toString();
-        
-        // Guardamos en sesión para los siguientes pasos del Wizard
-        session()->put('wizard_equipo.uuid', $uuid);
-        session()->put('wizard_equipo.equipo', $data);
+    'serial' => 'nullable|string|max:255',
+    'usuario_id' => 'required|integer|exists:users,id',
+    'ubicacion_id' => 'nullable|integer|exists:ubicaciones,id',
+    'valor_inicial' => 'nullable|numeric|min:0|max:99999999.99',
+    'fecha_adquisicion' => 'required|date',
+    'vida_util_estimada' => 'required|string|max:255',
+]);
 
-        return redirect()->route('equipos.wizard-ubicacion', $uuid);
-    }
+
+    $data = $request->only([
+        'serial',
+        'usuario_id',
+        'ubicacion_id',
+        'valor_inicial',
+        'fecha_adquisicion',
+        'vida_util_estimada',
+    ]);
+
+    $data['marca_equipo'] =
+        $request->marca_equipo === 'OTRO_VALOR'
+            ? $request->marca_equipo_input
+            : $request->marca_equipo;
+
+    $data['tipo_equipo'] =
+        $request->tipo_equipo === 'OTRO_VALOR'
+            ? $request->tipo_equipo_input
+            : $request->tipo_equipo;
+
+    $data['sistema_operativo'] = $request->sistema_operativo;
+
+    // Valores por defecto
+    $data['serial'] ??= 'INT-' . date('Y') . '-' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+    $data['valor_inicial'] ??= 0;
+
+    $uuid = Str::uuid()->toString();
+
+    session()->put('wizard_equipo.uuid', $uuid);
+    session()->put('wizard_equipo.equipo', $data);
+
+    return redirect()->route('equipos.wizard-ubicacion', $uuid);
+}
+
 
     /**
      * Carga la vista de edición con todas sus relaciones.
