@@ -171,8 +171,10 @@
                                 <div class="form-group col-md-6">
                                     <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo</label>
                                     <select name="marca_equipo" id="marca_equipo" class="form-control">
-                                        <option value="" {{ old('marca_equipo', $equipo->marca_equipo) == '' ? 'selected' : '' }}>Seleccione la marca</option>
-                                        
+                                        <option value="" disabled {{ old('marca_equipo', $equipo->marca_equipo) == '' ? 'selected' : '' }}>
+                                            Seleccione la marca
+                                        </option>
+
                                         @php
                                             // Definimos los grupos y sus marcas para una gestión más limpia
                                             $categorias = [
@@ -200,7 +202,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
                                     <select name="tipo_equipo" id="tipo_equipo" class="form-control" required>
-                                        <option value="" {{ old('tipo_equipo', $equipo->tipo_equipo) == '' ? 'selected' : '' }}>Seleccione el tipo</option>
+                                        <option value="" disabled>Seleccione el tipo</option>
                                         
                                         @php
                                             // Definimos las categorías y los tipos de equipos para una gestión más limpia
@@ -275,7 +277,7 @@
                                         <label for="usuario_id"><i class="fas fa-user-tag"></i> Usuario Responsable</label>
                                         <select name="usuario_id" id="usuario_id" class="form-control select2" data-placeholder="Seleccione un usuario">
                                             <option value="">Seleccione...</option>
-                                            @foreach($usuarios as $usuario)
+                                            @foreach($usuarios as $usuario) 
                                             <option value="{{ $usuario->id }}"
                                                 {{ $equipo->usuario_id == $usuario->id ? 'selected' : '' }}>
                                                 {{ $usuario->name }}
