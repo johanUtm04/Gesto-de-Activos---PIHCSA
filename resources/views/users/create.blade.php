@@ -150,24 +150,41 @@
                         <select name="rol" class="form-control" required>
                             <option value="">Seleccione un rol</option>
                             <option value="ADMIN" {{ old('rol') == 'ADMIN' ? 'selected' : '' }}>Administrador</option>
-                            <option value="USUARIO" {{ old('rol') == 'USUARIO' ? 'selected' : '' }}>Usuario</option>
+                            <option value="SISTEMAS" {{ old('rol') == 'SISTEMAS' ? 'selected' : '' }}>Sistemas</option>
+                            <option value="INVITADO" {{ old('rol') == 'INVITADO' ? 'selected' : '' }}>Invitado</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label>Departamento *</label>
-                        <select name="departamento" class="form-control" required>
-                            <option value="ACTIVO" {{ old('estatus') == 'ACTIVO' ? 'selected' : '' }}>
-                                SISTEMAS
-                            </option>
-                            <option value="INACTIVO" {{ old('estatus') == 'INACTIVO' ? 'selected' : '' }}>
-                                CONTABILIDAD
-                            </option>
-                            <option value="SUSPENDIDO" {{ old('estatus') == 'SUSPENDIDO' ? 'selected' : '' }}>
-                                OTRO
-                            </option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label>Departamento *</label>
+                    <select name="departamento" class="form-control" required>
+                        <option value="" disabled {{ old('departamento') == '' ? 'selected' : '' }}>-- Seleccione --</option>
+                        
+                        <option value="ALMACEN" {{ old('departamento') == 'ALMACEN' ? 'selected' : '' }}>
+                            ALMACEN
+                        </option>
+                        
+                        <option value="COBRANZA" {{ old('departamento') == 'COBRANZA' ? 'selected' : '' }}>
+                            COBRANZA
+                        </option>
+                        
+                        <option value="RESPONSABLE SANITARIO" {{ old('departamento') == 'RESPONSABLE SANITARIO' ? 'selected' : '' }}>
+                            RESPONSABLE SANITARIO
+                        </option>
+                        
+                        <option value="VENTAS" {{ old('departamento') == 'VENTAS' ? 'selected' : '' }}>
+                            VENTAS
+                        </option>
+                        
+                        <option value="OPERACIONES" {{ old('departamento') == 'OPERACIONES' ? 'selected' : '' }}>
+                            OPERACIONES
+                        </option>
+
+                        <option value="SISTEMAS" {{ old('departamento') == 'SISTEMAS' ? 'selected' : '' }}>
+                            SISTEMAS
+                        </option>
+                    </select>
+                </div>
 
                     <div class="form-group">
                         <label>Estatus *</label>
