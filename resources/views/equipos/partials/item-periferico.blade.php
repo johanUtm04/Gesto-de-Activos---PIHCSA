@@ -1,7 +1,7 @@
 <div class="periferico-item p-3 mb-5 border rounded bg-light shadow-sm">
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h6 class="text-secondary mb-0">
-            <i class="fas fa-desktop"></i> Rams #
+            <i class="fas fa-desktop"></i> Periferico #
             <span class="numero-index badge badge-secondary">
                 {{ is_numeric($index) ? $index + 1 : 'Nuevo' }} 
             </span>

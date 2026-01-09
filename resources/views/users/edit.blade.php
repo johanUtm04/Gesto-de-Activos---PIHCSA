@@ -131,11 +131,26 @@
                                             value="{{ old('name', $user->name) }}">
                                     </div>
 
-                                    <div class="form-group col-md-6">
-                                        <label for="estatus"><i class="fas fa-barcode"></i> Estatus:</label>
-                                        <input type="text" name="estatus" id="estatus" class="form-control"
-                                        value="{{ old('estatus', $user->estatus) }}">
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    <label for="estatus"><i class="fas fa-toggle-on"></i> Estatus:</label>
+                                    <select name="estatus" id="estatus" class="form-control @error('estatus') is-invalid @enderror">
+                                        <option value="ACTIVO" {{ old('estatus', $user->estatus) == 'ACTIVO' ? 'selected' : '' }}>
+                                            ACTIVO
+                                        </option>
+                                        <option value="INACTIVO" {{ old('estatus', $user->estatus) == 'INACTIVO' ? 'selected' : '' }}>
+                                            INACTIVO
+                                        </option>
+                                        <option value="SUSPENDIDO" {{ old('estatus', $user->estatus) == 'SUSPENDIDO' ? 'selected' : '' }}>
+                                            SUSPENDIDO
+                                        </option>
+                                    </select>
+                                    
+                                    @error('estatus')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
 
                                 </div>
 
@@ -146,11 +161,36 @@
                                         value="{{ old('email', $user->email) }}">
                                     </div>
 
-                                    <div class="form-group col-md-6">
-                                        <label for="departamento"><i class="fab fa-windows"></i> Departamento: </label>
-                                        <input type="text" name="departamento" id="departamento" class="form-control"
-                                            value="{{ old('departamento', $user->departamento) }}">
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    <label for="departamento"><i class="fas fa-building"></i> Departamento: </label>
+                                    <select name="departamento" id="departamento" class="form-control @error('departamento') is-invalid @enderror">
+                                        <option value="" disabled>-- Seleccione un Departamento --</option>
+                                        <option value="SISTEMAS" {{ old('departamento', $user->departamento) == 'SISTEMAS' ? 'selected' : '' }}>
+                                            SISTEMAS
+                                        </option>
+                                        <option value="ALMACEN" {{ old('departamento', $user->departamento) == 'ALMACEN' ? 'selected' : '' }}>
+                                            ALMACEN
+                                        </option>
+                                        <option value="COBRANZA" {{ old('departamento', $user->departamento) == 'COBRANZA' ? 'selected' : '' }}>
+                                            COBRANZA
+                                        </option>
+                                        <option value="RESPONSABLE SANITARIO" {{ old('departamento', $user->departamento) == 'RESPONSABLE SANITARIO' ? 'selected' : '' }}>
+                                            RESPONSABLE SANITARIO
+                                        </option>
+                                        <option value="VENTAS" {{ old('departamento', $user->departamento) == 'VENTAS' ? 'selected' : '' }}>
+                                            VENTAS
+                                        </option>
+                                        <option value="OPERACIONES" {{ old('departamento', $user->departamento) == 'OPERACIONES' ? 'selected' : '' }}>
+                                            OPERACIONES
+                                        </option>
+                                    </select>
+
+                                    @error('departamento')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
                                 </div>
 
                             </fieldset>

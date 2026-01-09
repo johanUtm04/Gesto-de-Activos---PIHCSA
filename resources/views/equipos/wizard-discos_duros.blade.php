@@ -38,7 +38,6 @@
         opacity: 0.25;
     }
 
-    /* Estilo para los campos de "Otro" que inician ocultos */
     .custom-input { display: none; margin-top: 10px; }
 </style>
 @stop

@@ -239,10 +239,23 @@ $request->validate([
     {
         $data = $request->validate([
             'tipo_evento'  => 'required|string',
+            'tipo_evento_input' => 'required_if:tipo_evento,OTRO_VALOR|nullable|string|max:255',
             'fecha_evento' => 'required|date',
             'contexto'     => 'required|string',
             'costo'        => 'required|numeric',
         ]);
+
+        $data = $request->only([
+            'tipo_evento',
+            'fecha_evento',
+            'contexto',
+            'costo',
+        ]);
+
+        $data['tipo_evento'] =
+        $request->tipo_evento === 'OTRO_VALOR'
+        ? $request->tipo_evento_input
+        : $request->tipo_evento;
 
             Historial_log::create([
                   'activo_id'         => $equipo->id,
@@ -256,10 +269,10 @@ $request->validate([
                             'Mantenimiento Creado' => [
                                 'antes'   => 'Inexistente',
                                 'despues' => "<ul class='list-unstyled mb-0'>" .
-                                "<li><b>Marca:</b> $data[tipo_evento]</li>" .
-                                "<li><b>S/N:</b> $data[fecha_evento]</li>" .
-                                "<li><b>Interface:</b> $data[contexto]</li>" .
-                                 "<li><b>Interface:</b> $data[costo]</li>" .
+                                "<li><b>Tipo de Evento:</b> $data[tipo_evento]</li>" .
+                                "<li><b>Fecha de Evento</b> $data[fecha_evento]</li>" .
+                                "<li><b>Contexto del Evento:</b> $data[contexto]</li>" .
+                                 "<li><b>Costo(De tenerlo):</b> $ $data[costo]</li>" .
                                 "</ul>"                    
                                 ]
                         ]   

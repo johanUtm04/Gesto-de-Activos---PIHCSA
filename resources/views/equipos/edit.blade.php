@@ -176,7 +176,6 @@
                                         </option>
 
                                         @php
-                                            // Definimos los grupos y sus marcas para una gestión más limpia
                                             $categorias = [
                                                 'Cómputo y Servidores' => ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'MSI', 'Microsoft (Surface)', 'Huawei', 'Samsung'],
                                                 'Infraestructura' => ['IBM', 'Supermicro', 'HPE', 'Oracle', 'Fujitsu'],
@@ -184,10 +183,18 @@
                                                 'Impresión' => ['HP', 'Epson', 'Canon', 'Brother', 'Xerox', 'Ricoh', 'Lexmark', 'Kyocera'],
                                                 'Otros' => ['Genérico', 'Otra']
                                             ];
-                                            $marcaActual = old('marca_equipo', $equipo->marca_equipo);
+                                        $marcaActual = old('marca_equipo', $equipo->marca_equipo);
+                                        $marcaActual = old('marca_equipo', $equipo->marca_equipo);
+                                        $marcasCatalogo = collect($categorias)->flatten();
                                         @endphp
 
                                         @foreach($categorias as $categoria => $marcas)
+                                            @if($marcaActual && !$marcasCatalogo->contains($marcaActual))
+                                            <option value="{{ $marcaActual }}" selected>
+                                            {{ $marcaActual }}
+                                            </option>
+                                        @endif
+
                                             <optgroup label="{{ $categoria }}">
                                                 @foreach($marcas as $marca)
                                                     <option value="{{ $marca }}" {{ $marcaActual == $marca ? 'selected' : '' }}>
@@ -199,13 +206,32 @@
                                     </select>
                                 </div>
 
+
                                 <div class="form-group col-md-6">
                                     <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
+                                    @php
+                                        $tipoActual = old('tipo_equipo', $equipo->tipo_equipo);
+                                        $tiposCatalogo = collect([
+                                        'Laptop','PC Escritorio','All in One','Workstation','Thin Client','Servidor',
+                                        'Tablet','Smartphone','PDA / Handheld',
+                                        'Impresora','Multifuncional','Escáner','Plotter',
+                                        'Router','Switch','Access Point','Firewall','Modem',
+                                        'Monitor','Teclado','Mouse','Webcam','Bocinas','Audífonos','Proyector',
+                                        'Disco Duro HDD','Disco Estado Solido SSD','NAS','SAN','Unidad Externa',
+                                        'Camara CCTV','Control de Acceso','Biometrico',
+                                        'Licencia de Software','UPS'
+                                        ]);
+                                    @endphp
                                     <select name="tipo_equipo" id="tipo_equipo" class="form-control" required>
-                                        <option value="" disabled>Seleccione el tipo</option>
+                                    @if($tipoActual && !$tiposCatalogo->contains($tipoActual))
+                                        <option value="{{ $tipoActual }}" selected>
+                                        {{ $tipoActual }}
+                                        </option>
+                                    @endif
+
+                                        <option value="{{old('tipo_equipo', $equipo->tipo_equipo)}}" disabled>Seleccione el tipo</option>
                                         
                                         @php
-                                            // Definimos las categorías y los tipos de equipos para una gestión más limpia
                                             $categoriasEquipos = [
                                                 'Dispositivos de Usuario' => ['Laptop', 'Desktop', 'All-in-One', 'Tablet', 'Smartphone', 'Workstation'],
                                                 'Infraestructura' => ['Servidor', 'Rack', 'Switch', 'Router', 'Access Point', 'Firewall', 'UPS'],

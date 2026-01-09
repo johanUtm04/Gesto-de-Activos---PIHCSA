@@ -24,6 +24,8 @@
     .form-group label {
         font-weight: 600;
     }
+
+    .custom-input { display: none; margin-top: 10px; }
 </style>
 @stop
 
@@ -63,12 +65,17 @@
 
                             <div class="form-group">
                                 <label>Tipo de evento </label>
-                                <select class="form-control" name="tipo_evento" required>
+                                <select class="form-control" id="tipo_evento" name="tipo_evento" required>
                                     <option value="">Seleccione una opción</option>
                                     <option>Mantenimiento preventivo</option>
                                     <option>Mantenimiento correctivo</option>
                                     <option>Actualización</option>
+                                    <option value="OTRO_VALOR">-- Otra capacidad (Escribir) --</option>
                                 </select>
+                                    <input type="text" name="tipo_evento_input" id="tipo_evento_input" 
+                                   class="form-control custom-input" 
+                                   placeholder="Ej. 128GB o 10TB"
+                                   value="{{ old('capacidad', session('wizard_equipo.disco_duro.capacidad')) }}">
                             </div>
 
                     <div class="form-group">
@@ -121,5 +128,38 @@
         </div>
     </div>
 </div>
+@stop
+
+@section('js')
+<script>
+    $(document).ready(function() {
+    /**
+     * Función para sincronizar Selects con Inputs de "Otro"
+     */
+    function setupSelectOtro(selectId, inputId) {
+        const $select = $(`#${selectId}`);
+        const $input = $(`#${inputId}`);
+
+        $select.on('change', function() {
+            if ($(this).val() === 'OTRO_VALOR') {
+                $input.fadeIn().focus();
+            } else {
+                $input.hide().val($(this).val()); 
+            }
+        });
+
+        // Al cargar (por si hay errores de validación o datos en sesión)
+        let initialVal = $input.val();
+        if(initialVal && !$select.find(`option[value='${initialVal}']`).length && initialVal !== '') {
+            $select.val('OTRO_VALOR');
+            $input.show();
+        } else if (initialVal !== '') {
+            $select.val(initialVal);
+        }
+    }
+
+    setupSelectOtro('tipo_evento', 'tipo_evento_input');
+});
+</script>
 @stop
 

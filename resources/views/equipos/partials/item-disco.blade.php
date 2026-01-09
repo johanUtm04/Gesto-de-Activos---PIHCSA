@@ -54,7 +54,6 @@
                 @endforeach
             </select>
         </div>
-
-        <p>El ID DE ESTE DISCODURO ES: {{$discoDuro->id ?? ''}}</p>
+         <small class="text-muted">ID Sistema: {{ $periferico->id ?? 'Pendiente' }}</small>
     </div>
 </div>
