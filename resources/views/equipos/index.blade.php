@@ -102,17 +102,26 @@
 @stop
 
 @section('content_header')
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="text-dark font-weight-bold">
+        <h1 class="text-dark font-weight-bold mb-1">
             <i class="fas fa-boxes text-info mr-2"></i>Inventario de Activos
         </h1>
-        <p class="text-muted mb-0">Rol actual: <span class="badge badge-info">{{ ucfirst(auth()->user()->rol) }}</span></p>
+        <p class="text-muted mb-0">
+            Rol actual: <span class="badge badge-info">{{ ucfirst(auth()->user()->rol) }}</span>
+        </p>
     </div>
+
     @can('crear-equipo')
-    <a href="{{ route('equipos.wizard.create') }}" class="btn btn-info btn-lg shadow-sm">
-        <i class="fas fa-plus-circle mr-1"></i> Nuevo Activo
-    </a>
+    <div class="d-flex" style="gap: 10px;">
+        <a href="{{ route('equipos.reporte') }}" class="btn btn-outline-success shadow-sm d-flex align-items-center">
+            <i class="fas fa-file-excel mr-2"></i> Reporte General
+        </a>
+
+        <a href="{{ route('equipos.wizard.create') }}" class="btn btn-info shadow-sm d-flex align-items-center">
+            <i class="fas fa-plus-circle mr-2"></i> Nuevo Activo
+        </a>
+    </div>
     @endcan
 </div>
 @stop
@@ -246,7 +255,7 @@
                                     data-email="{{ $equipo->usuario->email ?? '-' }}"
                                     data-ubicacion="{{ $equipo->ubicacion->nombre ?? 'Sin ubicación' }}"
                                     data-valor="{{ number_format($equipo->valor_inicial, 2) }}"
-                                    data-fecha="{{ $equipo->fecha_adquisicion ?? 'Sin registro' }}"
+                                    data-fecha="{{ $equipo->fecha_adquisicion ?? 'Sin registro' }}"a
                                     data-vida="{{ $equipo->vida_util_estimada ?? 'N/A' }}"
                                     data-monitores="{{ $equipo->monitores->count() }}"
                                     data-discos="{{ $equipo->discosDuros->count() }}"
@@ -267,7 +276,6 @@
                                         @if(session('new_mantenimiento') == $equipo->id)
                                             <span class="badge badge-secondary">Mantenimiento Registrado</span>
                                         @endif
-
                                         <div class="font-weight-bold text-dark">{{ $equipo->tipo_equipo }} {{ $equipo->marca_equipo }}</div>
                                         <span class="secondary-data"><i class="fas fa-barcode mr-1"></i>{{ $equipo->serial }}</span>
                                     </td>

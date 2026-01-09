@@ -311,4 +311,51 @@ public function update(Request $request, Equipo $equipo)
         ->with('new_mantenimiento', $equipo->id);
     }
 
+
+public function exportarGeneral()
+{
+    // 1. Obtener los datos de tu tabla
+    $equipos = \App\Models\Equipo::with('usuario')->get();
+
+    $fileName = 'Reporte_General_PIHCSA_' . date('Y-m-d') . '.csv';
+
+    // 2. Configurar cabeceras para que el navegador entienda que es un archivo
+    $headers = [
+        "Content-type"        => "text/csv; charset=UTF-8",
+        "Content-Disposition" => "attachment; filename=$fileName",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+
+    // 3. Crear el archivo en memoria
+    $callback = function() use($equipos) {
+        $file = fopen('php://output', 'w');
+        
+        // Añadir BOM para que Excel reconozca tildes y eñes
+        fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        //La coma es el separador
+        fputs($file, "sep=,\n");
+
+        // Encabezados basados en tu tabla
+        fputcsv($file, ['Marca', 'Tipo', 'Serial', 'Sistema Operativo', 'Valor Inicial', 'Fecha Compra', 'Usuario Responsable']);
+        foreach ($equipos as $equipo) {
+            fputcsv($file, [
+                $equipo->marca_equipo,
+                $equipo->tipo_equipo,
+                $equipo->serial,
+                $equipo->sistema_operativo,
+                $equipo->valor_inicial,
+                $equipo->fecha_adquisicion,
+                // Accedemos al nombre a través de la relación definida en el modelo
+                $equipo->usuario ? $equipo->usuario->name : 'Sin asignar',
+            ]);
+        }
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
+
 }
