@@ -315,7 +315,16 @@ public function update(Request $request, Equipo $equipo)
 public function exportarGeneral()
 {
     // 1. Obtener los datos de tu tabla
-    $equipos = \App\Models\Equipo::with('usuario')->get();
+    $equipos = \App\Models\Equipo::with([
+        'usuario', 
+        'ubicacion',
+        'monitores', 
+        'discosDuros', 
+        'rams', 
+        'perifericos', 
+        'procesadores'
+    ])->get();
+    
 
     $fileName = 'Reporte_General_PIHCSA_' . date('Y-m-d') . '.csv';
 
@@ -339,17 +348,39 @@ public function exportarGeneral()
         fputs($file, "sep=,\n");
 
         // Encabezados basados en tu tabla
-        fputcsv($file, ['Marca', 'Tipo', 'Serial', 'Sistema Operativo', 'Valor Inicial', 'Fecha Compra', 'Usuario Responsable']);
-        foreach ($equipos as $equipo) {
+        fputcsv($file, [
+        'ID',
+        'Usuario',
+        'Ubicacion',
+        'Marca', 
+        'Tipo', 
+        'Serial', 
+        'Procesador', 
+        'Memoria RAM', 
+        'Almacenamiento', 
+        'Monitores', 
+        'Periféricos'
+        ]);
+foreach ($equipos as $equipo) {
+            // Concatenamos Procesadores
+            $procInfo  = $equipo->procesadores->map(fn($p) => $p->descripcion_tipo . " (" . $p->frecuencia . ")")->implode(' | ');
+            $ramInfo   = $equipo->rams->map(fn($r) => $r->capacidad_gb . " GB " . $r->tipo)->implode(' | ');
+            $discoInfo = $equipo->discosDuros->map(fn($d) => $d->capacidad . " GB (" . $d->tipo . ")")->implode(' | ');
+            $monInfo   = $equipo->monitores->map(fn($m) => $m->marca . " " . $m->pulgadas . "''")->implode(' | ');
+            $perifInfo = $equipo->perifericos->map(fn($p) => $p->tipo . " " . $p->marca)->implode(' | ');
+
             fputcsv($file, [
+                $equipo->id,
+                $equipo->usuario ? $equipo->usuario->name : 'Sin asignar',
                 $equipo->marca_equipo,
+                $equipo->ubicacion ? $equipo->ubicacion->nombre : 'Sin asignar',
                 $equipo->tipo_equipo,
                 $equipo->serial,
-                $equipo->sistema_operativo,
-                $equipo->valor_inicial,
-                $equipo->fecha_adquisicion,
-                // Accedemos al nombre a través de la relación definida en el modelo
-                $equipo->usuario ? $equipo->usuario->name : 'Sin asignar',
+                $procInfo ?: 'N/A',
+                $ramInfo ?: 'N/A',
+                $discoInfo ?: 'N/A',
+                $monInfo ?: 'N/A',
+                $perifInfo ?: 'N/A',
             ]);
         }
         fclose($file);
