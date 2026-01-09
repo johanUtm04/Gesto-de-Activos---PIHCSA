@@ -21,6 +21,27 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+
+    $this->registerPolicies();
+
+
+    // El Admin tiene su propio permiso
+    Gate::define('access-admin', function ($user) {
+        return strtolower($user->rol) === 'admin'; 
+    });
+
+    // Sistemas puede entrar, ¡pero el Admin TAMBIÉN!
+    Gate::define('access-sistemas', function ($user) {
+        // Si es admin O es sistemas, devuélveme true
+        return in_array(strtolower($user->rol), ['admin', 'sistemas']);
+    });
+
+    // Permiso Para Usuario INVITADO
+    Gate::define('access-invitado', function ($user) {
+        return in_array(strtolower($user->rol), ['admin', 'invitado']);
+    });
+
+
     // Ver equipos (todos)
     Gate::define('ver-equipo', function ($user) {
         return true;
@@ -38,7 +59,7 @@ class AuthServiceProvider extends ServiceProvider
 
     // Eliminar equipo (solo admin)
     Gate::define('eliminar-equipo', function ($user) {
-       return in_array(strtolower($user->rol), ['admin', 'sistemas']);
+       return in_array(strtolower($user->rol), ['admin', '']);
     });
 
     // Agregar mantenimiento a un equipo (solo admin)

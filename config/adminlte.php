@@ -306,11 +306,6 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => false,
         ],
-        [
-            'text' => 'blog',
-            'url' => '/profile',
-            'can' => 'manage-blog',
-        ],
         ['header' => 'account_settings'],
 
         //Inicio
@@ -318,34 +313,42 @@ return [
             'text' => 'Inicio',
             'url' => '/equipos',
             'icon' => 'fas fa-fw fa-home',
+            'can'  => ['access-admin', 'access-sistemas', 'access-invitado'],
         ],
+        //Mi Perfil
         [
             'text' => 'profile',
             'url' => '/profile',
             'icon' => 'fas fa-fw fa-user',
+            'can'  => ['access-admin', 'access-sistemas'],
         ],
+        //Calcular Depreciacion
         [
             'text' => 'Calcular_depreciacion',
             'url' => '/depreciacion',
             'icon' => 'fas fa-dollar-sign',
+            'can'  => ['access-admin', 'access-sistemas', 'access-invitado'],
         ],
-
-        //Solo ADMIN
+        //Gestion de Usuarios
         [
             'text' => 'gestion_usuarios',
             'url' => '/gestionUsuarios',
             'icon' => 'fas fa-users-cog',
+            'can' => 'access-admin',
         ],
+        //Gestion de Ubicaciones
         [
             'text' => 'gestion_ubicaciones',
             'url' => '/gestionUbicaciones',
             'icon' => 'fas fa-map-marker-alt',
+            'can' => 'access-admin',
         ],
-
+        //Historial
         [
             'text' => 'historial',
             'url' => '/historial',
             'icon' => 'fas fa-history',
+            'can'  => ['access-admin', 'access-sistemas'],
         ],
 
     ],
