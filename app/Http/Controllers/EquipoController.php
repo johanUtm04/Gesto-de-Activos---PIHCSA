@@ -131,34 +131,57 @@ $request->validate([
     /**
      * Procesa la actualización masiva del equipo y sus componentes dinámicos.
      */
-    public function update(Request $request, Equipo $equipo)
-    {
-        // 1. Actualizar datos base del equipo
-        $equipo->update($request->only([
-            'marca_equipo', 'tipo_equipo', 'serial', 'sistema_operativo', 
-            'usuario_id', 'ubicacion_id', 'valor_inicial', 
-            'fecha_adquisicion', 'vida_util_estimada'
-        ]));
+public function update(Request $request, Equipo $equipo)
+{
+    // 1. Validar (Opcional pero recomendado para seguridad)
+    $request->validate([
+        'marca_equipo' => 'required|string',
+        'otra_marca'   => 'nullable|string|required_if:marca_equipo,Otra',
+        'tipo_equipo'  => 'required|string',
+        'otro_tipo'    => 'nullable|string|required_if:tipo_equipo,Otro',
+        // ... otras validaciones
+    ]);
 
-        // 2. Sincronizar relaciones dinámicas (RAM, Discos, etc.)
-        /**
-         * Aqui lo que pasa es que pasa es que que se busca la funcion sincrona 
-         */
-        $this->syncRelation($equipo->perifericos(),  $request->input('periferico', []));
-        $this->syncRelation($equipo->rams(),         $request->input('ram', []));
-        $this->syncRelation($equipo->procesadores(), $request->input('procesador', []));
-        $this->syncRelation($equipo->monitores(),    $request->input('monitor', []));
-        $this->syncRelation($equipo->discosDuros(),  $request->input('discoDuro', []));
+    // 2. Preparar los datos base
+    $data = $request->only([
+        'serial', 'sistema_operativo', 'usuario_id', 
+        'ubicacion_id', 'valor_inicial', 'fecha_adquisicion'
+    ]);
 
+    // Lógica para "Otra" Marca
+    $data['marca_equipo'] = ($request->marca_equipo === 'Otra' || $request->marca_equipo === 'Otra') 
+        ? $request->otra_marca 
+        : $request->marca_equipo;
 
-        $perPage = 11;
-        $position = Equipo::where('id', '<=', $equipo->id)->count();
-        $page = ceil($position / $perPage);
+    // Lógica para "Otro" Tipo
+    $data['tipo_equipo'] = ($request->tipo_equipo === 'Otro' || $request->tipo_equipo === 'Otro') 
+        ? $request->otro_tipo 
+        : $request->tipo_equipo;
 
-        return redirect()->route('equipos.index', ['page' => $page])
+    // Lógica para Vida Útil (Concatenar número + unidad)
+    if ($request->filled('vida_util_estimada') && $request->filled('vida_util_unidad')) {
+        $data['vida_util_estimada'] = $request->vida_util_estimada . ' ' . $request->vida_util_unidad;
+    }
+
+    // 3. Actualizar el equipo
+    $equipo->update($data);
+
+    // 4. Sincronizar relaciones dinámicas (Tu lógica actual está perfecta)
+    $this->syncRelation($equipo->perifericos(),  $request->input('periferico', []));
+    $this->syncRelation($equipo->rams(),         $request->input('ram', []));
+    $this->syncRelation($equipo->procesadores(), $request->input('procesador', []));
+    $this->syncRelation($equipo->monitores(),    $request->input('monitor', []));
+    $this->syncRelation($equipo->discosDuros(),  $request->input('discoDuro', []));
+
+    // Redirección con cálculo de página
+    $perPage = 11;
+    $position = Equipo::where('id', '<=', $equipo->id)->count();
+    $page = ceil($position / $perPage);
+
+    return redirect()->route('equipos.index', ['page' => $page])
         ->with('warning', 'Equipo actualizado correctamente')
         ->with('actualizado->id', $equipo->id);
-    }
+}
 
     /**
      * Muestra el detalle completo de un activo.

@@ -12,6 +12,11 @@
 
     .data-label {font-weight: 600;color: #495057;}
 
+    .custom-input {
+    display: none;
+    margin-top: 10px;
+    }
+
     .component-group {border: 1px solid #dee2e6;border-radius: .25rem;padding: 15px;margin-bottom: 20px;background-color: #f8f9fa;}
 </style>
 @stop
@@ -168,129 +173,75 @@
                                 <legend class="w-auto px-2 text-primary"><i class="fas fa-info-circle"></i> Datos Base</legend>
 
                                 <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo</label>
-                                    <select name="marca_equipo" id="marca_equipo" class="form-control">
-                                        <option value="" disabled {{ old('marca_equipo', $equipo->marca_equipo) == '' ? 'selected' : '' }}>
-                                            Seleccione la marca
-                                        </option>
-
-                                        @php
-                                            $categorias = [
-                                                'Cómputo y Servidores' => ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'MSI', 'Microsoft (Surface)', 'Huawei', 'Samsung'],
-                                                'Infraestructura' => ['IBM', 'Supermicro', 'HPE', 'Oracle', 'Fujitsu'],
-                                                'Redes y Telecomunicaciones' => ['Cisco', 'Ubiquiti', 'MikroTik', 'TP-Link', 'Aruba', 'Juniper', 'Fortinet', 'Huawei'],
-                                                'Impresión' => ['HP', 'Epson', 'Canon', 'Brother', 'Xerox', 'Ricoh', 'Lexmark', 'Kyocera'],
-                                                'Otros' => ['Genérico', 'Otra']
-                                            ];
-                                        $marcaActual = old('marca_equipo', $equipo->marca_equipo);
-                                        $marcaActual = old('marca_equipo', $equipo->marca_equipo);
-                                        $marcasCatalogo = collect($categorias)->flatten();
-                                        @endphp
-
-                                        @foreach($categorias as $categoria => $marcas)
-                                            @if($marcaActual && !$marcasCatalogo->contains($marcaActual))
-                                            <option value="{{ $marcaActual }}" selected>
-                                            {{ $marcaActual }}
-                                            </option>
-                                        @endif
-
-                                            <optgroup label="{{ $categoria }}">
-                                                @foreach($marcas as $marca)
-                                                    <option value="{{ $marca }}" {{ $marcaActual == $marca ? 'selected' : '' }}>
-                                                        {{ $marca }}
-                                                    </option>
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-                                <div class="form-group col-md-6">
-                                    <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
-                                    @php
-                                        $tipoActual = old('tipo_equipo', $equipo->tipo_equipo);
-                                        $tiposCatalogo = collect([
-                                        'Laptop','PC Escritorio','All in One','Workstation','Thin Client','Servidor',
-                                        'Tablet','Smartphone','PDA / Handheld',
-                                        'Impresora','Multifuncional','Escáner','Plotter',
-                                        'Router','Switch','Access Point','Firewall','Modem',
-                                        'Monitor','Teclado','Mouse','Webcam','Bocinas','Audífonos','Proyector',
-                                        'Disco Duro HDD','Disco Estado Solido SSD','NAS','SAN','Unidad Externa',
-                                        'Camara CCTV','Control de Acceso','Biometrico',
-                                        'Licencia de Software','UPS'
-                                        ]);
-                                    @endphp
-                                    <select name="tipo_equipo" id="tipo_equipo" class="form-control" required>
-                                    @if($tipoActual && !$tiposCatalogo->contains($tipoActual))
-                                        <option value="{{ $tipoActual }}" selected>
-                                        {{ $tipoActual }}
-                                        </option>
-                                    @endif
-
-                                        <option value="{{old('tipo_equipo', $equipo->tipo_equipo)}}" disabled>Seleccione el tipo</option>
-                                        
-                                        @php
-                                            $categoriasEquipos = [
-                                                'Dispositivos de Usuario' => ['Laptop', 'Desktop', 'All-in-One', 'Tablet', 'Smartphone', 'Workstation'],
-                                                'Infraestructura' => ['Servidor', 'Rack', 'Switch', 'Router', 'Access Point', 'Firewall', 'UPS'],
-                                                'Periféricos' => ['Monitor', 'Impresora', 'Multifuncional', 'Escáner', 'Proyector', 'Cámara'],
-                                                'Otros' => ['Genérico', 'Otro']
-                                            ];
-                                            $tipoActual = old('tipo_equipo', $equipo->tipo_equipo);
-                                        @endphp
-
-                                        @foreach($categoriasEquipos as $categoria => $tipos)
-                                            <optgroup label="{{ $categoria }}">
-                                                @foreach($tipos as $tipo)
-                                                    <option value="{{ $tipo }}" {{ $tipoActual == $tipo ? 'selected' : '' }}>
-                                                        {{ $tipo }}
-                                                    </option>
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                </div>
-
-                                <div class="row">
+                                    {{-- MARCA EQUIPO --}}
                                     <div class="form-group col-md-6">
-                                        <label for="serial"><i class="fas fa-barcode"></i> Serial</label>
-                                        <input type="text" name="serial" id="serial" class="form-control"
-                                            value="{{ old('serial', $equipo->serial) }}">
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label for="sistema_operativo"><i class="fab fa-windows"></i> Sistema Operativo</label>
-                                        <select name="sistema_operativo" id="sistema_operativo" class="form-control" required>
-                                            <option value="" disabled {{ old('sistema_operativo', $equipo->sistema_operativo) == '' ? 'selected' : '' }}>
-                                                Seleccione el sistema operativo
-                                            </option>
+                                        <label for="marca_equipo"><i class="fas fa-tag"></i> Marca del Equipo</label>
+                                        <select name="marca_equipo" id="marca_equipo" class="form-control" onchange="toggleOtro(this, 'otra_marca_container')">
+                                            <option value="" disabled {{ old('marca_equipo', $equipo->marca_equipo) == '' ? 'selected' : '' }}>Seleccione la marca</option>
 
                                             @php
-                                                $soActual = old('sistema_operativo', $equipo->sistema_operativo);
-                                                
-                                                $categoriasSO = [
-                                                    'Windows' => ['Windows 11', 'Windows 10', 'Windows 8.1', 'Windows 7', 'Windows Server 2022', 'Windows Server 2019', 'Windows Server 2016'],
-                                                    'macOS' => ['macOS Sonoma', 'macOS Ventura', 'macOS Monterey', 'macOS Big Sur', 'macOS Catalina'],
-                                                    'Linux' => ['Ubuntu', 'Ubuntu LTS', 'Debian', 'CentOS', 'Rocky Linux', 'AlmaLinux', 'Red Hat Enterprise Linux', 'Fedora', 'Arch Linux'],
-                                                    'Sistemas Móviles' => ['Android', 'iOS'],
-                                                    'Virtualización / Hipervisores' => ['VMware ESXi', 'Proxmox VE', 'Hyper-V', 'XenServer'],
-                                                    'Otros' => ['Chrome OS', 'FreeBSD', 'Otro', 'No aplica']
+                                                $categorias = [
+                                                    'Cómputo y Servidores' => ['Dell', 'HP', 'Lenovo', 'Apple', 'ASUS', 'Acer', 'MSI', 'Microsoft (Surface)', 'Huawei', 'Samsung'],
+                                                    'Infraestructura' => ['IBM', 'Supermicro', 'HPE', 'Oracle', 'Fujitsu'],
+                                                    'Redes y Telecomunicaciones' => ['Cisco', 'Ubiquiti', 'MikroTik', 'TP-Link', 'Aruba', 'Juniper', 'Fortinet', 'Huawei'],
+                                                    'Impresión' => ['HP', 'Epson', 'Canon', 'Brother', 'Xerox', 'Ricoh', 'Lexmark', 'Kyocera'],
+                                                    'Varios' => ['Genérico', 'Otra']
                                                 ];
+                                                $marcaActual = old('marca_equipo', $equipo->marca_equipo);
+                                                $marcasCatalogo = collect($categorias)->flatten();
+                                                $esOtraMarca = $marcaActual && !$marcasCatalogo->contains($marcaActual) && $marcaActual != 'Otra';
                                             @endphp
 
-                                            @foreach($categoriasSO as $grupo => $opciones)
-                                                <optgroup label="{{ $grupo }}">
-                                                    @foreach($opciones as $opcion)
-                                                        <option value="{{ $opcion }}" {{ $soActual == $opcion ? 'selected' : '' }}>
-                                                            {{ $opcion }}
+                                            @foreach($categorias as $categoria => $marcas)
+                                                <optgroup label="{{ $categoria }}">
+                                                    @foreach($marcas as $marca)
+                                                        <option value="{{ $marca }}" {{ ($marcaActual == $marca || ($marca == 'Otra' && $esOtraMarca)) ? 'selected' : '' }}>
+                                                            {{ $marca }}
                                                         </option>
                                                     @endforeach
                                                 </optgroup>
                                             @endforeach
                                         </select>
+
+                                        {{-- Input para "Otra" Marca --}}
+                                        <div id="otra_marca_container" class="mt-2" style="display: {{ $esOtraMarca ? 'block' : 'none' }};">
+                                            <input type="text" name="otra_marca" id="otra_marca" class="form-control" placeholder="Especifique la marca" value="{{ $esOtraMarca ? $marcaActual : '' }}">
+                                        </div>
+                                    </div>
+
+                                    {{-- TIPO EQUIPO --}}
+                                    <div class="form-group col-md-6">
+                                        <label for="tipo_equipo"><i class="fas fa-laptop"></i> Tipo de Equipo</label>
+                                        <select name="tipo_equipo" id="tipo_equipo" class="form-control" required onchange="toggleOtro(this, 'otro_tipo_container')">
+                                            <option value="" disabled>Seleccione el tipo</option>
+                                            
+                                            @php
+                                                $categoriasEquipos = [
+                                                    'Dispositivos de Usuario' => ['Laptop', 'Desktop', 'All-in-One', 'Tablet', 'Smartphone', 'Workstation'],
+                                                    'Infraestructura' => ['Servidor', 'Rack', 'Switch', 'Router', 'Access Point', 'Firewall', 'UPS'],
+                                                    'Periféricos' => ['Monitor', 'Impresora', 'Multifuncional', 'Escáner', 'Proyector', 'Cámara'],
+                                                    'Otros' => ['Genérico', 'Otro']
+                                                ];
+                                                $tipoActual = old('tipo_equipo', $equipo->tipo_equipo);
+                                                $tiposCatalogo = collect($categoriasEquipos)->flatten();
+                                                $esOtroTipo = $tipoActual && !$tiposCatalogo->contains($tipoActual) && $tipoActual != 'Otro';
+                                            @endphp
+
+                                            @foreach($categoriasEquipos as $categoria => $tipos)
+                                                <optgroup label="{{ $categoria }}">
+                                                    @foreach($tipos as $tipo)
+                                                        <option value="{{ $tipo }}" {{ ($tipoActual == $tipo || ($tipo == 'Otro' && $esOtroTipo)) ? 'selected' : '' }}>
+                                                            {{ $tipo }}
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+
+                                        {{-- Input para "Otro" Tipo --}}
+                                        <div id="otro_tipo_container" class="mt-2" style="display: {{ $esOtroTipo ? 'block' : 'none' }};">
+                                            <input type="text" name="otro_tipo" id="otro_tipo" class="form-control" placeholder="Especifique el tipo" value="{{ $esOtroTipo ? $tipoActual : '' }}">
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
@@ -491,5 +442,37 @@
 @stop
 
 @section('js')
+    {{-- Primero el archivo externo --}}
     <script src="{{ asset('js/equipos/edit-equipos.js') }}"></script>
+    
+    {{-- Luego el código personalizado --}}
+    <script>
+        function toggleOtro(selectElement, containerId) {
+            const container = document.getElementById(containerId);
+            const input = container.querySelector('input');
+            
+            if (selectElement.value === 'Otra' || selectElement.value === 'Otro') {
+                container.style.display = 'block';
+                input.setAttribute('required', 'required');
+                input.focus();
+            } else {
+                container.style.display = 'none';
+                input.removeAttribute('required');
+                input.value = '';
+            }
+        }
+    $(document).ready(function() {
+        $('.select2').select2({
+            theme: 'bootstrap4',
+            width: '100%'
+        });
+    });
+
+    $(document).ready(function() {
+    $('.select2').select2({
+        theme: 'bootstrap4',
+        width: '100%'
+    });
+});
+    </script>
 @stop

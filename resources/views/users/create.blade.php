@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Nombre completo *</label>
+                        <label>Nombre completo </label>
                         <input type="text"
                                name="name"
                                class="form-control"
@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Correo electrónico *</label>
+                        <label>Correo electrónico </label>
                         <input type="email"
                                name="email"
                                class="form-control"
@@ -115,7 +115,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Contraseña *</label>
+                        <label>Contraseña </label>
                         <input type="password"
                                name="password"
                                class="form-control"
@@ -125,7 +125,7 @@
 
 
                     <div class="form-group">
-                        <label>Confirmar contraseña *</label>
+                        <label>Confirmar contraseña </label>
                         <input type="password"
                             name="password_confirmation"
                             class="form-control"
@@ -146,7 +146,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Rol *</label>
+                        <label>Rol </label>
                         <select name="rol" class="form-control" required>
                             <option value="">Seleccione un rol</option>
                             <option value="ADMIN" {{ old('rol') == 'ADMIN' ? 'selected' : '' }}>Administrador</option>
@@ -156,7 +156,7 @@
                     </div>
 
                 <div class="form-group">
-                    <label>Departamento *</label>
+                    <label>Departamento </label>
                     <select name="departamento" class="form-control" required>
                         <option value="" disabled {{ old('departamento') == '' ? 'selected' : '' }}>-- Seleccione --</option>
                         
@@ -187,7 +187,7 @@
                 </div>
 
                     <div class="form-group">
-                        <label>Estatus *</label>
+                        <label>Estatus </label>
                         <select name="estatus" class="form-control" required>
                             <option value="ACTIVO" {{ old('estatus') == 'ACTIVO' ? 'selected' : '' }}>
                                 Activo
